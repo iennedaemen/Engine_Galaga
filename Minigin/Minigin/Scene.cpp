@@ -4,9 +4,29 @@
 
 unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : m_Name(name) {}
+Scene::Scene(const std::string& name)
+	: m_Name(name)
+{
+	
+}
 
 Scene::~Scene() = default;
+
+void Scene::RootInitialize()
+{
+	if(m_IsInitialized)
+		return;
+
+	Initialize();
+	
+	for (std::weak_ptr<GameObject> pObject : m_Objects)
+	{
+		pObject.lock()->RootInitialize();
+	}
+
+	m_IsInitialized = true;
+}
+
 
 void Scene::Add(const std::shared_ptr<GameObject>& object)
 {
@@ -14,19 +34,38 @@ void Scene::Add(const std::shared_ptr<GameObject>& object)
 	object->RootInitialize();
 }
 
-void Scene::Update()
+void Scene::Remove(const std::shared_ptr<GameObject>& object)
 {
+	auto it = std::find(m_Objects.begin(), m_Objects.end(), object);
+	if (it != m_Objects.end())
+	{
+		if (*it != m_Objects.back())
+			std::swap(*it, m_Objects.back());
+		m_Objects.pop_back();
+	}
+}
+
+void Scene::RootUpdate()
+{
+	Update();
+	
 	for(auto& object : m_Objects)
 	{
 		object->Update();
 	}
 }
 
-void Scene::Render() const
+void Scene::RootRender() const
 {
+	Render();
+	
 	for (const auto& object : m_Objects)
 	{
 		object->Render();
 	}
 }
 
+std::string Scene::GetName() const
+{
+	return m_Name;
+}

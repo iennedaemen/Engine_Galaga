@@ -14,6 +14,7 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FpsComponent.h"
+#include "TestScene.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -46,33 +47,8 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-
-	auto go = std::make_shared<GameObject>();
-	std::shared_ptr<RenderComponent> pRenderComp = std::make_shared<RenderComponent>();
-	go->AddComponent(pRenderComp);
-	pRenderComp->SetTexture("background.jpg");
-	scene.Add(go);
-
-	go = std::make_shared<GameObject>();
-	pRenderComp = std::make_shared<RenderComponent>();
-	go->AddComponent(pRenderComp);
-	pRenderComp->SetTexture("logo.png");
-	scene.Add(go);
-	go->SetPosition(216, 180);
-
-	go = std::make_shared<GameObject>();
-	std::shared_ptr<TextComponent> pTextComp = std::make_shared<TextComponent>("Lingua.otf", 36);
-	go->AddComponent(pTextComp);
-	pTextComp->SetText("Programming 4 Assignment");
-	scene.Add(go);
-	go->SetPosition(80, 20);
-
-	go = std::make_shared<GameObject>();
-	std::shared_ptr<FpsComponent> pFpsComp = std::make_shared<FpsComponent>(FpsComponent("Lingua.otf", 20, {255, 255, 0, 255}));
-	go->AddComponent(pFpsComp);
-	scene.Add(go);
-	go->SetPosition(10, 10);
+	SceneManager::GetInstance().AddScene(std::make_shared<TestScene>());
+	SceneManager::GetInstance().SetActiveScene("TestScene");
 }
 
 void Minigin::Cleanup()
