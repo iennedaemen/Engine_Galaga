@@ -14,7 +14,7 @@ RenderComponent::RenderComponent()
 }
 
 void RenderComponent::SetTexture(const std::string& filename, float width, float height)
-{
+{	
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 	m_Width = width;
 	m_Height = height;

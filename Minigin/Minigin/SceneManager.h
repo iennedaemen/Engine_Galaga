@@ -19,5 +19,5 @@
 		SceneManager() = default;
 		std::vector<std::shared_ptr<Scene>> m_Scenes;
 		std::shared_ptr<Scene> m_ActiveScene;
-		bool m_IsInitialized;
+		bool m_IsInitialized = false;
 	};

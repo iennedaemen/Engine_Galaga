@@ -49,3 +49,9 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
+
+void Renderer::RenderTexture(Texture2D& texture, SDL_Rect dstRect, SDL_Rect srcRect) const
+{
+	SDL_Point center = { dstRect.w / 2 ,dstRect.h / 2 };
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dstRect, 0, &center, SDL_FLIP_NONE);
+}

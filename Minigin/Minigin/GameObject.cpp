@@ -31,12 +31,9 @@ void GameObject::Update()
 
 void GameObject::Render()
 {
-	if (m_Render)
+	for (std::weak_ptr<BaseComponent> pComponent : m_pComponents)
 	{
-		for (std::weak_ptr<BaseComponent> pComponent : m_pComponents)
-		{
-			pComponent.lock()->Render();
-		}
+		pComponent.lock()->Render();
 	}
 }
 

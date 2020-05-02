@@ -16,6 +16,6 @@ void FpsComponent::Initialize()
 
 void FpsComponent::Update()
 {
-	m_Fps = int(1/Time::GetInstance().GetElapsedSec());
+	m_Fps = int(1/Time::GetInstance().m_ElapsedSec);
 	GetGameObject()->GetComponent<TextComponent>()->SetText("FPS: " + std::to_string(m_Fps));
 }

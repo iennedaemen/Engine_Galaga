@@ -3,7 +3,7 @@
 
 class Texture2D;
 
-class RenderComponent : public BaseComponent
+class RenderComponent final: public BaseComponent
 {
 public:
 	RenderComponent();

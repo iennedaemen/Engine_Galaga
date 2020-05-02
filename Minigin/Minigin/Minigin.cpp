@@ -82,7 +82,7 @@ void Minigin::Run()
 			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
 			lastTime = currentTime;
 			lag += deltaTime;
-			Time::GetInstance().SetElapsedSec(deltaTime);
+			Time::GetInstance().m_ElapsedSec = deltaTime;
 
 			doContinue = input.ProcessInput();
 			while (lag >= 0.2f)

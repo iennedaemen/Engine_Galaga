@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "Font.h"
 
-class TextComponent : public BaseComponent
+class TextComponent final: public BaseComponent
 {
 public:
 	TextComponent(std::string font, int size = 1, SDL_Color color = { 255,255,255,255 });

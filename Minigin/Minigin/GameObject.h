@@ -17,11 +17,6 @@ class BaseComponent;
 
 		void AddComponent(std::shared_ptr<BaseComponent> component);
 
-		void EnableRender(bool enable)
-		{
-			m_Render = enable;
-		}
-
 		template <class T>
 		T* GetComponent()
 		{
