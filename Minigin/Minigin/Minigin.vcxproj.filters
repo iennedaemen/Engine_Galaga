@@ -28,6 +28,12 @@
     <Filter Include="Engine\Render">
       <UniqueIdentifier>{caef2cc2-2db9-41c1-a019-35d29311e510}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Prefab">
+      <UniqueIdentifier>{b7b56bd3-7444-4590-b14f-cbc8c66d160a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\StateMachine">
+      <UniqueIdentifier>{eccaca1d-41f4-478b-a66f-3415b14195bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniginPCH.h">
@@ -87,6 +93,18 @@
     <ClInclude Include="SpriteComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Engine\StateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -142,6 +160,15 @@
     </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>Engine\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

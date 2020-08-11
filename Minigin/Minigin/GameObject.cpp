@@ -18,10 +18,12 @@ void GameObject::RootInitialize()
 	m_IsInitialized = true;
 }
 
-void GameObject::Update()
+void GameObject::RootUpdate()
 {
 	if (m_IsInitialized && m_NeedsUpdate)
 	{
+		Update();
+
 		for (std::weak_ptr<BaseComponent> pComponent : m_pComponents)
 		{
 			pComponent.lock()->Update();
@@ -29,8 +31,10 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Render()
+void GameObject::RootRender()
 {
+	Render();
+	
 	for (std::weak_ptr<BaseComponent> pComponent : m_pComponents)
 	{
 		pComponent.lock()->Render();

@@ -10,6 +10,7 @@ public:
 	virtual void Render() const override;
 	
 private:
-	
+	std::shared_ptr<GameObject> m_pPlayer = nullptr;
+	std::shared_ptr<GameObject> m_pPlayer2 = nullptr;
 };
 

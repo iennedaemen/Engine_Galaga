@@ -1,6 +1,7 @@
 #include "MiniginPCH.h"
 #include "Scene.h"
 #include "GameObject.h"
+#include "ColliderComponent.h"
 
 unsigned int Scene::m_IdCounter = 0;
 
@@ -51,7 +52,28 @@ void Scene::RootUpdate()
 	
 	for(auto& object : m_Objects)
 	{
-		object->Update();
+		if (object->GetComponent<ColliderComponent>() != nullptr)
+		{
+			for (auto& object2 : m_Objects)
+			{
+				if (object2 != object)
+				{					
+					if (object->GetComponent<ColliderComponent>()->IsGround(object2->GetRect()))
+						break;
+				}
+			}
+
+			for (auto& object2 : m_Objects)
+			{
+				if (object2 != object)
+				{
+					object->GetComponent<ColliderComponent>()->Collide(object2->GetRect());
+				}
+			}
+		}
+
+		
+		object->RootUpdate();
 	}
 }
 
@@ -61,7 +83,7 @@ void Scene::RootRender() const
 	
 	for (const auto& object : m_Objects)
 	{
-		object->Render();
+		object->RootRender();
 	}
 }
 

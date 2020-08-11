@@ -85,10 +85,10 @@ void Minigin::Run()
 			Time::GetInstance().m_ElapsedSec = deltaTime;
 
 			doContinue = input.ProcessInput();
-			while (lag >= 0.2f)
+			while (lag >= 0.02f)
 			{
 				sceneManager.Update();
-				lag -= 0.2f;
+				lag -= 0.02f;
 			}
 			renderer.Render();
 

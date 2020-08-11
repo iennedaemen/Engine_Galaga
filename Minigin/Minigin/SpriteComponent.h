@@ -23,7 +23,7 @@ protected:
 
 private:
 	std::shared_ptr<Texture2D> m_pTexture;
-	SDL_Rect m_SrcRect, m_DestRect;
+	SDL_Rect m_SrcRect;
 	float m_FrameTime;
 	float m_AccumulatedSec;
 	float m_SheetWidth, m_SheetHeight;

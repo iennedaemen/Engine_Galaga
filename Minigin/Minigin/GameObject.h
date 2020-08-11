@@ -3,10 +3,11 @@
 #include "Texture2D.h"
 #include <vector>
 #include "Transform.h"
+#include <SDL.h>
 
 class BaseComponent;
 
-	class GameObject final
+	class GameObject
 	{
 	public:
 		GameObject() = default;
@@ -46,12 +47,24 @@ class BaseComponent;
 		}
 
 		void RootInitialize();
+		void RootRender();
+		void RootUpdate();
 
 		virtual void Initialize() {}
-		virtual void Render();
-		void Update();
+		virtual void Render() {}
+		virtual void Update() {}
 
 		void NeedsUpdate(bool needsUpdate);
+
+		void SetRect(SDL_Rect rect)
+		{
+			m_Rect = rect;
+		}
+
+		SDL_Rect GetRect()
+		{
+			return m_Rect;
+		}
 
 
 		// delete functions
@@ -67,5 +80,6 @@ class BaseComponent;
 		bool m_IsInitialized = false;
 		bool m_Render = true;
 		bool m_NeedsUpdate = true;
+		SDL_Rect m_Rect = { 0,0,0,0 };
 	};
 
