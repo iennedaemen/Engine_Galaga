@@ -10,7 +10,7 @@ public:
    // static ShootingState shooting;
 	
     virtual ~PlayerState() {}
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input)
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0)
     {
         UNREFERENCED_PARAMETER(player);
         UNREFERENCED_PARAMETER(input);
@@ -23,57 +23,21 @@ public:
 
 };
 
-//class WalkingState : PlayerState
-//{
-//public:
-//    WalkingState(){}
-//
-//   PlayerState* handleInput(Player& player, Input input) {
-//        if (input == SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_SPACE])
-//        {
-//            return new ShootingState();
-//                	
-//           return nullptr;
-//           // Change to standing state...
-//           // player.setGraphics(IMAGE_STAND);
-//        }
-//    }
-//
-//    virtual void update(Player& player)
-//	{
-//
-//    }
-//
-//};
-//
-//class ShootingState : PlayerState
-//{
-//public:
-//    ShootingState() {}
-//
-//    std::shared_ptr<PlayerState> handleInput(Player& player, Input input) {
-//        if (input == SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_SPACE])
-//        {
-//            player.SetState(PlayerState::shooting);
-//            return nullptr;
-//            // Change to standing state...
-//           // player.setGraphics(IMAGE_STAND);
-//        }
-//    }
-//
-//    virtual void update(Player& player)
-//    {
-//
-//    }
-//
-//};
+class IdleState : public PlayerState
+{
+public:
+    IdleState() {}
+
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
+
+};
 
 class WalkingState : public PlayerState
 {
 public:
     WalkingState() {}
 
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input) override;
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
 
 };
 
@@ -82,6 +46,6 @@ class ShootingState : public PlayerState
 public:
     ShootingState() {}
 
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input) override;
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
 
 };

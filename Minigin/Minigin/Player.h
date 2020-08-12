@@ -14,6 +14,13 @@ public:
 	{
 		m_State = std::make_shared<PlayerState>(state);
 	}
+
+	void SetVelocity(glm::vec2 velocity)
+	{
+		m_Velocity = velocity;
+	}
+
+	//void Move();
 	
 protected:
 	void Initialize() override;
@@ -26,6 +33,6 @@ private:
 	float speed = 40;
 	SDL_Rect m_Rect;
 
-	std::shared_ptr<PlayerState> m_State = std::make_shared<WalkingState>();
+	std::shared_ptr<PlayerState> m_State = std::make_shared<IdleState>();
 };
 

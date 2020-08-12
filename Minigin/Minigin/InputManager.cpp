@@ -28,15 +28,27 @@ bool InputManager::IsPressed(ControllerButton button) const
 {
 	switch (button)
 	{
+	case ControllerButton::ButtonLeft:
+		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
+	case ControllerButton::ButtonRight:
+		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
+	case ControllerButton::ButtonUp:
+		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
+	case ControllerButton::ButtonDown:
+		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
 	case ControllerButton::ButtonA:
 		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
-	case ControllerButton::ButtonB:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
-	case ControllerButton::ButtonX:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
-	case ControllerButton::ButtonY:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
 	default: return false;
 	}
 }
 
+std::shared_ptr<Command> InputManager::HandleInput()
+{
+	if (IsPressed(ControllerButton::ButtonLeft)) return m_pButtonLeft;
+	if (IsPressed(ControllerButton::ButtonRight)) return m_pButtonRight;
+	if (IsPressed(ControllerButton::ButtonUp)) return m_pButtonUp;
+	if (IsPressed(ControllerButton::ButtonDown)) return m_pButtonDown;
+	if (IsPressed(ControllerButton::ButtonDown)) return m_pButtonA;
+
+	return nullptr;
+}

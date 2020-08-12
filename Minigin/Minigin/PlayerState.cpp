@@ -1,21 +1,36 @@
 #include "MiniginPCH.h"
 #include "PlayerState.h"
 #include <SDL.h>
+#include "InputManager.h"
+#include "SpriteComponent.h"
 
 std::shared_ptr<PlayerState> WalkingState::handleInput(Player& player, Uint8 input)
 {
     UNREFERENCED_PARAMETER(player);
-    if (input == SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_SPACE])
+    UNREFERENCED_PARAMETER(input);
+	
+    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
     {
-        // std::shared_ptr<PlayerState> ptr2 = std::make_shared<ShootingState>();
-        std::shared_ptr<ShootingState> ptr1 = std::make_shared<ShootingState>();
+        std::shared_ptr<IdleState> ptr1 = std::make_shared<IdleState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
 
-        return ptr2;
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(0);
 
-        //  return nullptr;
-          // Change to standing state...
-          // player.setGraphics(IMAGE_STAND);
+        return ptr2;
+    }
+
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    {
+        std::shared_ptr<ShootingState> ptr1 = std::make_shared<ShootingState>();
+        std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
+    	
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(2);
+
+        return ptr2;
     }
     return nullptr;
 }
@@ -23,17 +38,63 @@ std::shared_ptr<PlayerState> WalkingState::handleInput(Player& player, Uint8 inp
 std::shared_ptr<PlayerState> ShootingState::handleInput(Player& player, Uint8 input)
 {
     UNREFERENCED_PARAMETER(player);
-    if (input == SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_RIGHT])
+    UNREFERENCED_PARAMETER(input);
+
+    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown)
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    {
+        std::shared_ptr<IdleState> ptr1 = std::make_shared<IdleState>();
+        std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
+
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(0);
+    	
+        return ptr2;
+    }
+	
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown))
     { 
-        // std::shared_ptr<PlayerState> ptr2 = std::make_shared<ShootingState>();
         std::shared_ptr<WalkingState> ptr1 = std::make_shared<WalkingState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
 
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(1);
+    	
         return ptr2;
+    }
+    return nullptr;
+}
 
-        //  return nullptr;
-          // Change to standing state...
-          // player.setGraphics(IMAGE_STAND);
+std::shared_ptr<PlayerState> IdleState::handleInput(Player& player, Uint8 input)
+{
+    UNREFERENCED_PARAMETER(player);
+    UNREFERENCED_PARAMETER(input);
+
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    {
+        std::shared_ptr<ShootingState> ptr1 = std::make_shared<ShootingState>();
+        std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
+
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(2);
+
+        return ptr2;
+    }
+	
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown))
+    {
+        std::shared_ptr<WalkingState> ptr1 = std::make_shared<WalkingState>();
+        std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
+
+        player.GetComponent<SpriteComponent>()->SetCurrentFrame(1);
+    	
+        return ptr2;
     }
     return nullptr;
 }

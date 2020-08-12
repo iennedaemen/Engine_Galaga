@@ -52,9 +52,9 @@ void TestScene::Initialize()
 	//m_pPlayer2->SetRect({ 30, 50, 128 / 8, 259 / 16 });
 	SDL_Rect m_Rect = m_pPlayer2->GetRect();
 
-	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(128.0f, 256.0f, 8, 16, 5);
+	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(244.0f, 61.0f, 4, 1, 0);
 	m_pPlayer2->AddComponent(pSpriteComp);
-	pSpriteComp->SetTexture("Walk2.png");
+	pSpriteComp->SetTexture("Player1.png");
 	m_pPlayer2->SetPosition(30, 200);
 	m_pPlayer2->SetRect({ int(m_pPlayer2->GetTransform().GetPosition().x), int(m_pPlayer2->GetTransform().GetPosition().y), 128 / 8, 259 / 16 });
 	Add(m_pPlayer2);

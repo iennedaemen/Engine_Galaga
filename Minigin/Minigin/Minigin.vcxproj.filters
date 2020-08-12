@@ -34,6 +34,9 @@
     <Filter Include="Engine\StateMachine">
       <UniqueIdentifier>{eccaca1d-41f4-478b-a66f-3415b14195bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Command">
+      <UniqueIdentifier>{cc588df3-e507-421e-b66b-c983c306416b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniginPCH.h">
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="PlayerState.h">
       <Filter>Engine\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Engine\Command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

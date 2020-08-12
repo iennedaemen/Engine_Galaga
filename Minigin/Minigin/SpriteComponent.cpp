@@ -109,6 +109,7 @@ void SpriteComponent::IsStatic(bool isStatic)
 void SpriteComponent::SetCurrentFrame(int frame)
 {
 	m_CurFrame = frame;
+	UpdateSourceRect();
 }
 
 void SpriteComponent::SetNrFramesToPlay(int nrFramesToPlay)
