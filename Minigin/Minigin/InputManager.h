@@ -2,24 +2,18 @@
 #include <XInput.h>
 #include "Singleton.h"
 #include "Command.h"
-
-enum class ControllerButton
-	{
-		ButtonUp,
-		ButtonDown,
-		ButtonLeft,
-		ButtonRight,
-		ButtonA
-	};
+#include "Controller.h"
+#include "structs.h"
 
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		bool ProcessInput();
-		bool IsPressed(ControllerButton button) const;
-		std::shared_ptr<Command> HandleInput();
+		bool IsPressed(ControllerButton button, int playerNr) const;
+		std::shared_ptr<Command> HandleInput(int playerNr);
 	private:
-		XINPUT_STATE m_CurrentState{};
+		XINPUT_STATE m_CurrentState1{};
+		XINPUT_STATE m_CurrentState2{};
 
 		// Commands
 		std::shared_ptr<WalkLeftCommand> m_pButtonLeft = std::make_shared<WalkLeftCommand>();
@@ -28,5 +22,9 @@ enum class ControllerButton
 		std::shared_ptr<WalkDownCommand> m_pButtonDown = std::make_shared<WalkDownCommand>();
 		
 		std::shared_ptr<ShootCommand> m_pButtonA = std::make_shared<ShootCommand>();
+
+		// Controllers
+		std::shared_ptr<Controller> m_Contoller1 = std::make_shared<Controller>(1);
+		std::shared_ptr<Controller> m_Contoller2 = std::make_shared<Controller>(2);
 	};
 

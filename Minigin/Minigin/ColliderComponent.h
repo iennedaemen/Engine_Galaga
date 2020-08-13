@@ -40,6 +40,6 @@ private:
 	bool m_IsTrigger = false;
 	bool m_HitWall = false;
 
-	bool check_collision(SDL_Rect A, SDL_Rect B);
+	bool CheckCollision(SDL_Rect A, SDL_Rect B);
 };
 

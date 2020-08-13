@@ -5,9 +5,9 @@
 
 bool InputManager::ProcessInput()
 {
-	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
-	XInputGetState(0, &m_CurrentState);
-
+	m_Contoller1->GetState();
+	m_Contoller2->GetState();
+	
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		if (e.type == SDL_QUIT) {
@@ -24,31 +24,24 @@ bool InputManager::ProcessInput()
 	return true;
 }
 
-bool InputManager::IsPressed(ControllerButton button) const
+bool InputManager::IsPressed(ControllerButton button, int playerNr) const
 {
-	switch (button)
-	{
-	case ControllerButton::ButtonLeft:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
-	case ControllerButton::ButtonRight:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
-	case ControllerButton::ButtonUp:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
-	case ControllerButton::ButtonDown:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
-	case ControllerButton::ButtonA:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
-	default: return false;
-	}
+	if(playerNr == 1)
+		return m_Contoller1->IsPressed(button);
+	
+	if (playerNr == 2)
+		return m_Contoller2->IsPressed(button);
+
+	return false;
 }
 
-std::shared_ptr<Command> InputManager::HandleInput()
+std::shared_ptr<Command> InputManager::HandleInput(int playerNr)
 {
-	if (IsPressed(ControllerButton::ButtonLeft)) return m_pButtonLeft;
-	if (IsPressed(ControllerButton::ButtonRight)) return m_pButtonRight;
-	if (IsPressed(ControllerButton::ButtonUp)) return m_pButtonUp;
-	if (IsPressed(ControllerButton::ButtonDown)) return m_pButtonDown;
-	if (IsPressed(ControllerButton::ButtonDown)) return m_pButtonA;
+	if (IsPressed(ControllerButton::ButtonLeft, playerNr)) return m_pButtonLeft;
+	if (IsPressed(ControllerButton::ButtonRight, playerNr)) return m_pButtonRight;
+	if (IsPressed(ControllerButton::ButtonUp, playerNr)) return m_pButtonUp;
+	if (IsPressed(ControllerButton::ButtonDown, playerNr)) return m_pButtonDown;
+	if (IsPressed(ControllerButton::ButtonA, playerNr)) return m_pButtonA;
 
 	return nullptr;
 }

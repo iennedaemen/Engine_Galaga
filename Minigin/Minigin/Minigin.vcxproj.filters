@@ -111,6 +111,9 @@
     <ClInclude Include="Command.h">
       <Filter>Engine\Command</Filter>
     </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Engine\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">

@@ -25,7 +25,7 @@ bool ColliderComponent::IsGround(SDL_Rect rect)
 	SDL_Rect r2{ r.x + 4, r.y + r.h - 4, r.w - 8, 8 };
 	SDL_Rect r3{ r.x, r.y + 1, r.w, r.h };
 
-	if (check_collision(r2, rect) && check_collision(r3, rect))
+	if (CheckCollision(r2, rect) && CheckCollision(r3, rect))
 	{
 		if (!m_IsOnGround)
 		{
@@ -34,7 +34,7 @@ bool ColliderComponent::IsGround(SDL_Rect rect)
 		}
 		return true;
 	}
-	if (!check_collision(r2, rect) && m_IsOnGround)
+	if (!CheckCollision(r2, rect) && m_IsOnGround)
 	{
 		m_IsOnGround = false;
 		return false;
@@ -49,7 +49,7 @@ void ColliderComponent::Collide(SDL_Rect rect)
 		
 	SDL_Rect r = GetGameObject()->GetRect();
 	SDL_Rect r3{ r.x -4, r.y +4, r.w + 8, 2 };
-	if (check_collision(rect, r) && check_collision(rect, r3))
+	if (CheckCollision(rect, r) && CheckCollision(rect, r3))
 	{
 		m_Velocity = 0;
 
@@ -58,14 +58,14 @@ void ColliderComponent::Collide(SDL_Rect rect)
 		if (r.x > rect.x)
 			GetGameObject()->SetPosition(float(rect.x + rect.w), GetGameObject()->GetTransform().GetPosition().y);
 	}
-	else if(!check_collision(rect, r3)) m_Velocity = 40;
+	else if(!CheckCollision(rect, r3)) m_Velocity = 40;
 }
 void ColliderComponent::Update()
 {
 
 }
 
-bool ColliderComponent::check_collision( SDL_Rect A, SDL_Rect B )
+bool ColliderComponent::CheckCollision( SDL_Rect A, SDL_Rect B )
 {
 int leftA, leftB;
 int rightA, rightB;

@@ -16,3 +16,12 @@ enum Input
 	Down,
 	Space
 };
+
+enum class ControllerButton
+{
+	ButtonUp,
+	ButtonDown,
+	ButtonLeft,
+	ButtonRight,
+	ButtonA
+};

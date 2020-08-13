@@ -1,7 +1,6 @@
 #include "MiniginPCH.h"
 #include "Player.h"
 #include "SpriteComponent.h"
-#include "Time.h"
 #include "ColliderComponent.h"
 #include "InputManager.h"
 
@@ -23,7 +22,7 @@ void Player::Initialize()
 void Player::Update()
 {
 	// COMMAND
-	std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput();
+	std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr);
 	if(command != nullptr)
 	{
 		command->execute(*this);
@@ -39,7 +38,6 @@ void Player::Update()
 	if (m_State)
 		m_State->update(*this);
 
-	
 	// COLLIDER RECT
 	m_Rect.x = int(GetTransform().GetPosition().x);
 	m_Rect.y = int(GetTransform().GetPosition().y);

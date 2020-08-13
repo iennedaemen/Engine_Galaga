@@ -44,19 +44,11 @@ void TestScene::Initialize()
 	//Add(go);
 	//go->SetPosition(10, 50);
 	//
-	m_pPlayer = std::make_shared<Player>();
+	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
 
 
-	m_pPlayer2 = std::make_shared<GameObject>();
-	//m_pPlayer2->SetRect({ 30, 50, 128 / 8, 259 / 16 });
-	SDL_Rect m_Rect = m_pPlayer2->GetRect();
-
-	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(244.0f, 61.0f, 4, 1, 0);
-	m_pPlayer2->AddComponent(pSpriteComp);
-	pSpriteComp->SetTexture("Player1.png");
-	m_pPlayer2->SetPosition(30, 200);
-	m_pPlayer2->SetRect({ int(m_pPlayer2->GetTransform().GetPosition().x), int(m_pPlayer2->GetTransform().GetPosition().y), 128 / 8, 259 / 16 });
+	m_pPlayer2 = std::make_shared<Player>(2);
 	Add(m_pPlayer2);
 
 	//go = std::make_shared<GameObject>();

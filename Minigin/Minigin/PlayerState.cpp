@@ -9,11 +9,11 @@ std::shared_ptr<PlayerState> WalkingState::handleInput(Player& player, Uint8 inp
     UNREFERENCED_PARAMETER(player);
     UNREFERENCED_PARAMETER(input);
 	
-    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA, player.getPlayerNr()))
     {
         std::shared_ptr<IdleState> ptr1 = std::make_shared<IdleState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
@@ -23,7 +23,7 @@ std::shared_ptr<PlayerState> WalkingState::handleInput(Player& player, Uint8 inp
         return ptr2;
     }
 
-    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA, player.getPlayerNr()))
     {
         std::shared_ptr<ShootingState> ptr1 = std::make_shared<ShootingState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
@@ -40,11 +40,11 @@ std::shared_ptr<PlayerState> ShootingState::handleInput(Player& player, Uint8 in
     UNREFERENCED_PARAMETER(player);
     UNREFERENCED_PARAMETER(input);
 
-    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown)
-        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    if (!InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown, player.getPlayerNr())
+        && !InputManager::GetInstance().IsPressed(ControllerButton::ButtonA, player.getPlayerNr()))
     {
         std::shared_ptr<IdleState> ptr1 = std::make_shared<IdleState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
@@ -54,10 +54,10 @@ std::shared_ptr<PlayerState> ShootingState::handleInput(Player& player, Uint8 in
         return ptr2;
     }
 	
-    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown))
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown, player.getPlayerNr()))
     { 
         std::shared_ptr<WalkingState> ptr1 = std::make_shared<WalkingState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
@@ -74,7 +74,7 @@ std::shared_ptr<PlayerState> IdleState::handleInput(Player& player, Uint8 input)
     UNREFERENCED_PARAMETER(player);
     UNREFERENCED_PARAMETER(input);
 
-    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA))
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonA, player.getPlayerNr()))
     {
         std::shared_ptr<ShootingState> ptr1 = std::make_shared<ShootingState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
@@ -84,10 +84,10 @@ std::shared_ptr<PlayerState> IdleState::handleInput(Player& player, Uint8 input)
         return ptr2;
     }
 	
-    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp)
-        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown))
+    if (InputManager::GetInstance().IsPressed(ControllerButton::ButtonLeft, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonRight, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonUp, player.getPlayerNr())
+        || InputManager::GetInstance().IsPressed(ControllerButton::ButtonDown, player.getPlayerNr()))
     {
         std::shared_ptr<WalkingState> ptr1 = std::make_shared<WalkingState>();
         std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);

@@ -10,6 +10,8 @@
 class Player : public GameObject
 {
 public:
+	Player(int playerNr) : m_PlayerNr(playerNr){}
+	
 	void SetState(PlayerState state)
 	{
 		m_State = std::make_shared<PlayerState>(state);
@@ -20,6 +22,11 @@ public:
 		m_Velocity = velocity;
 	}
 
+	int getPlayerNr()
+	{
+		return m_PlayerNr;
+	}
+
 	//void Move();
 	
 protected:
@@ -28,6 +35,8 @@ protected:
 	void Update() override;
 
 private:
+	int m_PlayerNr;
+	
 	glm::vec2 m_Velocity = {0, 0};
 	float m_Gravity = -0.981f;
 	float speed = 40;
