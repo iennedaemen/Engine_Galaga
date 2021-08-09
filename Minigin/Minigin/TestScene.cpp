@@ -35,23 +35,8 @@ void TestScene::Initialize()
 		for (int j{}; j < 8; ++j)
 		{
 			m_ZakoPositions.push_back(std::pair<glm::vec2, bool>({ 40.0f * (j + 1), 30 * i + 100}, false));
-			//std::shared_ptr<GameObject> zako = std::make_shared<Zako>();
-			//Add(zako);
-			//zako->SetPosition(40.0f * (j + 1), 30.0f * i + 100);
-			//m_pZakos.push_back(zako);
 		}
 	}
-
-
-	/*std::shared_ptr<GameObject> zako = std::make_shared<Zako>();
-	Add(zako);
-	zako->SetPosition(0, 20);
-	m_pZakos.push_back(zako);*/
-
-	//m_pLaser = std::make_shared<Laser>();
-	//Add(m_pLaser);
-	//m_pLaser->SetPosition(20, float(ScreenInfo::GetInstance().screenheigth - 110));
-
 }
 
 void TestScene::Update()
@@ -132,6 +117,19 @@ void TestScene::UpdateZako()
 	std::shared_ptr<GameObject> pLasers[2];
 	pLasers[0] = dPlayer->GetLaser(0);
 	pLasers[1] = dPlayer->GetLaser(1);
+
+	// UPDATE DATA
+	for (int i{}; i < m_pZakos.size(); ++i)
+	{
+		std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+
+		int r = std::rand() % 2;
+		if (r % 2 == 0)
+			dZako->SetNextAction(true);
+		else dZako->SetNextAction(false);
+
+		dZako->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w/2,  m_pPlayer->m_Rect.y });
+	}
 
 	// COLLISION
 	for (int i{}; i < 2; ++i)

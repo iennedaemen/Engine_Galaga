@@ -12,39 +12,73 @@ public:
 	Zako(glm::vec2 idlePos) : m_IdlePos(idlePos)
 	{};
 
+	void ShootLaser();
+
 	void SetIsHit(bool isHit)
 	{
 		m_IsHit = isHit;
 	}
-
 	bool GetIsHit()
 	{
 		return m_IsHit;
 	}
-
 	void SetIsDead(bool isDead)
 	{
 		m_IsDead = isDead;
 	}
-
 	bool GetIsDead()
 	{
 		return m_IsDead;
 	}
-
 	glm::vec2 GetIdlePos()
 	{
 		return m_IdlePos;
 	}
-
 	bool SpawnedLeft()
 	{
 		return m_SpawnedLeft;
 	}
-
 	void SetSpawnedLeft(bool spawnedLeft)
 	{
 		m_SpawnedLeft = spawnedLeft;
+	}
+	void SetPlayerPos(glm::vec2 playerPos)
+	{
+		m_PlayerPos = playerPos;
+	}
+	glm::vec2 GetPlayerPos()
+	{
+		return m_PlayerPos;
+	}
+
+	// ACTIONS
+	void SetIsIdle(bool isIdle)
+	{
+		m_IsIdle = isIdle;
+	}
+	bool IsIdle()
+	{
+		return m_IsIdle;
+	}
+	bool DoShootRun()
+	{
+		return m_DoShootRun;
+	}
+	void SetShootRun(bool doShootRun)
+	{
+		m_DoShootRun = doShootRun;
+	}
+	bool DoCrashRun()
+	{
+		return m_DoCrashRun;
+	}
+	void SetCrashRun(bool doCrashRun)
+	{
+		m_DoCrashRun = doCrashRun;
+	}
+	void SetNextAction(bool doShootRun)
+	{
+		m_NextAction = doShootRun;
 	}
 
 protected:
@@ -57,7 +91,17 @@ private:
 	bool m_IsDead = false;
 	bool m_SpawnedLeft = true;
 	glm::vec2 m_IdlePos;
+	glm::vec2 m_PlayerPos;
+	std::shared_ptr<GameObject> m_pLaser = nullptr;
 
 	std::shared_ptr<ZakoState> m_State = std::make_shared<SpawnStateZako>();
+
+	// ACTIONS
+	float m_ActionTimer = 0.0f;
+	float m_ActionTime = 5.0f;
+	bool m_DoShootRun = false;
+	bool m_DoCrashRun = false;
+	bool m_IsIdle = false;
+	bool m_NextAction = false;
 };
 
