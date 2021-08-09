@@ -4,6 +4,7 @@
 #include "ColliderComponent.h"
 #include "Laser.h"
 #include "Time.h"
+#include "ScreenInfo.h"
 
 void Zako::Initialize()
 {
@@ -39,6 +40,16 @@ void Zako::Update()
 		}
 	}
 
+	// LASER
+
+		if (m_pLaser->GetRect().y > ScreenInfo::GetInstance().screenheigth + 20)
+		{
+			m_pLaser->m_Rect.x = -100;
+			std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
+			dLaser->SetActive(false);
+		}
+	
+
 	// STATE
 	std::shared_ptr<ZakoState> newState = nullptr;
 	newState = m_State->handleInput(*this);
@@ -52,10 +63,10 @@ void Zako::Update()
 
 void Zako::ShootLaser()
 {
-	std::shared_ptr<Laser> derived = std::dynamic_pointer_cast<Laser> (m_pLaser);
-	if (!derived->IsActive())
+	std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
+	if (!dLaser->IsActive())
 	{
-		derived->SetActive(true);
+		dLaser->SetActive(true);
 		m_pLaser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - m_pLaser->m_Rect.w / 2), float(m_Rect.y));
 		return;
 	}

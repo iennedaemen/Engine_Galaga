@@ -8,10 +8,9 @@ class PlayerState
 public:
 	
     virtual ~PlayerState() {}
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0)
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player)
     {
         UNREFERENCED_PARAMETER(player);
-        UNREFERENCED_PARAMETER(input);
         return nullptr;
     };
     virtual void update(Player& player)
@@ -26,6 +25,15 @@ class IdleState : public PlayerState
 public:
     IdleState() {}
 
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player) override;
+
+};
+
+class ExplodeState : public PlayerState
+{
+public:
+    ExplodeState() {}
+
+    virtual std::shared_ptr<PlayerState> handleInput(Player& player) override;
 
 };

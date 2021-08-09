@@ -30,7 +30,10 @@ public:
 	{
 		return m_PlayedAnim;
 	}
-	
+	void SetIsAnimPlayed(bool isPlayed)
+	{
+		m_PlayedAnim = isPlayed;
+	}
 
 protected:
 	virtual void Update() override;

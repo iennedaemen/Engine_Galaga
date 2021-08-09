@@ -29,5 +29,9 @@ void Laser::Update()
 			SetPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y - velocity);
 		else SetPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y + velocity);
 	}
+	else
+	{
+		SetPosition(-100, 0);
+	}
 }
 

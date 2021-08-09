@@ -1,4 +1,11 @@
-﻿  ZakoState.cpp
+﻿  Laser.cpp
+  Player.cpp
+  PlayerState.cpp
+  SpriteComponent.cpp
+  TestScene.cpp
+  Zako.cpp
+  ZakoState.cpp
+  Generating Code...
   Minigin.vcxproj -> C:\Users\Ienne\Documents\GitHub\Engine_BubbleBobble\Minigin\x64\Debug\Minigin.exe
   C:\Users\Ienne\Documents\GitHub\Engine_BubbleBobble\Minigin\3rdParty\SDL2\lib\x64\SDL2.dll
   1 File(s) copied

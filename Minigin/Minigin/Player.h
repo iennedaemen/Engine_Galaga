@@ -52,6 +52,31 @@ public:
 
 	bool m_Shot = false;
 	
+	void SetIsHit(bool isHit)
+	{
+		m_IsHit = isHit;
+	}
+	bool GetIsHit()
+	{
+		return m_IsHit;
+	}
+	void SetIsDead(bool isDead)
+	{
+		m_IsDead = isDead;
+	}
+	bool GetIsDead()
+	{
+		return m_IsDead;
+	}
+	int GetLives()
+	{
+		return m_Lives;
+	}
+	void SetLives(int nrLives)
+	{
+		m_Lives = nrLives;
+	}
+
 protected:
 	void Initialize() override;
 	void Render() override {};
@@ -59,6 +84,9 @@ protected:
 
 private:
 	int m_PlayerNr;	
+	int m_Lives = 3;
+	bool m_IsHit = false;
+	bool m_IsDead = false;
 	glm::vec2 m_Velocity = {0, 0};
 	float m_Gravity = -0.981f;
 	float speed = 40;

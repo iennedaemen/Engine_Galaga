@@ -91,6 +91,5 @@ void Player::RemoveLaser(std::shared_ptr<Laser> laser)
 	if (laser == m_pLasers[0] || laser == m_pLasers[1])
 	{
 		laser->SetActive(false);
-		laser->m_Rect.x = -100;
 	}
 }

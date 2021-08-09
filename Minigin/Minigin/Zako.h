@@ -13,6 +13,10 @@ public:
 	{};
 
 	void ShootLaser();
+	std::shared_ptr<GameObject> GetLaser()
+	{
+		return m_pLaser;
+	}
 
 	void SetIsHit(bool isHit)
 	{

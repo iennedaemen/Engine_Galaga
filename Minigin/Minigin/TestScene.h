@@ -28,6 +28,7 @@ private:
 	bool m_SpawnLeftZeko = false;
 
 	// FUNCTIONS
+	void UpdatePlayer();
 	void SpawnZako(bool SpawnLeft);
 	void UpdateZako();
 

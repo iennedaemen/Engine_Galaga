@@ -43,6 +43,8 @@ void TestScene::Update()
 {
 	UpdateZako();
 
+	UpdatePlayer();
+
 	if (m_NrActiveZeko < 16)
 	{
 		m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
@@ -72,6 +74,32 @@ void TestScene::Update()
 
 void TestScene::Render() const
 {
+	
+}
+
+void TestScene::UpdatePlayer()
+{
+	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+	if (!dPlayer->GetIsHit())
+	{
+		for (int i{}; i < m_pZakos.size(); ++i)
+		{
+			std::shared_ptr<Zako> dZakos = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+			if (dZakos->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(m_pPlayer->m_Rect))
+			{
+				dPlayer->SetIsHit(true);
+
+				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (dZakos->GetLaser());
+				dLaser->SetActive(false);
+
+			}
+		}
+	}
+
+	if (dPlayer->GetIsDead())
+	{
+		Remove(m_pPlayer);
+	}
 	
 }
 
