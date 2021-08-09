@@ -114,6 +114,21 @@
     <ClInclude Include="Controller.h">
       <Filter>Engine\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="PyramidPos.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenInfo.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Laser.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Zako.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="ZakoState.h">
+      <Filter>Engine\StateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -177,6 +192,15 @@
       <Filter>Engine\Components</Filter>
     </ClCompile>
     <ClCompile Include="PlayerState.cpp">
+      <Filter>Engine\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Laser.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="Zako.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="ZakoState.cpp">
       <Filter>Engine\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>

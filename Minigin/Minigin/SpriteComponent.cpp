@@ -3,9 +3,10 @@
 #include "Renderer.h"
 #include "Time.h"
 #include "ResourceManager.h"
+#include "ScreenInfo.h"
 
 
-SpriteComponent::SpriteComponent(float width, float height, int rows, int cols, int framesPerSec, int beginFrame)
+SpriteComponent::SpriteComponent(float width, float height, int rows, int cols, int beginFrame)
 	: m_pTexture{nullptr}
 	, m_SrcRect{}
 	, m_FrameTime{}
@@ -16,7 +17,6 @@ SpriteComponent::SpriteComponent(float width, float height, int rows, int cols, 
 	, m_SheetTop{}
 	, m_Cols{ cols }
 	, m_Rows{rows}
-	, m_FramesPerSec{framesPerSec}
 	, m_CurFrame{beginFrame}
 	, m_NrFramesToPlay{m_Rows}
 	, m_IsStatic{false}
@@ -26,7 +26,7 @@ SpriteComponent::SpriteComponent(float width, float height, int rows, int cols, 
 
 void SpriteComponent::Initialize()
 {
-	m_FrameTime = 1.0f / float(m_FramesPerSec);
+	m_FrameTime = 1.0f / ScreenInfo::GetInstance().framesPerSecond;
 
 	InitSourceRect();
 	InitDestinationRect();
@@ -43,6 +43,13 @@ void SpriteComponent::Update()
 			++m_CurFrame %= m_NrFramesToPlay;
 			m_AccumulatedSec -= m_FrameTime;
 			UpdateSourceRect();
+			if (m_PlayOnce)
+			{
+				if (m_CurFrame == m_NrFramesToPlay - 1)
+				{
+					m_PlayedAnim = true;
+				}
+			}
 		}
 	}
 
@@ -82,13 +89,18 @@ void SpriteComponent::SetSpriteSheetTopLeft(float left, float top)
 	UpdateSourceRect();
 }
 
+glm::vec2 SpriteComponent::GetSpriteSheetTopLeft()
+{
+	return { m_SheetLeft, m_SheetTop };
+}
+
 void SpriteComponent::SetTexture(const std::string& filename)
 {
 	m_pTexture.reset();
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 }
 
-void SpriteComponent::SetTexture(const std::string& filename, float width, float height, int rows, int cols, int fps)
+void SpriteComponent::SetTexture(const std::string& filename, float width, float height, int rows, int cols)
 {
 	m_pTexture = nullptr;
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
@@ -96,7 +108,6 @@ void SpriteComponent::SetTexture(const std::string& filename, float width, float
 	m_SheetHeight = height;
 	m_Rows = rows;
 	m_Cols = cols;
-	m_FramesPerSec = fps;
 
 	Initialize();
 }

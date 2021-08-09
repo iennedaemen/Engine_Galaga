@@ -15,6 +15,7 @@
 #include "TextComponent.h"
 #include "FpsComponent.h"
 #include "TestScene.h"
+#include "ScreenInfo.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -30,8 +31,8 @@ void Minigin::Initialize()
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480,
+		ScreenInfo::GetInstance().screenwidth,
+		ScreenInfo::GetInstance().screenheigth,
 		SDL_WINDOW_OPENGL
 	);
 	if (m_Window == nullptr) 

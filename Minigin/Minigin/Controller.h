@@ -9,6 +9,7 @@ class Controller
 public:
 	Controller(int playerNr)
 		: m_ContollerNr{ playerNr - 1 }
+		, m_ControllerState{NULL}
 	{}
 	
 	XINPUT_STATE GetState()

@@ -7,6 +7,10 @@
 #include "SpriteComponent.h"
 #include "Player.h"
 #include "ColliderComponent.h"
+#include "ScreenInfo.h"
+#include "Laser.h"
+#include "Zako.h"
+#include "Time.h"
 
 TestScene::TestScene()
 	: Scene("TestScene")
@@ -17,53 +21,162 @@ TestScene::TestScene()
 
 void TestScene::Initialize()
 {
-	//auto go = std::make_shared<GameObject>();
-	//std::shared_ptr<RenderComponent> pRenderComp = std::make_shared<RenderComponent>();
-	//go->AddComponent(pRenderComp);
-	//pRenderComp->SetTexture("background.jpg");
-	//Add(go);
 
-	auto go = std::make_shared<GameObject>();
-	auto pRenderComp = std::make_shared<RenderComponent>();
-	go->AddComponent(pRenderComp);
-	pRenderComp->SetTexture("bar.png");
-	Add(go);
-	go->SetRect({ 0, 300, 291, 65 });
-	go->SetPosition(0, 300);
-
-	//go = std::make_shared<GameObject>();
-	//std::shared_ptr<TextComponent> pTextComp = std::make_shared<TextComponent>("Lingua.otf", 36);
-	//go->AddComponent(pTextComp);
-	//pTextComp->SetText("Programming 4 Assignment");
-	//Add(go);
-	//go->SetPosition(80, 20);
-
-	//std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(128.0f, 256.0f, 8 ,16, 50);
-	//go->AddComponent(pSpriteComp);
-	//pSpriteComp->SetTexture("Walk2.png");
-	//Add(go);
-	//go->SetPosition(10, 50);
-	//
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
+	m_pPlayer->SetPosition(0, float(ScreenInfo::GetInstance().screenheigth - 75));
+
+	//m_pPlayer2 = std::make_shared<Player>(2);
+	//Add(m_pPlayer2);
+	//m_pPlayer2->SetPosition(0, float(ScreenInfo::GetInstance().screenheigth - 175));
+
+	for (int i{}; i < 2; ++i)
+	{
+		for (int j{}; j < 8; ++j)
+		{
+			m_ZakoPositions.push_back(std::pair<glm::vec2, bool>({ 40.0f * (j + 1), 30 * i + 100}, false));
+			//std::shared_ptr<GameObject> zako = std::make_shared<Zako>();
+			//Add(zako);
+			//zako->SetPosition(40.0f * (j + 1), 30.0f * i + 100);
+			//m_pZakos.push_back(zako);
+		}
+	}
 
 
-	m_pPlayer2 = std::make_shared<Player>(2);
-	Add(m_pPlayer2);
+	/*std::shared_ptr<GameObject> zako = std::make_shared<Zako>();
+	Add(zako);
+	zako->SetPosition(0, 20);
+	m_pZakos.push_back(zako);*/
 
-	//go = std::make_shared<GameObject>();
-	//std::shared_ptr<FpsComponent> pFpsComp = std::make_shared<FpsComponent>(FpsComponent("Lingua.otf", 20, { 255, 255, 0, 255 }));
-	//go->AddComponent(pFpsComp);
-	//Add(go);
-	//go->SetPosition(10, 10);
+	//m_pLaser = std::make_shared<Laser>();
+	//Add(m_pLaser);
+	//m_pLaser->SetPosition(20, float(ScreenInfo::GetInstance().screenheigth - 110));
+
 }
 
 void TestScene::Update()
 {
+	UpdateZako();
+
+	if (m_NrActiveZeko < 16)
+	{
+		m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
+
+		if (m_SpawnTimer >= m_SpawnTime)
+		{
+			SpawnZako(m_SpawnLeftZeko);
+
+			m_SpawnAmount--;
+			m_SpawnTimer = 0;
+			if (m_SpawnAmount > 0)
+				m_SpawnTime = 0.05f;
+			else
+			{
+				m_SpawnTime = float(std::rand() % 5 + 5);
+				m_SpawnAmount = std::rand() % 5 + 1;
+				int r = std::rand() % 2;
+				if (r % 2 == 0)
+					m_SpawnLeftZeko = true;
+				else m_SpawnLeftZeko = false;
+			}
+		}
+	}
+	else m_SpawnTimer = 0.0f;
 
 }
 
 void TestScene::Render() const
 {
 	
+}
+
+void TestScene::SpawnZako(bool SpawnLeft)
+{
+
+	if (m_NrActiveZeko + 1 > 16)
+		return;
+
+	if (m_NrActiveZeko < 16)
+	{
+		m_NrActiveZeko++;
+
+		int r{};
+
+
+			do r = std::rand() % 16;
+			while (m_ZakoPositions[r].second);
+
+			m_ZakoPositions[r].second = true;
+			std::shared_ptr<GameObject> zako = std::make_shared<Zako>(m_ZakoPositions[r].first);
+			Add(zako);
+			m_pZakos.push_back(zako);
+			std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako>(zako);
+
+			if (SpawnLeft)
+			{
+				zako->SetPosition(-20, 400);
+				dZako->SetSpawnedLeft(true);
+			}
+			else
+			{
+				zako->SetPosition(float(ScreenInfo::GetInstance().screenwidth-20), 400.0f);
+				dZako->SetSpawnedLeft(false);
+			}
+		
+	}
+}
+
+void TestScene::UpdateZako()
+{
+	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+	std::shared_ptr<GameObject> pLasers[2];
+	pLasers[0] = dPlayer->GetLaser(0);
+	pLasers[1] = dPlayer->GetLaser(1);
+
+	// COLLISION
+	for (int i{}; i < 2; ++i)
+	{
+		for (int j{}; j < m_pZakos.size(); ++j)
+		{
+			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(m_pZakos[j]->m_Rect))
+			{
+				std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[j]);
+				if (!dZako->GetIsHit())
+				{
+					dZako->SetIsHit(true);
+					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+				}
+			}
+		}
+	}
+
+	// DELETE
+	std::vector<int> idxRemove;
+	for (int i{}; i < m_pZakos.size(); ++i)
+	{
+		std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+		if (dZako->GetIsDead())
+		{
+			auto it = std::find_if(m_ZakoPositions.begin(), m_ZakoPositions.end(),
+				[dZako](const std::pair<glm::vec2, bool>& element) { return element.first == dZako->GetIdlePos(); });
+			if (it != m_ZakoPositions.end())
+			{
+				it->second = false;
+			}
+			
+			Remove(dZako);
+			idxRemove.push_back(i);
+			--m_NrActiveZeko;
+		}
+	}
+
+	if (!idxRemove.empty())
+	{
+		for (int index : idxRemove)
+		{
+			std::swap(m_pZakos[index], m_pZakos.back());
+			m_pZakos.pop_back();
+		}
+	}
+	idxRemove.clear();
 }

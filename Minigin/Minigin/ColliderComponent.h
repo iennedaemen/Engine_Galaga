@@ -13,10 +13,10 @@ public:
 	void Collide(SDL_Rect rect);
 	bool IsGround(SDL_Rect rect);
 	
-	void SetSpeed(float& speed)
-	{
-		m_Velocity = speed;
-	}
+	//void SetSpeed(float& speed)
+	//{
+	//	m_Velocity = speed;
+	//}
 
 	bool IsOnGround()
 	{
@@ -35,7 +35,6 @@ protected:
 
 private:
 	SDL_Rect* m_Rect;
-	float m_Velocity;
 	bool m_IsOnGround = false;
 	bool m_IsTrigger = false;
 	bool m_HitWall = false;

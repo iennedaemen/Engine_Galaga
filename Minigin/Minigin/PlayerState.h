@@ -6,8 +6,6 @@ class Player;
 class PlayerState
 {
 public:
-   // static WalkingState walking;
-   // static ShootingState shooting;
 	
     virtual ~PlayerState() {}
     virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0)
@@ -27,24 +25,6 @@ class IdleState : public PlayerState
 {
 public:
     IdleState() {}
-
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
-
-};
-
-class WalkingState : public PlayerState
-{
-public:
-    WalkingState() {}
-
-    virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
-
-};
-
-class ShootingState : public PlayerState
-{
-public:
-    ShootingState() {}
 
     virtual std::shared_ptr<PlayerState> handleInput(Player& player, Uint8 input = 0) override;
 

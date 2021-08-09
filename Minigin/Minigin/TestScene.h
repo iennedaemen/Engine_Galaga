@@ -1,5 +1,9 @@
 #pragma once
 #include "Scene.h"
+#pragma warning(push)
+#pragma warning (disable:4201)
+#include <glm/vec2.hpp>
+#pragma warning(pop)
 
 class TestScene : public Scene
 {
@@ -12,5 +16,20 @@ public:
 private:
 	std::shared_ptr<GameObject> m_pPlayer = nullptr;
 	std::shared_ptr<GameObject> m_pPlayer2 = nullptr;
+
+	std::vector<std::shared_ptr<GameObject>> m_pZakos;
+	std::vector<std::pair<glm::vec2, bool>> m_ZakoPositions;
+
+	// ZEKO
+	int m_NrActiveZeko = 0;
+	float m_SpawnTimer = 0;
+	float m_SpawnTime = 5;
+	int m_SpawnAmount = 4;
+	bool m_SpawnLeftZeko = false;
+
+	// FUNCTIONS
+	void SpawnZako(bool SpawnLeft);
+	void UpdateZako();
+
 };
 

@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "InputManager.h"
 #include <SDL.h>
-
+#include "Player.h"
 
 bool InputManager::ProcessInput()
 {
@@ -35,13 +35,16 @@ bool InputManager::IsPressed(ControllerButton button, int playerNr) const
 	return false;
 }
 
-std::shared_ptr<Command> InputManager::HandleInput(int playerNr)
+std::shared_ptr<Command> InputManager::HandleInput(int playerNr, Player& player)
 {
 	if (IsPressed(ControllerButton::ButtonLeft, playerNr)) return m_pButtonLeft;
 	if (IsPressed(ControllerButton::ButtonRight, playerNr)) return m_pButtonRight;
-	if (IsPressed(ControllerButton::ButtonUp, playerNr)) return m_pButtonUp;
-	if (IsPressed(ControllerButton::ButtonDown, playerNr)) return m_pButtonDown;
+	//if (IsPressed(ControllerButton::ButtonUp, playerNr)) return m_pButtonUp;
+	//if (IsPressed(ControllerButton::ButtonDown, playerNr)) return m_pButtonDown;
 	if (IsPressed(ControllerButton::ButtonA, playerNr)) return m_pButtonA;
+
+	if (!IsPressed(ControllerButton::ButtonA, playerNr))
+		player.m_Shot = false;
 
 	return nullptr;
 }

@@ -201,15 +201,18 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="FpsComponent.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Laser.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PyramidPos.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScreenInfo.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="structs.h" />
@@ -218,6 +221,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Zako.h" />
+    <ClInclude Include="ZakoState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp" />
@@ -226,6 +231,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="FpsComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Minigin.cpp" />
     <ClCompile Include="MiniginPCH.cpp">
@@ -247,6 +253,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Zako.cpp" />
+    <ClCompile Include="ZakoState.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

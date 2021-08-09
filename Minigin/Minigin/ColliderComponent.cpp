@@ -3,7 +3,6 @@
 
 ColliderComponent::ColliderComponent()
 	: m_Rect()
-	, m_Velocity()
 {}
 
 
@@ -51,14 +50,12 @@ void ColliderComponent::Collide(SDL_Rect rect)
 	SDL_Rect r3{ r.x -4, r.y +4, r.w + 8, 2 };
 	if (CheckCollision(rect, r) && CheckCollision(rect, r3))
 	{
-		m_Velocity = 0;
-
 		if (r.x < rect.x)
 			GetGameObject()->SetPosition(float(rect.x - r.w), GetGameObject()->GetTransform().GetPosition().y);
 		if (r.x > rect.x)
 			GetGameObject()->SetPosition(float(rect.x + rect.w), GetGameObject()->GetTransform().GetPosition().y);
 	}
-	else if(!CheckCollision(rect, r3)) m_Velocity = 40;
+	//else if(!CheckCollision(rect, r3)) m_Velocity = 40;
 }
 void ColliderComponent::Update()
 {
