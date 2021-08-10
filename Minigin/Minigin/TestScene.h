@@ -17,23 +17,32 @@ private:
 	std::shared_ptr<GameObject> m_pPlayer = nullptr;
 	std::shared_ptr<GameObject> m_pPlayer2 = nullptr;
 
-	std::vector<std::shared_ptr<GameObject>> m_pZakos;
-	std::vector<std::shared_ptr<GameObject>> m_pGoeis;
-	std::vector<std::pair<glm::vec2, bool>> m_ZakoPositions;
-	std::vector<std::pair<glm::vec2, bool>> m_GoeiPositions;
 
-	int m_SpawnNr = 0;
-	// ZEKO
-	int m_NrActiveZeko = 0;
+
+	// ENEMIES
 	float m_SpawnTimer = 0;
 	float m_SpawnTime = 5;
+	int m_SpawnNr = 0;
+
+	// ZEKO
+	std::vector<std::pair<glm::vec2, bool>> m_ZakoPositions;
+	std::vector<std::shared_ptr<GameObject>> m_pZakos;
+	int m_NrActiveZeko = 0;
 	int m_SpawnAmountZeko = 4;
 	bool m_SpawnLeftZeko = false;
 
 	// GOEI
+	std::vector<std::pair<glm::vec2, bool>> m_GoeiPositions;
+	std::vector<std::shared_ptr<GameObject>> m_pGoeis;
 	int m_NrActiveGoei = 0;
 	int m_SpawnAmountGoei = 0;
 	bool m_SpawnLeftGoei = false;
+
+	// BOSS
+	std::vector<std::pair<glm::vec2, bool>> m_BossPositions;
+	std::vector<std::shared_ptr<GameObject>> m_pBosses;
+	int m_NrActiveBoss = 0;
+	int m_SpawnAmountBoss = 0;
 
 	// FUNCTIONS
 	void UpdatePlayer();
@@ -41,7 +50,8 @@ private:
 	void UpdateZako();
 	void SpawnGoei(bool SpawnLeft);
 	void UpdateGoei();
-
+	void SpawnBoss();
+	void UpdateBoss();
 
 };
 

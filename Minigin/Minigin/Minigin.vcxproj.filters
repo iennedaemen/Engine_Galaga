@@ -135,6 +135,15 @@
     <ClInclude Include="GoeiState.h">
       <Filter>Engine\StateMachine</Filter>
     </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="BossState.h">
+      <Filter>Engine\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Beam.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -214,6 +223,15 @@
     </ClCompile>
     <ClCompile Include="GoeiState.cpp">
       <Filter>Engine\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="BossState.cpp">
+      <Filter>Engine\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Beam.cpp">
+      <Filter>Game\Prefab</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

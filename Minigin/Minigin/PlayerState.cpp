@@ -41,6 +41,7 @@ std::shared_ptr<PlayerState> ExplodeState::handleInput(Player& player)
             player.GetComponent<SpriteComponent>()->SetSpriteSheetTopLeft(0, 0);
             player.GetComponent<SpriteComponent>()->IsStatic(true);
             player.GetComponent<SpriteComponent>()->SetCurrentFrame(0);
+            player.SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2), float(ScreenInfo::GetInstance().screenheigth - 75));
             std::shared_ptr<IdleState> ptr1 = std::make_shared<IdleState>();
             std::shared_ptr<PlayerState> ptr2 = std::static_pointer_cast<PlayerState>(ptr1);
             return ptr2;

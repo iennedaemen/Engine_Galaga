@@ -34,7 +34,7 @@ class SpawnStateGoei : public GoeiState
 public:
     SpawnStateGoei() {}
 
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& zagoeiko) override;
+    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei) override;
     virtual void update(Goei& goei) override;
 
 private:

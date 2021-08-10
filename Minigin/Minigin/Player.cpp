@@ -31,21 +31,14 @@ void Player::Initialize()
 void Player::Update()
 {
 	// COMMAND
-	std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
-	if (command)
+	if (!m_Abducted)
 	{
-		command->execute(*this);
+		std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
+		if (command)
+		{
+			command->execute(*this);
+		}
 	}
-	////std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr);
-	//if (!m_IsMoving)
-	//{
-	//	m_pLastCommand = InputManager::GetInstance().HandleInput(m_PlayerNr);
-	//}
-	//if(m_pLastCommand != nullptr)
-	//{
-	//	m_IsMoving = true;
-	//	m_pLastCommand->execute(*this);
-	//}
 
 	// STATE
 	std::shared_ptr<PlayerState> newState = nullptr;
@@ -68,6 +61,37 @@ void Player::Update()
 			derived->SetActive(false);
 		}
 	}
+
+	// ABDUCTION
+	if (m_Abducted)
+	{
+		float elapsedSec = Time::GetInstance().m_ElapsedSec;
+		float velocity{};
+		if(m_ReachedAbductionPos)
+			velocity = 150 * elapsedSec;
+		else velocity = 50 * elapsedSec;
+
+
+		if (GetTransform().GetPosition().x > m_pKidnapper->GetRect().x + 2.0f)
+			SetPosition(GetTransform().GetPosition().x - velocity, GetTransform().GetPosition().y);
+		else if (GetTransform().GetPosition().x < m_pKidnapper->GetRect().x + 1.0f)
+			SetPosition(GetTransform().GetPosition().x + velocity, GetTransform().GetPosition().y);
+		else SetPosition(m_pKidnapper->GetRect().x + 2.0f, GetTransform().GetPosition().y);
+
+		if (GetTransform().GetPosition().y > m_pKidnapper->GetRect().y + 40)
+			SetPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y - velocity);
+		else m_ReachedAbductionPos = true;
+
+		if (m_pKidnapper->IsIdle())
+		{
+			m_IsHit = true;
+			m_ReachedAbductionPos = false;
+			m_Abducted = false;
+
+		}
+
+		
+	}
 }
 
 void Player::ShootLaser()
@@ -86,9 +110,11 @@ void Player::ShootLaser()
 
 void Player::RemoveLaser(std::shared_ptr<Laser> laser)
 {
-	
-	if (laser == m_pLasers[0] || laser == m_pLasers[1])
+	if (laser->IsActive())
 	{
-		laser->SetActive(false);
+		if (laser == m_pLasers[0] || laser == m_pLasers[1])
+		{
+			laser->SetActive(false);
+		}
 	}
 }

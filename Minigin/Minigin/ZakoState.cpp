@@ -199,7 +199,6 @@ void ShootingRunStateZako::update(Zako& zako)
         }
     }
 
-    float lastPosX{};
     // POSITION 3
     if (m_ReachedPosX2 && m_ReachedPosY2)
     {
@@ -212,14 +211,18 @@ void ShootingRunStateZako::update(Zako& zako)
                 else
                 {
                     m_ReachedPos3 = true;
-                    lastPosX = zako.GetTransform().GetPosition().x;
+                    m_LastPosX = zako.GetTransform().GetPosition().x;
                 }
             }
             else
             {
                 if (zako.m_Rect.x > newPosCoord3.x)
                     zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);
-                else m_ReachedPos3 = true;
+                else
+                {
+                    m_ReachedPos3 = true;
+                    m_LastPosX = zako.GetTransform().GetPosition().x;
+                }
             }
         }
     }
@@ -227,7 +230,7 @@ void ShootingRunStateZako::update(Zako& zako)
     // POSITION IDLE
     if (m_ReachedPos3)
     {
-        if (zako.GetIdlePos().x < lastPosX)
+        if (zako.GetIdlePos().x < m_LastPosX)
         {
             if (zako.m_Rect.x > zako.GetIdlePos().x)
                 zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);
@@ -292,7 +295,6 @@ void CrashRunStateZako::update(Zako& zako)
     velocity = speed * elapsedSec;
 
     // POSITION 1
-    float lastPosX{};
     if (!m_ReachedPosX1 || !m_ReachedPosY1)
     {
 
@@ -302,7 +304,7 @@ void CrashRunStateZako::update(Zako& zako)
             zako.SetPosition(zako.GetTransform().GetPosition().x + velocity, zako.GetTransform().GetPosition().y);
         else
         {
-            lastPosX = zako.GetTransform().GetPosition().x;
+            m_LastPosX = zako.GetTransform().GetPosition().x;
             m_ReachedPosX1 = true;
         }
 
@@ -325,7 +327,7 @@ void CrashRunStateZako::update(Zako& zako)
     // POSITION IDLE
     if (m_ReachedPos2)
     {
-        if (zako.GetIdlePos().x < lastPosX)
+        if (zako.GetIdlePos().x < m_LastPosX)
         {
             if (zako.m_Rect.x > zako.GetIdlePos().x)
                 zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);

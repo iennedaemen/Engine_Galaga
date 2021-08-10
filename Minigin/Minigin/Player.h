@@ -7,14 +7,16 @@
 #include <SDL.h>
 #include "PlayerState.h"
 #pragma warning(pop)
+#include "Boss.h"
+
 class Command;
 class Laser;
 
 class Player : public GameObject
 {
 public:
-	Player(int playerNr) : m_PlayerNr(playerNr){}
-	
+	Player(int playerNr) : m_PlayerNr(playerNr) {}
+
 	void SetState(PlayerState state)
 	{
 		m_State = std::make_shared<PlayerState>(state);
@@ -51,7 +53,7 @@ public:
 	}
 
 	bool m_Shot = false;
-	
+
 	void SetIsHit(bool isHit)
 	{
 		m_IsHit = isHit;
@@ -77,6 +79,16 @@ public:
 		m_Lives = nrLives;
 	}
 
+	bool IsAbducted()
+	{
+		return m_Abducted;
+	}
+	void SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper)
+	{
+		m_Abducted = abducted;
+		m_pKidnapper = std::dynamic_pointer_cast<Boss>(kidnapper);
+	}
+
 protected:
 	void Initialize() override;
 	void Render() override {};
@@ -92,11 +104,16 @@ private:
 	float speed = 40;
 	bool m_IsMoving = false;
 	std::shared_ptr<Command> m_pLastCommand = nullptr;
+	bool m_Abducted = false;
+	std::shared_ptr<Boss> m_pKidnapper = nullptr;
 
 	std::shared_ptr<PlayerState> m_State = std::make_shared<IdleState>();
 	//std::vector<std::vector<glm::vec2>> m_PossiblePos;
 
 	// LASERS
 	std::shared_ptr<GameObject> m_pLasers[2];
+
+	// ABDUCTION
+	bool m_ReachedAbductionPos = false;
 };
 

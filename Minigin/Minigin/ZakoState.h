@@ -59,6 +59,7 @@ private:
     bool m_ReachedPos3 = false;
     bool m_ReachedPosXIdle = false;
     bool m_ReachedPosYIdle = false;
+    float m_LastPosX = 0;
 };
 
 class CrashRunStateZako : public ZakoState
@@ -75,6 +76,7 @@ private:
     bool m_ReachedPos2 = false;
     bool m_ReachedPosXIdle = false;
     bool m_ReachedPosYIdle = false;
+    float m_LastPosX = 0;
 };
 
 class ExplodeStateZako : public ZakoState

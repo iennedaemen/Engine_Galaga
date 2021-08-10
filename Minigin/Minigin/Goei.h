@@ -95,4 +95,3 @@ private:
 	bool m_DoShootRun = false;
 	bool m_IsIdle = false;
 };
-

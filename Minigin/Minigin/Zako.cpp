@@ -23,7 +23,7 @@ void Zako::Initialize()
 
 void Zako::Update()
 {
-	// SHOOT RUN
+	// ACTIONS
 	if (m_IsIdle)
 	{
 		m_ActionTimer += Time::GetInstance().m_ElapsedSec;
