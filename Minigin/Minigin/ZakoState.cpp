@@ -199,6 +199,7 @@ void ShootingRunStateZako::update(Zako& zako)
         }
     }
 
+    float lastPosX{};
     // POSITION 3
     if (m_ReachedPosX2 && m_ReachedPosY2)
     {
@@ -208,7 +209,11 @@ void ShootingRunStateZako::update(Zako& zako)
             {
                 if (zako.m_Rect.x < newPosCoord3.x)
                     zako.SetPosition(zako.GetTransform().GetPosition().x + velocity, zako.GetTransform().GetPosition().y);
-                else m_ReachedPos3 = true;
+                else
+                {
+                    m_ReachedPos3 = true;
+                    lastPosX = zako.GetTransform().GetPosition().x;
+                }
             }
             else
             {
@@ -222,7 +227,7 @@ void ShootingRunStateZako::update(Zako& zako)
     // POSITION IDLE
     if (m_ReachedPos3)
     {
-        if (zako.GetIdlePos().x < ScreenInfo::GetInstance().screenwidth / 2)
+        if (zako.GetIdlePos().x < lastPosX)
         {
             if (zako.m_Rect.x > zako.GetIdlePos().x)
                 zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);
@@ -287,6 +292,7 @@ void CrashRunStateZako::update(Zako& zako)
     velocity = speed * elapsedSec;
 
     // POSITION 1
+    float lastPosX{};
     if (!m_ReachedPosX1 || !m_ReachedPosY1)
     {
 
@@ -294,7 +300,11 @@ void CrashRunStateZako::update(Zako& zako)
             zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);
         else if(zako.m_Rect.x < newPosCoord2.x - 10)
             zako.SetPosition(zako.GetTransform().GetPosition().x + velocity, zako.GetTransform().GetPosition().y);
-        else m_ReachedPosX1 = true;
+        else
+        {
+            lastPosX = zako.GetTransform().GetPosition().x;
+            m_ReachedPosX1 = true;
+        }
 
         if (zako.m_Rect.y < newPosCoord2.y)
             zako.SetPosition(zako.GetTransform().GetPosition().x, zako.GetTransform().GetPosition().y + velocity);
@@ -315,7 +325,7 @@ void CrashRunStateZako::update(Zako& zako)
     // POSITION IDLE
     if (m_ReachedPos2)
     {
-        if (zako.GetIdlePos().x < ScreenInfo::GetInstance().screenwidth / 2)
+        if (zako.GetIdlePos().x < lastPosX)
         {
             if (zako.m_Rect.x > zako.GetIdlePos().x)
                 zako.SetPosition(zako.GetTransform().GetPosition().x - velocity, zako.GetTransform().GetPosition().y);

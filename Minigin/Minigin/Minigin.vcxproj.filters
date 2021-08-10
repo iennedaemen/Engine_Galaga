@@ -129,6 +129,12 @@
     <ClInclude Include="ZakoState.h">
       <Filter>Engine\StateMachine</Filter>
     </ClInclude>
+    <ClInclude Include="Goei.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="GoeiState.h">
+      <Filter>Engine\StateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -201,6 +207,12 @@
       <Filter>Game\Prefab</Filter>
     </ClCompile>
     <ClCompile Include="ZakoState.cpp">
+      <Filter>Engine\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Goei.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="GoeiState.cpp">
       <Filter>Engine\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>

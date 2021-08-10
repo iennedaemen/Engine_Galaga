@@ -13,9 +13,8 @@ void Player::Initialize()
 	pSpriteComp->SetTexture("Player1.png");
 	pSpriteComp->IsStatic(true);
 	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
-	//std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
-	//pCollComp->SetSpeed(speed);
-	//AddComponent(pCollComp);	
+	std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
+	AddComponent(pCollComp);	
 	m_Rect = { m_Rect.x, m_Rect.y, 25, 27 };
 
 	m_pLasers[0] = std::shared_ptr<GameObject>(std::make_shared<Laser>(true));
