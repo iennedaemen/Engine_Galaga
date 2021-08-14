@@ -14,7 +14,7 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FpsComponent.h"
-#include "TestScene.h"
+#include "GameScene.h"
 #include "ScreenInfo.h"
 
 using namespace std;
@@ -48,8 +48,8 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
-	SceneManager::GetInstance().AddScene(std::make_shared<TestScene>());
-	SceneManager::GetInstance().SetActiveScene("TestScene");
+	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(1));
+	SceneManager::GetInstance().SetActiveScene("GameScene");
 }
 
 void Minigin::Cleanup()

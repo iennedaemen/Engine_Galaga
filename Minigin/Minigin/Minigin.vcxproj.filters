@@ -144,6 +144,9 @@
     <ClInclude Include="Beam.h">
       <Filter>Game\Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="Beam.cpp">
       <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Game\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

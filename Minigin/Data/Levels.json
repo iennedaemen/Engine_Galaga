@@ -1,0 +1,14 @@
+{
+	"1":
+		{
+		"AmountZako" : 8,
+		"ZakoTimes" : [5.0, 5.1, 5.2, 5.3, 10.0, 10.1, 15.0, 15.1],
+		"ZakoPositions" : [0, 1, 8, 9, 5, 6, 7, 15],
+		"AmountGoei" : 6,
+		"GoeiTimes" : [7.0, 7.1, 7.2, 11.0, 11.1, 14.0],
+		"GoeiPositions" : [3, 4, 5, 13, 14, 0],
+		"AmountBoss" : 2,
+		"BossTimes" : [8.0, 13.0],
+		"BossPositions" : [6, 0]
+		}
+}

@@ -48,7 +48,6 @@ void TestScene::Initialize()
 		{
 			m_BossPositions.push_back(std::pair<glm::vec2, bool>({ 40.0f * (j + 1), 25 + 20 }, false));
 		}
-	
 
 
 }
