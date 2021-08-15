@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "ZakoState.h"
+#include "GameInfo.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
@@ -46,13 +47,19 @@ public:
 	{
 		m_SpawnedLeft = spawnedLeft;
 	}
-	void SetPlayerPos(glm::vec2 playerPos)
+	void SetPlayerPos(glm::vec2 playerPos, glm::vec2 player2Pos = {0, 0})
 	{
 		m_PlayerPos = playerPos;
+		m_Player2Pos = player2Pos;
 	}
 	glm::vec2 GetPlayerPos()
 	{
 		return m_PlayerPos;
+	}
+
+	glm::vec2 GetPlayer2Pos()
+	{
+		return m_Player2Pos;
 	}
 
 	// ACTIONS
@@ -96,6 +103,7 @@ private:
 	bool m_SpawnedLeft = true;
 	glm::vec2 m_IdlePos;
 	glm::vec2 m_PlayerPos;
+	glm::vec2 m_Player2Pos;
 	std::shared_ptr<GameObject> m_pLaser = nullptr;
 
 	std::shared_ptr<ZakoState> m_State = std::make_shared<SpawnStateZako>();

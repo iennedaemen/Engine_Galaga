@@ -14,14 +14,17 @@ public:
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void Render() const override;
-
+	virtual void Reset() override;
 	//SET SCENE
 
 private:
+	int k = 0;
+
 	std::shared_ptr<GameObject> m_pPlayer = nullptr;
 	std::shared_ptr<GameObject> m_pPlayer2 = nullptr;
 
 	float m_SpawnTimer = 0;
+	int m_EnemiesDead = 0;
 
 	// ZAKO
 	std::vector<glm::vec2> m_ZakoPositions;
@@ -44,7 +47,7 @@ private:
 	int m_SpawnAmountBoss = 0;
 
 	// FUNCTIONS
-	void UpdatePlayer();
+	void UpdatePlayer(std::shared_ptr<GameObject> pPlayer);
 	void SpawnZako();
 	void UpdateZako();
 	void SpawnGoei();

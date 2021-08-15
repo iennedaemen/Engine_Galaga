@@ -5,6 +5,7 @@
 #include "ScreenInfo.h"
 #include "Time.h"
 #include "Beam.h"
+#include "GameInfo.h"
 
 std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 {
@@ -226,6 +227,15 @@ void ShootingRunStateBoss::update(Boss& boss)
         && boss.GetPlayerPos().x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
     {
         boss.ShootLaser();
+    }
+
+    if (GameInfo::GetInstance().player2Active)
+    {
+        if (boss.GetPlayer2Pos().x > boss.m_Rect.x + 5
+            && boss.GetPlayer2Pos().x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
+        {
+            boss.ShootLaser();
+        }
     }
 }
 

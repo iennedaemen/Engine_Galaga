@@ -4,6 +4,7 @@
 #include "Goei.h"
 #include "ScreenInfo.h"
 #include "Time.h"
+#include "GameInfo.h"
 
 std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
 {
@@ -236,6 +237,15 @@ void ShootingRunStateGoei::update(Goei& goei)
         && goei.GetPlayerPos().x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
     {
         goei.ShootLaser();
+    }
+
+    if (GameInfo::GetInstance().player2Active)
+    {
+        if (goei.GetPlayer2Pos().x > goei.m_Rect.x + 5
+            && goei.GetPlayer2Pos().x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
+        {
+            goei.ShootLaser();
+        }
     }
 }
 

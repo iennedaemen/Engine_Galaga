@@ -10,23 +10,7 @@ class ColliderComponent final : public BaseComponent
 public:
 	ColliderComponent();
 	bool IsColliding(SDL_Rect rect);
-	void Collide(SDL_Rect rect);
-	bool IsGround(SDL_Rect rect);
-	
-	//void SetSpeed(float& speed)
-	//{
-	//	m_Velocity = speed;
-	//}
 
-	bool IsOnGround()
-	{
-		return m_IsOnGround;
-	}
-
-	void setTrigger(bool isTrigger)
-	{
-		m_IsTrigger = isTrigger;
-	}
 
 protected:
 	virtual void Update() override;
@@ -35,10 +19,5 @@ protected:
 
 private:
 	SDL_Rect* m_Rect;
-	bool m_IsOnGround = false;
-	bool m_IsTrigger = false;
-	bool m_HitWall = false;
-
-	bool CheckCollision(SDL_Rect A, SDL_Rect B);
 };
 

@@ -16,6 +16,9 @@
 		void RootRender() const;
 
 		std::string GetName() const;
+		bool GetInitialized();
+
+		virtual void Reset() {};
 
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;

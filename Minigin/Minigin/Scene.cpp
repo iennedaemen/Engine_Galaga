@@ -51,28 +51,7 @@ void Scene::RootUpdate()
 	Update();
 	
 	for(auto& object : m_Objects)
-	{
-		if (object->GetComponent<ColliderComponent>() != nullptr)
-		{
-			for (auto& object2 : m_Objects)
-			{
-				if (object2 != object)
-				{					
-					if (object->GetComponent<ColliderComponent>()->IsGround(object2->GetRect()))
-						break;
-				}
-			}
-
-			for (auto& object2 : m_Objects)
-			{
-				if (object2 != object)
-				{
-					object->GetComponent<ColliderComponent>()->Collide(object2->GetRect());
-				}
-			}
-		}
-
-		
+	{		
 		object->RootUpdate();
 	}
 }
@@ -90,4 +69,9 @@ void Scene::RootRender() const
 std::string Scene::GetName() const
 {
 	return m_Name;
+}
+
+bool Scene::GetInitialized()
+{
+	return m_IsInitialized;
 }

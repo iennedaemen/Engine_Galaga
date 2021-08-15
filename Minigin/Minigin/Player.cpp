@@ -10,7 +10,7 @@ void Player::Initialize()
 {	
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(60.0f, 64.0f, 1, 1);
 	AddComponent(pSpriteComp);
-	pSpriteComp->SetTexture("Player1.png");
+	pSpriteComp->SetTexture("Player" + std::to_string(m_PlayerNr) + ".png");
 	pSpriteComp->IsStatic(true);
 	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
 	std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
@@ -31,12 +31,15 @@ void Player::Initialize()
 void Player::Update()
 {
 	// COMMAND
-	if (!m_Abducted)
+	if (!m_Exploding)
 	{
-		std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
-		if (command)
+		if (!m_Abducted)
 		{
-			command->execute(*this);
+			std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
+			if (command)
+			{
+				command->execute(*this);
+			}
 		}
 	}
 

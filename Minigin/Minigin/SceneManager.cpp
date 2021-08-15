@@ -43,6 +43,8 @@ void SceneManager::SetActiveScene(const std::string name)
 		if (scene->GetName() == name)
 		{
 			m_ActiveScene = scene;
+			if (m_ActiveScene->GetInitialized())
+				m_ActiveScene->Reset();
 		}
 	}
 	if (m_ActiveScene == nullptr)

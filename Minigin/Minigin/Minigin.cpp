@@ -16,6 +16,7 @@
 #include "FpsComponent.h"
 #include "GameScene.h"
 #include "ScreenInfo.h"
+#include "GameInfo.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -48,8 +49,10 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
+	GameInfo::GetInstance().player2Active = true;
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(1));
-	SceneManager::GetInstance().SetActiveScene("GameScene");
+	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(2));
+	SceneManager::GetInstance().SetActiveScene("GameScene1");
 }
 
 void Minigin::Cleanup()

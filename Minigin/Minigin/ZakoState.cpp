@@ -4,6 +4,7 @@
 #include "SpriteComponent.h"
 #include "Time.h"
 #include "ScreenInfo.h"
+#include "GameInfo.h"
 
 std::shared_ptr<ZakoState> IdleStateZako::handleInput(Zako& zako)
 {
@@ -253,6 +254,15 @@ void ShootingRunStateZako::update(Zako& zako)
     {
         zako.ShootLaser();
     }
+
+    if (GameInfo::GetInstance().player2Active)
+    {
+        if (zako.GetPlayer2Pos().x > zako.m_Rect.x + 5
+            && zako.GetPlayer2Pos().x - 5 < zako.m_Rect.x + zako.m_Rect.w / 2)
+        {
+            zako.ShootLaser();
+        }
+    }
 }
 
 std::shared_ptr<ZakoState> CrashRunStateZako::handleInput(Zako& zako)
@@ -286,7 +296,16 @@ std::shared_ptr<ZakoState> CrashRunStateZako::handleInput(Zako& zako)
 
 void CrashRunStateZako::update(Zako& zako)
 {
-    glm::vec2 newPosCoord1 = { zako.GetPlayerPos().x , ScreenInfo::GetInstance().screenheigth - 275 };
+    glm::vec2 newPosCoord1 = { 0, 0 };
+    if (GameInfo::GetInstance().player2Active)
+    {
+        int r = std::rand() % 2;
+        if( r == 0)
+            newPosCoord1 = { zako.GetPlayerPos().x , ScreenInfo::GetInstance().screenheigth - 275 };
+        else newPosCoord1 = { zako.GetPlayer2Pos().x , ScreenInfo::GetInstance().screenheigth - 275 };
+    }
+    else newPosCoord1 = { zako.GetPlayerPos().x , ScreenInfo::GetInstance().screenheigth - 275 };
+
     glm::vec2 newPosCoord2 = { zako.m_Rect.x , ScreenInfo::GetInstance().screenheigth - 10};
  
     float elapsedSec = Time::GetInstance().m_ElapsedSec;

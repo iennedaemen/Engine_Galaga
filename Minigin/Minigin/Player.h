@@ -89,6 +89,20 @@ public:
 		m_pKidnapper = std::dynamic_pointer_cast<Boss>(kidnapper);
 	}
 
+	bool IsExploding()
+	{
+		return m_Exploding;
+	}
+	void SetExploding(bool exploding)
+	{
+		m_Exploding = exploding;
+	}
+
+	int GetPLayerNr()
+	{
+		return m_PlayerNr;
+	}
+
 protected:
 	void Initialize() override;
 	void Render() override {};
@@ -105,6 +119,7 @@ private:
 	bool m_IsMoving = false;
 	std::shared_ptr<Command> m_pLastCommand = nullptr;
 	bool m_Abducted = false;
+	bool m_Exploding = false;
 	std::shared_ptr<Boss> m_pKidnapper = nullptr;
 
 	std::shared_ptr<PlayerState> m_State = std::make_shared<IdleState>();
