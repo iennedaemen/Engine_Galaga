@@ -204,11 +204,13 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="FpsComponent.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Goei.h" />
     <ClInclude Include="GoeiState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Laser.h" />
+    <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Player.h" />
@@ -240,12 +242,14 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FpsComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Goei.cpp" />
     <ClCompile Include="GoeiState.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Minigin.cpp" />
     <ClCompile Include="MiniginPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

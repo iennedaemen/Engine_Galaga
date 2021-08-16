@@ -26,6 +26,12 @@ private:
 	float m_SpawnTimer = 0;
 	int m_EnemiesDead = 0;
 
+	//BEGIN
+	std::shared_ptr<GameObject> m_pLevelText = nullptr;
+	bool m_IsBegin = true;
+	float m_BeginTimer = 0.0f;
+	float m_BeginTime = 4.0f;
+
 	// ZAKO
 	std::vector<glm::vec2> m_ZakoPositions;
 	std::vector<std::shared_ptr<GameObject>> m_pZakos;

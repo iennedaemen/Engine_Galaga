@@ -150,6 +150,12 @@
     <ClInclude Include="GameInfo.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
+    <ClInclude Include="MenuScene.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -240,6 +246,12 @@
       <Filter>Game\Prefab</Filter>
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
+      <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
       <Filter>Game\Scenes</Filter>
     </ClCompile>
   </ItemGroup>

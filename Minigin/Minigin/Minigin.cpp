@@ -17,6 +17,8 @@
 #include "GameScene.h"
 #include "ScreenInfo.h"
 #include "GameInfo.h"
+#include "MenuScene.h"
+#include "GameOverScene.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -49,10 +51,12 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
-	GameInfo::GetInstance().player2Active = true;
+	//GameInfo::GetInstance().player2Active = true;
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(1));
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(2));
-	SceneManager::GetInstance().SetActiveScene("GameScene1");
+	SceneManager::GetInstance().AddScene(std::make_shared<MenuScene>());
+	SceneManager::GetInstance().AddScene(std::make_shared<GameOverScene>());
+	SceneManager::GetInstance().SetActiveScene("MenuScene");
 }
 
 void Minigin::Cleanup()

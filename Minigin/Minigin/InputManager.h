@@ -13,6 +13,11 @@ class Player;
 		bool ProcessInput();
 		bool IsPressed(ControllerButton button, int playerNr) const;
 		std::shared_ptr<Command> HandleInput(int playerNr, Player& player);
+		std::shared_ptr<Controller> GetController()
+		{
+			return m_Contoller1;
+		}
+
 	private:
 		XINPUT_STATE m_CurrentState1{};
 		XINPUT_STATE m_CurrentState2{};
@@ -20,7 +25,6 @@ class Player;
 		// Commands
 		std::shared_ptr<MoveLeftCommand> m_pButtonLeft = std::make_shared<MoveLeftCommand>();
 		std::shared_ptr<MoveRightCommand> m_pButtonRight = std::make_shared<MoveRightCommand>();
-		
 		std::shared_ptr<ShootCommand> m_pButtonA = std::make_shared<ShootCommand>();
 
 		// Controllers

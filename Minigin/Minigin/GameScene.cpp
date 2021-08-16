@@ -31,6 +31,21 @@ GameScene::GameScene(int level)
 
 void GameScene::Initialize()
 {
+	std::shared_ptr<GameObject> pBackObj = std::make_shared<GameObject>();
+	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(1000.0f, 2000.0f, 1, 1);
+	pBackObj->AddComponent(pSpriteComp);
+	pSpriteComp->SetTexture("Background.png");
+	pSpriteComp->IsStatic(true);
+	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
+	Add(pBackObj);
+
+	m_pLevelText = std::make_shared<GameObject>();
+	std::shared_ptr<TextComponent> text = std::make_shared<TextComponent>("../Data/Pixel.otf", 25);
+	text->SetText("Level " + std::to_string(m_Level));
+	m_pLevelText->AddComponent(text);
+	Add(m_pLevelText);
+	m_pLevelText->SetPosition(135, ScreenInfo::GetInstance().screenheigth/2.0f - 50);
+
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
 
@@ -63,6 +78,16 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	if (m_IsBegin)
+	{
+		m_BeginTimer += Time::GetInstance().m_ElapsedSec;
+		if (m_BeginTimer >= m_BeginTime)
+		{
+			m_IsBegin = false;
+			m_pLevelText->GetComponent<TextComponent>()->SetText(" ");
+		}
+	}
+
 	m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
 
 	SpawnZako();
@@ -92,9 +117,26 @@ void GameScene::Update()
 
 	if (m_EnemiesDead >= m_AmountZako + m_AmountGoei + m_AmountBoss)
 	{
-		Reset();
 		if(m_Level < 2)
 			SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(m_Level + 1));
+		else SceneManager::GetInstance().SetActiveScene("GameOverScene");
+
+	}
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+
+		if(dPlayer->GetIsDead() && dPlayer2->GetIsDead())
+			SceneManager::GetInstance().SetActiveScene("GameOverScene");
+	}
+	else
+	{
+		std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+
+		if (dPlayer->GetIsDead())
+			SceneManager::GetInstance().SetActiveScene("GameOverScene");
 	}
 }
 
@@ -105,8 +147,28 @@ void GameScene::Render() const
 
 void GameScene::Reset()
 {
+	//std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+	if (m_Level == 1)
+	{
+		GameInfo::GetInstance().player1Lives = 3;
+		GameInfo::GetInstance().player2Lives = 3;
+	}
+	//if (dPlayer->GetIsDead()) Add(m_pPlayer);
+	//m_pPlayer->GetComponent<SpriteComponent>()->SetTexture("Player1.png", 60.0f, 64.0f, 1, 1);
+	//m_pPlayer->GetComponent<SpriteComponent>()->SetSpriteSheetTopLeft(0, 0);
+	//m_pPlayer->GetComponent<SpriteComponent>()->IsStatic(true);
+	//m_pPlayer->GetComponent<SpriteComponent>()->SetCurrentFrame(0);
+	//dPlayer->SetLives(GameInfo::GetInstance().player1Lives);
+	//dPlayer->SetIsDead(false);
+	//dPlayer->SetExploding(false);
+	//dPlayer->SetIsHit(false);
+
+	Remove(m_pPlayer);
+	m_pPlayer = nullptr;
+	m_pPlayer = std::make_shared<Player>(1);
+	Add(m_pPlayer);
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	dPlayer->SetLives(3);
+	dPlayer->SetLives(GameInfo::GetInstance().player1Lives);
 
 	Remove(m_pPlayer2);
 	m_pPlayer2 = nullptr;
@@ -115,11 +177,18 @@ void GameScene::Reset()
 	{
 		m_pPlayer2 = std::make_shared<Player>(2);
 		Add(m_pPlayer2);
+		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+		dPlayer2->SetLives(GameInfo::GetInstance().player2Lives);
 		m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f - 20), float(ScreenInfo::GetInstance().screenheigth - 75));
 		m_pPlayer2->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer2->m_Rect.w / 2.0f + 20), float(ScreenInfo::GetInstance().screenheigth - 75));
 	}
 	else m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f), float(ScreenInfo::GetInstance().screenheigth - 75));
 
+
+	m_BeginTimer = 0.0f;
+	m_IsBegin = true;
+	m_pLevelText->GetComponent<TextComponent>()->SetText("Level " + std::to_string(m_Level));
+	
 
 
 	m_SpawnTimer = 0;
@@ -291,9 +360,16 @@ void GameScene::SpawnZako()
 void GameScene::UpdateZako()
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	std::shared_ptr<GameObject> pLasers[2];
-	pLasers[0] = dPlayer->GetLaser(0);
-	pLasers[1] = dPlayer->GetLaser(1);
+	std::vector<std::shared_ptr<GameObject>> pLasers;
+	pLasers.push_back(dPlayer->GetLaser(0));
+	pLasers.push_back(dPlayer->GetLaser(1));
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+		pLasers.push_back(dPlayer2->GetLaser(0));
+		pLasers.push_back(dPlayer2->GetLaser(1));
+	}
 
 	// UPDATE DATA
 	for (int i{}; i < m_pZakos.size(); ++i)
@@ -311,7 +387,7 @@ void GameScene::UpdateZako()
 	}
 
 	// COLLISION
-	for (int i{}; i < 2; ++i)
+	for (int i{}; i < pLasers.size(); ++i)
 	{
 		for (int j{}; j < m_pZakos.size(); ++j)
 		{
@@ -322,6 +398,11 @@ void GameScene::UpdateZako()
 				{
 					dZako->SetIsHit(true);
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					if (GameInfo::GetInstance().player2Active)
+					{
+						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					}
 				}
 			}
 		}
@@ -396,9 +477,16 @@ void GameScene::SpawnGoei()
 void GameScene::UpdateGoei()
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	std::shared_ptr<GameObject> pLasers[2];
-	pLasers[0] = dPlayer->GetLaser(0);
-	pLasers[1] = dPlayer->GetLaser(1);
+	std::vector<std::shared_ptr<GameObject>> pLasers;
+	pLasers.push_back(dPlayer->GetLaser(0));
+	pLasers.push_back(dPlayer->GetLaser(1));
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+		pLasers.push_back(dPlayer2->GetLaser(0));
+		pLasers.push_back(dPlayer2->GetLaser(1));
+	}
 
 	// UPDATE DATA
 	for (int i{}; i < m_pGoeis.size(); ++i)
@@ -410,7 +498,7 @@ void GameScene::UpdateGoei()
 	}
 
 	// COLLISION
-	for (int i{}; i < 2; ++i)
+	for (int i{}; i < pLasers.size(); ++i)
 	{
 		for (int j{}; j < m_pGoeis.size(); ++j)
 		{
@@ -421,6 +509,11 @@ void GameScene::UpdateGoei()
 				{
 					dGoei->SetIsHit(true);
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					if (GameInfo::GetInstance().player2Active)
+					{
+						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					}
 				}
 			}
 		}
@@ -480,9 +573,16 @@ void GameScene::SpawnBoss()
 void GameScene::UpdateBoss()
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	std::shared_ptr<GameObject> pLasers[2];
-	pLasers[0] = dPlayer->GetLaser(0);
-	pLasers[1] = dPlayer->GetLaser(1);
+	std::vector<std::shared_ptr<GameObject>> pLasers;
+	pLasers.push_back(dPlayer->GetLaser(0));
+	pLasers.push_back(dPlayer->GetLaser(1));
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+		pLasers.push_back(dPlayer2->GetLaser(0));
+		pLasers.push_back(dPlayer2->GetLaser(1));
+	}
 
 	// UPDATE DATA
 	for (int i{}; i < m_pBosses.size(); ++i)
@@ -500,7 +600,7 @@ void GameScene::UpdateBoss()
 	}
 
 	// COLLISION
-	for (int i{}; i < 2; ++i)
+	for (int i{}; i < pLasers.size(); ++i)
 	{
 		for (int j{}; j < m_pBosses.size(); ++j)
 		{
@@ -511,6 +611,11 @@ void GameScene::UpdateBoss()
 				{
 					dBoss->SetIsHit(true);
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					if (GameInfo::GetInstance().player2Active)
+					{
+						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
+						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+					}
 				}
 			}
 		}
@@ -540,7 +645,6 @@ void GameScene::UpdateBoss()
 	}
 	idxRemove.clear();
 }
-
 
 void GameScene::ReadFile()
 {
