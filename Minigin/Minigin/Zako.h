@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ZakoState.h"
 #include "GameInfo.h"
+#include "structs.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
@@ -92,10 +93,17 @@ public:
 		m_NextAction = doShootRun;
 	}
 
+	State GetEnumState()
+	{
+		return m_State->GetEnumState();
+	}
+
+
 protected:
 	void Initialize() override;
 	void Render() override {};
 	void Update() override;
+
 
 private:
 	bool m_IsHit = false;
@@ -107,6 +115,7 @@ private:
 	std::shared_ptr<GameObject> m_pLaser = nullptr;
 
 	std::shared_ptr<ZakoState> m_State = std::make_shared<SpawnStateZako>();
+
 
 	// ACTIONS
 	float m_ActionTimer = 0.0f;

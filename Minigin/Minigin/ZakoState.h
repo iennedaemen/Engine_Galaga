@@ -6,7 +6,6 @@ class Zako;
 class ZakoState
 {
 public:
-
     virtual ~ZakoState() {}
     virtual std::shared_ptr<ZakoState> handleInput(Zako& zako)
     {
@@ -18,6 +17,13 @@ public:
         UNREFERENCED_PARAMETER(zako);
     }
 
+    State GetEnumState()
+    {
+        return m_EnumState;
+    }
+
+protected:
+    State m_EnumState = State::Attacking;
 };
 
 class IdleStateZako : public ZakoState

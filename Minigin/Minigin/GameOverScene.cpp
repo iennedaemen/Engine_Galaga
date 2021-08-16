@@ -29,6 +29,13 @@ void GameOverScene::Initialize()
 	Add(m_pTextScore);
 	m_pTextScore->SetPosition(150, 90);
 
+	m_pTextScoreNr = std::make_shared<GameObject>();
+	std::shared_ptr<TextComponent> textScoreNr = std::make_shared<TextComponent>("../Data/Pixel.otf", 40);
+	textScoreNr->SetText(std::to_string(GameInfo::GetInstance().score));
+	m_pTextScoreNr->AddComponent(textScoreNr);
+	Add(m_pTextScoreNr);
+	m_pTextScoreNr->SetPosition(150, 110);
+
 	m_pTextMenu = std::make_shared<GameObject>();
 	std::shared_ptr<TextComponent> textMenu = std::make_shared<TextComponent>("../Data/Pixel.otf", 25);
 	textMenu->SetText("Menu");
@@ -103,4 +110,5 @@ void GameOverScene::Reset()
 	m_ItemSelected = 0;
 	m_ButtonPressed = true;
 	m_pTextScore->GetComponent<TextComponent>()->SetText("Score: ");
+	m_pTextScoreNr->GetComponent<TextComponent>()->SetText(std::to_string(GameInfo::GetInstance().score));
 }

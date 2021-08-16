@@ -3,9 +3,8 @@
 enum State
 {
 	Idle,
-	walking,
-	Shooting,
-	Dying
+	Attacking,
+	Dead
 };
 
 enum Input
@@ -24,4 +23,16 @@ enum class ControllerButton
 	ButtonLeft,
 	ButtonRight,
 	ButtonA
+};
+
+enum class EnemyType
+{
+	Zako,
+	Goei,
+	Boss
+};
+
+enum class Event
+{
+	ZakoHit
 };

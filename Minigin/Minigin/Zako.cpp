@@ -18,7 +18,6 @@ void Zako::Initialize()
 	m_pLaser = std::shared_ptr<GameObject>(std::make_shared<Laser>(false));
 	Add(m_pLaser);
 	m_pLaser->SetPosition(-100, 0);
-
 }
 
 void Zako::Update()
@@ -59,6 +58,7 @@ void Zako::Update()
 	}
 	if (m_State)
 		m_State->update(*this);
+
 }
 
 void Zako::ShootLaser()

@@ -20,6 +20,10 @@
 #include <string>
 #include "SceneManager.h"
 #include "GameInfo.h"
+#include "Observer.h"
+#include <sstream>
+#include <iomanip>
+#include "ScoreCounter.h"
 
 using json = nlohmann::json;
 
@@ -31,13 +35,25 @@ GameScene::GameScene(int level)
 
 void GameScene::Initialize()
 {
+	m_Observers.push_back(std::make_shared<ScoreCounter>());
+
 	std::shared_ptr<GameObject> pBackObj = std::make_shared<GameObject>();
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(1000.0f, 2000.0f, 1, 1);
 	pBackObj->AddComponent(pSpriteComp);
 	pSpriteComp->SetTexture("Background.png");
 	pSpriteComp->IsStatic(true);
-	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
+	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y + 20, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
 	Add(pBackObj);
+
+	m_pTextScoreNr = std::make_shared<GameObject>();
+	std::shared_ptr<TextComponent> textScoreNr = std::make_shared<TextComponent>("../Data/Pixel.otf", 15);
+	std::stringstream ss;
+	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().score;
+	std::string s = ss.str();
+	textScoreNr->SetText(s);
+	m_pTextScoreNr->AddComponent(textScoreNr);
+	Add(m_pTextScoreNr);
+	m_pTextScoreNr->SetPosition(10, 1);
 
 	m_pLevelText = std::make_shared<GameObject>();
 	std::shared_ptr<TextComponent> text = std::make_shared<TextComponent>("../Data/Pixel.otf", 25);
@@ -87,6 +103,11 @@ void GameScene::Update()
 			m_pLevelText->GetComponent<TextComponent>()->SetText(" ");
 		}
 	}
+
+	std::stringstream ss;
+	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().score;
+	std::string s = ss.str();
+	m_pTextScoreNr->GetComponent<TextComponent>()->SetText(s);
 
 	m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
 
@@ -329,7 +350,7 @@ void GameScene::SpawnZako()
 
 			if (!m_ZakoTimes.empty())
 			{
-				if (m_ZakoTimes.front() - time > 0.5f)
+				if (m_ZakoTimes.front() - time > 0.2f)
 				{
 					int r = std::rand() % 2;
 					if (r == 0) m_SpawnLeftZako = true;
@@ -396,6 +417,11 @@ void GameScene::UpdateZako()
 				std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[j]);
 				if (!dZako->GetIsHit())
 				{
+					auto parent = pLasers[i]->GetParent();
+					for (std::shared_ptr<Observer> observer : m_Observers)
+					{
+						observer->onNotify(Event::ZakoHit, dZako, parent);
+					}
 					dZako->SetIsHit(true);
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 					if (GameInfo::GetInstance().player2Active)

@@ -12,6 +12,7 @@ std::shared_ptr<ZakoState> IdleStateZako::handleInput(Zako& zako)
 
     if (zako.GetIsHit())
     {
+        m_EnumState = State::Dead;
         zako.SetIsIdle(false);
         zako.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         zako.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -25,6 +26,7 @@ std::shared_ptr<ZakoState> IdleStateZako::handleInput(Zako& zako)
 
     if (zako.DoShootRun())
     {
+        m_EnumState = State::Attacking;
         zako.SetIsIdle(false);
         std::shared_ptr<ShootingRunStateZako> ptr1 = std::make_shared<ShootingRunStateZako>();
         std::shared_ptr<ZakoState> ptr2 = std::static_pointer_cast<ZakoState>(ptr1);
@@ -33,6 +35,7 @@ std::shared_ptr<ZakoState> IdleStateZako::handleInput(Zako& zako)
 
     if (zako.DoCrashRun())
     {
+        m_EnumState = State::Attacking;
         zako.SetIsIdle(false);
         std::shared_ptr<CrashRunStateZako> ptr1 = std::make_shared<CrashRunStateZako>();
         std::shared_ptr<ZakoState> ptr2 = std::static_pointer_cast<ZakoState>(ptr1);
@@ -47,6 +50,7 @@ std::shared_ptr<ZakoState> SpawnStateZako::handleInput(Zako& zako)
 {
     if (zako.GetIsHit())
     {
+        m_EnumState = State::Dead;
         zako.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         zako.GetComponent<SpriteComponent>()->IsStatic(false);
         zako.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -59,6 +63,7 @@ std::shared_ptr<ZakoState> SpawnStateZako::handleInput(Zako& zako)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
+        m_EnumState = State::Idle;
         zako.SetIsIdle(true);
         std::shared_ptr<IdleStateZako> ptr1 = std::make_shared<IdleStateZako>();
         std::shared_ptr<ZakoState> ptr2 = std::static_pointer_cast<ZakoState>(ptr1);
@@ -123,6 +128,7 @@ std::shared_ptr<ZakoState> ShootingRunStateZako::handleInput(Zako& zako)
 
     if (zako.GetIsHit())
     {
+        m_EnumState = State::Dead;
         zako.SetIsIdle(false);
         zako.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         zako.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -136,6 +142,7 @@ std::shared_ptr<ZakoState> ShootingRunStateZako::handleInput(Zako& zako)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
+        m_EnumState = State::Idle;
         zako.SetShootRun(false);
         zako.SetIsIdle(true);
         std::shared_ptr<IdleStateZako> ptr1 = std::make_shared<IdleStateZako>();
@@ -271,6 +278,7 @@ std::shared_ptr<ZakoState> CrashRunStateZako::handleInput(Zako& zako)
 
     if (zako.GetIsHit())
     {
+        m_EnumState = State::Dead;
         zako.SetIsIdle(false);
         zako.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         zako.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -284,6 +292,7 @@ std::shared_ptr<ZakoState> CrashRunStateZako::handleInput(Zako& zako)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
+        m_EnumState = State::Idle;
         zako.SetCrashRun(false);
         zako.SetIsIdle(true);
         std::shared_ptr<IdleStateZako> ptr1 = std::make_shared<IdleStateZako>();

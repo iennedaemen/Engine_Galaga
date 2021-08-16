@@ -37,6 +37,9 @@
     <Filter Include="Engine\Command">
       <UniqueIdentifier>{cc588df3-e507-421e-b66b-c983c306416b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Observer">
+      <UniqueIdentifier>{163e6a4a-7609-4d97-876c-822519278def}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniginPCH.h">
@@ -155,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="GameOverScene.h">
       <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Engine\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreCounter.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

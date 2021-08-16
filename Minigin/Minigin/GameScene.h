@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include <queue>
+#include "Observer.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
@@ -15,9 +16,10 @@ public:
 	virtual void Update() override;
 	virtual void Render() const override;
 	virtual void Reset() override;
-	//SET SCENE
 
 private:
+	std::vector<std::shared_ptr<Observer>> m_Observers;
+
 	int k = 0;
 
 	std::shared_ptr<GameObject> m_pPlayer = nullptr;
@@ -25,6 +27,8 @@ private:
 
 	float m_SpawnTimer = 0;
 	int m_EnemiesDead = 0;
+
+	std::shared_ptr<GameObject> m_pTextScoreNr = nullptr;
 
 	//BEGIN
 	std::shared_ptr<GameObject> m_pLevelText = nullptr;

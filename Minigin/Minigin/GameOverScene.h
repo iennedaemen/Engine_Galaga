@@ -12,6 +12,7 @@ public:
 
 private:
 	std::shared_ptr<GameObject> m_pTextScore = nullptr;
+	std::shared_ptr<GameObject> m_pTextScoreNr = nullptr;
 	std::shared_ptr<GameObject> m_pTextMenu = nullptr;
 	std::shared_ptr<GameObject> m_pTextQuit = nullptr;
 
