@@ -11,7 +11,7 @@ std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 {
     if (boss.m_Lives <= 0)
     {
-        boss.SetIsIdle(false);
+        boss.m_EnumState = State::Dead;
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         boss.GetComponent<SpriteComponent>()->IsStatic(false);
         boss.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -25,15 +25,15 @@ std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 
     if (boss.m_DoShootRun)
     {
-        boss.SetIsIdle(false);
+        boss.m_EnumState = State::Moving;
         std::shared_ptr<ShootingRunStateBoss> ptr1 = std::make_shared<ShootingRunStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
         return ptr2;
     }
 
-    if (boss.DoBeamRun())
+    if (boss.m_DoBeamRun)
     {
-        boss.SetIsIdle(false);
+        boss.m_EnumState = State::Moving;
         std::shared_ptr<BeamRunStateBoss> ptr1 = std::make_shared<BeamRunStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
         return ptr2;
@@ -46,6 +46,7 @@ std::shared_ptr<BossState> SpawnStateBoss::handleInput(Boss& boss)
 {
     if (boss.m_Lives <= 0)
     {
+        boss.m_EnumState = State::Dead;
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         boss.GetComponent<SpriteComponent>()->IsStatic(false);
         boss.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -58,7 +59,7 @@ std::shared_ptr<BossState> SpawnStateBoss::handleInput(Boss& boss)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
-        boss.SetIsIdle(true);
+        boss.m_EnumState = State::Idle;
         std::shared_ptr<IdleStateBoss> ptr1 = std::make_shared<IdleStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
         return ptr2;
@@ -97,7 +98,7 @@ std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
 {
     if (boss.m_Lives <= 0)
     {
-        boss.SetIsIdle(false);
+        boss.m_EnumState = State::Dead;
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         boss.GetComponent<SpriteComponent>()->IsStatic(false);
         boss.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -110,8 +111,8 @@ std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
+        boss.m_EnumState = State::Idle;
         boss.m_DoShootRun = false;
-        boss.SetIsIdle(true);
         std::shared_ptr<IdleStateBoss> ptr1 = std::make_shared<IdleStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
         return ptr2;
@@ -245,7 +246,7 @@ std::shared_ptr<BossState> BeamRunStateBoss::handleInput(Boss& boss)
 {
     if (boss.m_Lives <= 0)
     {
-        boss.SetIsIdle(false);
+        boss.m_EnumState = State::Dead;
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         boss.GetComponent<SpriteComponent>()->IsStatic(false);
         boss.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -258,8 +259,8 @@ std::shared_ptr<BossState> BeamRunStateBoss::handleInput(Boss& boss)
 
     if (m_ReachedPosYIdle)
     {
-        boss.SetBeamRun(false);
-        boss.SetIsIdle(true);
+        boss.m_EnumState = State::Idle;
+        boss.m_DoBeamRun = false;
         std::shared_ptr<IdleStateBoss> ptr1 = std::make_shared<IdleStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
         return ptr2;

@@ -3,7 +3,7 @@
 enum State
 {
 	Idle,
-	Attacking,
+	Moving,
 	Dead
 };
 
@@ -34,5 +34,7 @@ enum class EnemyType
 
 enum class Event
 {
-	ZakoHit
+	ZakoHit,
+	GoeiHit,
+	BossHit
 };

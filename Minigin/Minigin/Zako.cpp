@@ -23,7 +23,7 @@ void Zako::Initialize()
 void Zako::Update()
 {
 	// ACTIONS
-	if (m_IsIdle)
+	if (m_EnumState == State::Idle)
 	{
 		m_ActionTimer += Time::GetInstance().m_ElapsedSec;
 
@@ -51,12 +51,12 @@ void Zako::Update()
 
 	// STATE
 	std::shared_ptr<ZakoState> newState = nullptr;
-	newState = m_State->handleInput(*this);
+	newState = m_State->HandleState(*this);
 	if (newState != nullptr)
 	{
 		m_State = newState;
 	}
 	if (m_State)
-		m_State->update(*this);
+		m_State->Update(*this);
 
 }

@@ -98,7 +98,7 @@ public:
 		m_Exploding = exploding;
 	}
 
-	int GetPLayerNr()
+	const int GetPLayerNr()
 	{
 		return m_PlayerNr;
 	}

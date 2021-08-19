@@ -8,16 +8,15 @@ class GoeiState
 public:
 
     virtual ~GoeiState() {}
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei)
+    virtual std::shared_ptr<GoeiState> HandleState(Goei& goei)
     {
         UNREFERENCED_PARAMETER(goei);
         return nullptr;
     }
-    virtual void update(Goei& goei)
+    virtual void Update(Goei& goei)
     {
         UNREFERENCED_PARAMETER(goei);
     }
-
 };
 
 class IdleStateGoei : public GoeiState
@@ -25,7 +24,7 @@ class IdleStateGoei : public GoeiState
 public:
     IdleStateGoei() {}
 
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei) override;
+    virtual std::shared_ptr<GoeiState> HandleState(Goei& goei) override;
 
 };
 
@@ -34,8 +33,8 @@ class SpawnStateGoei : public GoeiState
 public:
     SpawnStateGoei() {}
 
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei) override;
-    virtual void update(Goei& goei) override;
+    virtual std::shared_ptr<GoeiState> HandleState(Goei& goei) override;
+    virtual void Update(Goei& goei) override;
 
 private:
     bool m_ReachedPosX1 = false;
@@ -49,8 +48,8 @@ class ShootingRunStateGoei : public GoeiState
 public:
     ShootingRunStateGoei() {}
 
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei) override;
-    virtual void update(Goei& goei) override;
+    virtual std::shared_ptr<GoeiState> HandleState(Goei& goei) override;
+    virtual void Update(Goei& goei) override;
 
 private:
     bool m_ReachedPos1 = false;
@@ -66,6 +65,6 @@ class ExplodeStateGoei : public GoeiState
 public:
     ExplodeStateGoei() {}
 
-    virtual std::shared_ptr<GoeiState> handleInput(Goei& goei) override;
+    virtual std::shared_ptr<GoeiState> HandleState(Goei& goei) override;
 
 };

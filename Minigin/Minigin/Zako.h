@@ -16,32 +16,12 @@ public:
 	Zako(glm::vec2 idlePos) : Enemy(idlePos)
 	{};
 
-	// ACTIONS
-	void SetIsIdle(bool isIdle)
-	{
-		m_IsIdle = isIdle;
-	}
-	bool IsIdle()
-	{
-		return m_IsIdle;
-	}
-	bool DoCrashRun()
-	{
-		return m_DoCrashRun;
-	}
-	void SetCrashRun(bool doCrashRun)
-	{
-		m_DoCrashRun = doCrashRun;
-	}
 	void SetNextAction(bool doShootRun)
 	{
 		m_NextAction = doShootRun;
 	}
 
-	State GetEnumState()
-	{
-		return m_State->GetEnumState();
-	}
+	bool m_DoCrashRun = false;
 
 protected:
 	void Initialize() override;
@@ -51,10 +31,6 @@ protected:
 
 private:
 	std::shared_ptr<ZakoState> m_State = std::make_shared<SpawnStateZako>();
-
-	// ACTIONS
-	bool m_DoCrashRun = false;
-	bool m_IsIdle = false;
 	bool m_NextAction = false;
 };
 

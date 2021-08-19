@@ -13,17 +13,6 @@ public:
 	Goei(glm::vec2 idlePos) : Enemy(idlePos)
 	{};
 
-	// ACTIONS
-	void SetIsIdle(bool isIdle)
-	{
-		m_IsIdle = isIdle;
-	}
-	bool IsIdle()
-	{
-		return m_IsIdle;
-	}
-
-
 protected:
 	void Initialize() override;
 	void Render() override {};
@@ -31,7 +20,4 @@ protected:
 
 private:
 	std::shared_ptr<GoeiState> m_State = std::make_shared<SpawnStateGoei>();
-
-	// ACTIONS
-	bool m_IsIdle = false;
 };

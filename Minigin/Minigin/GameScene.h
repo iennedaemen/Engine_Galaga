@@ -28,7 +28,8 @@ private:
 	float m_SpawnTimer = 0;
 	int m_EnemiesDead = 0;
 
-	std::shared_ptr<GameObject> m_pTextScoreNr = nullptr;
+	std::shared_ptr<GameObject> m_pTextScoreP1 = nullptr;
+	std::shared_ptr<GameObject> m_pTextScoreP2 = nullptr;
 
 	//BEGIN
 	std::shared_ptr<GameObject> m_pLevelText = nullptr;

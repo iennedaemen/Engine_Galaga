@@ -7,23 +7,15 @@ class ZakoState
 {
 public:
     virtual ~ZakoState() {}
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako)
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako)
     {
         UNREFERENCED_PARAMETER(zako);
         return nullptr;
     }
-    virtual void update(Zako& zako)
+    virtual void Update(Zako& zako)
     {
         UNREFERENCED_PARAMETER(zako);
     }
-
-    State GetEnumState()
-    {
-        return m_EnumState;
-    }
-
-protected:
-    State m_EnumState = State::Attacking;
 };
 
 class IdleStateZako : public ZakoState
@@ -31,7 +23,7 @@ class IdleStateZako : public ZakoState
 public:
     IdleStateZako() {}
 
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako) override;
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako) override;
 
 };
 
@@ -40,8 +32,8 @@ class SpawnStateZako : public ZakoState
 public:
     SpawnStateZako() {}
 
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako) override;
-    virtual void update(Zako& zako) override;
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako) override;
+    virtual void Update(Zako& zako) override;
 
 private:
     bool m_ReachedPosX1 = false;
@@ -55,8 +47,8 @@ class ShootingRunStateZako : public ZakoState
 public:
     ShootingRunStateZako() {}
 
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako) override;
-    virtual void update(Zako& zako) override;
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako) override;
+    virtual void Update(Zako& zako) override;
 
 private:
     bool m_ReachedPos1 = false;
@@ -73,8 +65,8 @@ class CrashRunStateZako : public ZakoState
 public:
     CrashRunStateZako() {}
 
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako) override;
-    virtual void update(Zako& zako) override;
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako) override;
+    virtual void Update(Zako& zako) override;
 
 private:
     bool m_ReachedPosX1 = false;
@@ -90,6 +82,6 @@ class ExplodeStateZako : public ZakoState
 public:
     ExplodeStateZako() {}
 
-    virtual std::shared_ptr<ZakoState> handleInput(Zako& zako) override;
+    virtual std::shared_ptr<ZakoState> HandleState(Zako& zako) override;
 
 };

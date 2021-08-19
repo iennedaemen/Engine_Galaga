@@ -4,6 +4,7 @@
 #include "ColliderComponent.h"
 #include "InputManager.h"
 #include "Laser.h"
+#include "GameInfo.h"
 
 
 void Player::Initialize()
@@ -85,7 +86,7 @@ void Player::Update()
 			SetPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y - velocity);
 		else m_ReachedAbductionPos = true;
 
-		if (m_pKidnapper->IsIdle())
+		if (m_pKidnapper->m_EnumState == State::Idle)
 		{
 			m_IsHit = true;
 			m_ReachedAbductionPos = false;
@@ -101,10 +102,13 @@ void Player::ShootLaser()
 {
 	for (std::shared_ptr<GameObject> laser : m_pLasers)
 	{
-		std::shared_ptr<Laser> derived = std::dynamic_pointer_cast<Laser> (laser);
-		if (!derived->IsActive())
+		std::shared_ptr<Laser> l = std::dynamic_pointer_cast<Laser> (laser);
+		if (!l->IsActive())
 		{
-			derived->SetActive(true);
+			if(m_PlayerNr == 1) GameInfo::GetInstance().shotsFiredP1 += 1;
+			else if (m_PlayerNr == 2) GameInfo::GetInstance().shotsFiredP2 += 1;
+
+			l->SetActive(true);
  			laser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - laser->m_Rect.w / 2), float(m_Rect.y));
 			return;
 		}

@@ -3,6 +3,7 @@
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
 #pragma warning(pop)
+#include "structs.h"
 class GameObject;
 class Laser;
 
@@ -22,7 +23,10 @@ public:
 		return m_pLaser;
 	}
 
+
 	void ShootLaser(std::shared_ptr<GameObject> obj);
+
+	State m_EnumState = State::Moving;
 
 	glm::vec2 m_PlayerPos;
 	glm::vec2 m_Player2Pos;

@@ -17,7 +17,6 @@ public:
     {
         UNREFERENCED_PARAMETER(boss);
     }
-
 };
 
 class IdleStateBoss : public BossState

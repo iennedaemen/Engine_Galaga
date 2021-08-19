@@ -126,4 +126,12 @@ void MenuScene::Reset()
 {
 	m_ItemSelected = 0;
 	m_ButtonPressed = true;
+	GameInfo::GetInstance().scoreP1 = 0;
+	GameInfo::GetInstance().scoreP2 = 0;
+	GameInfo::GetInstance().shotsFiredP1 = 0;
+	GameInfo::GetInstance().shotsFiredP2 = 0;
+	GameInfo::GetInstance().shotsHitP1 = 0;
+	GameInfo::GetInstance().shotsHitP2 = 0;
+	GameInfo::GetInstance().player1Lives = 3;
+	GameInfo::GetInstance().player2Lives = 3;
 }

@@ -23,7 +23,7 @@
 #include "Observer.h"
 #include <sstream>
 #include <iomanip>
-#include "ScoreCounter.h"
+#include "ScoreObserver.h"
 
 using json = nlohmann::json;
 
@@ -35,7 +35,7 @@ GameScene::GameScene(int level)
 
 void GameScene::Initialize()
 {
-	m_Observers.push_back(std::make_shared<ScoreCounter>());
+	m_Observers.push_back(std::make_shared<ScoreObserver>());
 
 	std::shared_ptr<GameObject> pBackObj = std::make_shared<GameObject>();
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(1000.0f, 2000.0f, 1, 1);
@@ -45,15 +45,29 @@ void GameScene::Initialize()
 	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y + 20, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
 	Add(pBackObj);
 
-	m_pTextScoreNr = std::make_shared<GameObject>();
-	std::shared_ptr<TextComponent> textScoreNr = std::make_shared<TextComponent>("../Data/Pixel.otf", 15);
+	m_pTextScoreP1 = std::make_shared<GameObject>();
+	std::shared_ptr<TextComponent> textScore1 = std::make_shared<TextComponent>("../Data/Pixel.otf", 15);
 	std::stringstream ss;
-	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().score;
+	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP1;
 	std::string s = ss.str();
-	textScoreNr->SetText(s);
-	m_pTextScoreNr->AddComponent(textScoreNr);
-	Add(m_pTextScoreNr);
-	m_pTextScoreNr->SetPosition(10, 1);
+	textScore1->SetText(s);
+	m_pTextScoreP1->AddComponent(textScore1);
+	Add(m_pTextScoreP1);
+	m_pTextScoreP1->SetPosition(10, 1);
+
+	m_pTextScoreP2 = std::make_shared<GameObject>();
+	std::shared_ptr<TextComponent> textScore2 = std::make_shared<TextComponent>("../Data/Pixel.otf", 15, SDL_Color{ 215, 27, 27, 255 });
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::stringstream ss2;
+		ss2 << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP2;
+		s = ss2.str();
+		textScore2->SetText(s);
+	}
+	else textScore2->SetText(" ");
+	m_pTextScoreP2->AddComponent(textScore2);
+	Add(m_pTextScoreP2);
+	m_pTextScoreP2->SetPosition(100, 1);
 
 	m_pLevelText = std::make_shared<GameObject>();
 	std::shared_ptr<TextComponent> text = std::make_shared<TextComponent>("../Data/Pixel.otf", 25);
@@ -105,9 +119,17 @@ void GameScene::Update()
 	}
 
 	std::stringstream ss;
-	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().score;
+	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP1;
 	std::string s = ss.str();
-	m_pTextScoreNr->GetComponent<TextComponent>()->SetText(s);
+	m_pTextScoreP1->GetComponent<TextComponent>()->SetText(s);
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::stringstream ss2;
+		ss2 << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP2;
+		s = ss2.str();
+		m_pTextScoreP2->GetComponent<TextComponent>()->SetText(s);
+	}
 
 	m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
 
@@ -174,15 +196,6 @@ void GameScene::Reset()
 		GameInfo::GetInstance().player1Lives = 3;
 		GameInfo::GetInstance().player2Lives = 3;
 	}
-	//if (dPlayer->GetIsDead()) Add(m_pPlayer);
-	//m_pPlayer->GetComponent<SpriteComponent>()->SetTexture("Player1.png", 60.0f, 64.0f, 1, 1);
-	//m_pPlayer->GetComponent<SpriteComponent>()->SetSpriteSheetTopLeft(0, 0);
-	//m_pPlayer->GetComponent<SpriteComponent>()->IsStatic(true);
-	//m_pPlayer->GetComponent<SpriteComponent>()->SetCurrentFrame(0);
-	//dPlayer->SetLives(GameInfo::GetInstance().player1Lives);
-	//dPlayer->SetIsDead(false);
-	//dPlayer->SetExploding(false);
-	//dPlayer->SetIsHit(false);
 
 	Remove(m_pPlayer);
 	m_pPlayer = nullptr;
@@ -210,10 +223,17 @@ void GameScene::Reset()
 	m_IsBegin = true;
 	m_pLevelText->GetComponent<TextComponent>()->SetText("Level " + std::to_string(m_Level));
 	
-
-
 	m_SpawnTimer = 0;
 	m_EnemiesDead = 0;
+
+	if (GameInfo::GetInstance().player2Active)
+	{
+		std::stringstream ss;
+		ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP2;
+		std::string s = ss.str();
+		m_pTextScoreP2->GetComponent<TextComponent>()->SetText(s);
+	}
+	else m_pTextScoreP2->GetComponent<TextComponent>()->SetText(" ");
 
 	// ZAKO
 	for (int i{}; i < m_pZakos.size(); ++i)
@@ -423,12 +443,8 @@ void GameScene::UpdateZako()
 						observer->onNotify(Event::ZakoHit, m_pZakos[j], parent);
 					}
 					zako->m_IsHit = true;
-					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
-					if (GameInfo::GetInstance().player2Active)
-					{
-						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
-					}
+					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
 		}
@@ -534,13 +550,15 @@ void GameScene::UpdateGoei()
 				std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[j]);
 				if (!goei->m_IsHit)
 				{
-					goei->m_IsHit = true;
-					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
-					if (GameInfo::GetInstance().player2Active)
+					auto parent = pLasers[i]->GetParent();
+					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+						observer->onNotify(Event::GoeiHit, m_pGoeis[j], parent);
 					}
+
+					goei->m_IsHit = true;
+					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
 		}
@@ -636,13 +654,15 @@ void GameScene::UpdateBoss()
 				std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[j]);
 				if (!boss->m_IsHit)
 				{
-					boss->m_IsHit = true;
-					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
-					if (GameInfo::GetInstance().player2Active)
+					auto parent = pLasers[i]->GetParent();
+					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-						dPlayer2->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
+						observer->onNotify(Event::BossHit, m_pBosses[j], parent);
 					}
+
+					boss->m_IsHit = true;
+					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
 		}

@@ -1,27 +1,12 @@
-﻿  BaseComponent.cpp
-  Beam.cpp
-  Boss.cpp
+﻿  Boss.cpp
   BossState.cpp
-  ColliderComponent.cpp
-  Enemy.cpp
-  FpsComponent.cpp
-  GameObject.cpp
   GameOverScene.cpp
   GameScene.cpp
-  Goei.cpp
-  GoeiState.cpp
   InputManager.cpp
-  Laser.cpp
   MenuScene.cpp
   Minigin.cpp
   Player.cpp
   PlayerState.cpp
-  RenderComponent.cpp
-  Scene.cpp
-  Generating Code...
-  Compiling...
-  SpriteComponent.cpp
-  TextComponent.cpp
   Zako.cpp
   ZakoState.cpp
   Generating Code...

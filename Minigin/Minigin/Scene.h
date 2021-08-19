@@ -11,6 +11,14 @@
 		void Add(const std::shared_ptr<GameObject>& object);
 		void Remove(const std::shared_ptr<GameObject>& object);
 
+		void Clear()
+		{
+			while (!m_Objects.empty())
+			{
+				Remove(m_Objects.back());
+			}
+		}
+
 		void RootInitialize();
 		void RootUpdate();
 		void RootRender() const;

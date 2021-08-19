@@ -6,11 +6,11 @@
 #include "Time.h"
 #include "GameInfo.h"
 
-std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
+std::shared_ptr<GoeiState> IdleStateGoei::HandleState(Goei& goei)
 {
     if (goei.m_IsHit)
     {
-        goei.SetIsIdle(false);
+        goei.m_EnumState = State::Dead;
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         goei.GetComponent<SpriteComponent>()->IsStatic(false);
         goei.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -23,7 +23,7 @@ std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
 
     if (goei.m_DoShootRun)
     {
-        goei.SetIsIdle(false);
+        goei.m_EnumState = State::Moving;
         std::shared_ptr<ShootingRunStateGoei> ptr1 = std::make_shared<ShootingRunStateGoei>();
         std::shared_ptr<GoeiState> ptr2 = std::static_pointer_cast<GoeiState>(ptr1);
         return ptr2;
@@ -32,10 +32,11 @@ std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
     return nullptr;
 }
 
-std::shared_ptr<GoeiState> SpawnStateGoei::handleInput(Goei& goei)
+std::shared_ptr<GoeiState> SpawnStateGoei::HandleState(Goei& goei)
 {
     if (goei.m_IsHit)
     {
+        goei.m_EnumState = State::Dead;
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         goei.GetComponent<SpriteComponent>()->IsStatic(false);
         goei.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -48,7 +49,7 @@ std::shared_ptr<GoeiState> SpawnStateGoei::handleInput(Goei& goei)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
-        goei.SetIsIdle(true);
+        goei.m_EnumState = State::Idle;
         std::shared_ptr<IdleStateGoei> ptr1 = std::make_shared<IdleStateGoei>();
         std::shared_ptr<GoeiState> ptr2 = std::static_pointer_cast<GoeiState>(ptr1);
         return ptr2;
@@ -57,7 +58,7 @@ std::shared_ptr<GoeiState> SpawnStateGoei::handleInput(Goei& goei)
     return nullptr;
 }
 
-void SpawnStateGoei::update(Goei& goei)
+void SpawnStateGoei::Update(Goei& goei)
 {
     glm::vec2 newPosCoord1 = { ScreenInfo::GetInstance().screenwidth / 2 - goei.m_Rect.w / 2, ScreenInfo::GetInstance().screenheigth / 2 };
 
@@ -106,11 +107,11 @@ void SpawnStateGoei::update(Goei& goei)
 
 }
 
-std::shared_ptr<GoeiState> ShootingRunStateGoei::handleInput(Goei& goei)
+std::shared_ptr<GoeiState> ShootingRunStateGoei::HandleState(Goei& goei)
 {
     if (goei.m_IsHit)
     {
-        goei.SetIsIdle(false);
+        goei.m_EnumState = State::Dead;
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         goei.GetComponent<SpriteComponent>()->IsStatic(false);
         goei.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -123,8 +124,8 @@ std::shared_ptr<GoeiState> ShootingRunStateGoei::handleInput(Goei& goei)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
+        goei.m_EnumState = State::Idle;
         goei.m_DoShootRun = false;
-        goei.SetIsIdle(true);
         std::shared_ptr<IdleStateGoei> ptr1 = std::make_shared<IdleStateGoei>();
         std::shared_ptr<GoeiState> ptr2 = std::static_pointer_cast<GoeiState>(ptr1);
         return ptr2;
@@ -133,7 +134,7 @@ std::shared_ptr<GoeiState> ShootingRunStateGoei::handleInput(Goei& goei)
     return nullptr;
 }
 
-void ShootingRunStateGoei::update(Goei& goei)
+void ShootingRunStateGoei::Update(Goei& goei)
 {
     float maxDivePosY = ScreenInfo::GetInstance().screenheigth - 100.0f;
     float newPosCoordLeft = 50.0f;
@@ -236,7 +237,7 @@ void ShootingRunStateGoei::update(Goei& goei)
     if (goei.m_PlayerPos.x > goei.m_Rect.x + 5
         && goei.m_PlayerPos.x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
     {
-        //goei.ShootLaser();
+        goei.ShootLaser(std::make_shared<Goei>(goei));
     }
 
     if (GameInfo::GetInstance().player2Active)
@@ -244,14 +245,13 @@ void ShootingRunStateGoei::update(Goei& goei)
         if (goei.m_Player2Pos.x > goei.m_Rect.x + 5
             && goei.m_Player2Pos.x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
         {
-            //goei.ShootLaser();
+            goei.ShootLaser(std::make_shared<Goei>(goei));
         }
     }
 }
 
-std::shared_ptr<GoeiState> ExplodeStateGoei::handleInput(Goei& goei)
+std::shared_ptr<GoeiState> ExplodeStateGoei::HandleState(Goei& goei)
 {
-
     if (goei.GetComponent<SpriteComponent>()->IsAnimPlayed())
     {
         goei.m_IsDead = true;

@@ -15,25 +15,6 @@ public:
 	Boss(glm::vec2 idlePos) : Enemy(idlePos)
 	{};
 
-
-	// ACTIONS
-	void SetIsIdle(bool isIdle)
-	{
-		m_IsIdle = isIdle;
-	}
-	bool IsIdle()
-	{
-		return m_IsIdle;
-	}
-	bool DoBeamRun()
-	{
-		return m_DoBeamRun;
-	}
-	void SetBeamRun(bool doBeamRun)
-	{
-		m_DoBeamRun = doBeamRun;
-	}
-
 	std::shared_ptr<GameObject> GetBeam()
 	{
 		return m_pBeam;
@@ -45,6 +26,7 @@ public:
 	}
 
 	int m_Lives = 2;
+	bool m_DoBeamRun = false;
 
 protected:
 	void Initialize() override;
@@ -56,7 +38,5 @@ private:
 	std::shared_ptr<BossState> m_State = std::make_shared<SpawnStateBoss>();
 
 	// ACTIONS
-	bool m_DoBeamRun = false;
-	bool m_IsIdle = false;
 	bool m_NextAction = false;
 };

@@ -11,12 +11,11 @@ public:
 	virtual void Reset() override;
 
 private:
-	std::shared_ptr<GameObject> m_pTextScore = nullptr;
-	std::shared_ptr<GameObject> m_pTextScoreNr = nullptr;
 	std::shared_ptr<GameObject> m_pTextMenu = nullptr;
 	std::shared_ptr<GameObject> m_pTextQuit = nullptr;
 
 	int m_ItemSelected = 0;
-
 	bool m_ButtonPressed = true;
+
+	void MakeScoreBoard(int playerNr);
 };

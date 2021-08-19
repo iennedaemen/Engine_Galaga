@@ -40,7 +40,7 @@ void Boss::Update()
 	}
 
 	// ACTIONS
-	if (m_IsIdle)
+	if (m_EnumState == State::Idle)
 	{
 		m_ActionTimer += Time::GetInstance().m_ElapsedSec;
 

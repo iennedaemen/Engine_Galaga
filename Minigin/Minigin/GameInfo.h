@@ -8,6 +8,14 @@ public:
 	int player2Lives = 3;
 	bool player2Active = false;
 	bool enemyPlayerActive = false;
-	int score = 0;
+
+	int scoreP1 = 0;
+	int scoreP2 = 0;
+
+	int shotsFiredP1 = 0;
+	int shotsFiredP2 = 0;
+
+	int shotsHitP1 = 0;
+	int shotsHitP2 = 0;
 };
 
