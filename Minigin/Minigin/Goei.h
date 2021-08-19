@@ -5,60 +5,13 @@
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
 #pragma warning(pop)
+#include "Enemy.h"
 
-class Goei : public GameObject
+class Goei : public GameObject, public Enemy
 {
 public:
-	Goei(glm::vec2 idlePos) : m_IdlePos(idlePos)
+	Goei(glm::vec2 idlePos) : Enemy(idlePos)
 	{};
-
-	void ShootLaser();
-	std::shared_ptr<GameObject> GetLaser()
-	{
-		return m_pLaser;
-	}
-
-	void SetIsHit(bool isHit)
-	{
-		m_IsHit = isHit;
-	}
-	bool GetIsHit()
-	{
-		return m_IsHit;
-	}
-	void SetIsDead(bool isDead)
-	{
-		m_IsDead = isDead;
-	}
-	bool GetIsDead()
-	{
-		return m_IsDead;
-	}
-	glm::vec2 GetIdlePos()
-	{
-		return m_IdlePos;
-	}
-	bool SpawnedLeft()
-	{
-		return m_SpawnedLeft;
-	}
-	void SetSpawnedLeft(bool spawnedLeft)
-	{
-		m_SpawnedLeft = spawnedLeft;
-	}
-	void SetPlayerPos(glm::vec2 playerPos, glm::vec2 player2Pos = { 0, 0 })
-	{
-		m_PlayerPos = playerPos;
-		m_Player2Pos = player2Pos;
-	}
-	glm::vec2 GetPlayerPos()
-	{
-		return m_PlayerPos;
-	}
-	glm::vec2 GetPlayer2Pos()
-	{
-		return m_Player2Pos;
-	}
 
 	// ACTIONS
 	void SetIsIdle(bool isIdle)
@@ -69,14 +22,6 @@ public:
 	{
 		return m_IsIdle;
 	}
-	bool DoShootRun()
-	{
-		return m_DoShootRun;
-	}
-	void SetShootRun(bool doShootRun)
-	{
-		m_DoShootRun = doShootRun;
-	}
 
 
 protected:
@@ -85,19 +30,8 @@ protected:
 	void Update() override;
 
 private:
-	bool m_IsHit = false;
-	bool m_IsDead = false;
-	bool m_SpawnedLeft = true;
-	glm::vec2 m_IdlePos;
-	glm::vec2 m_PlayerPos;
-	glm::vec2 m_Player2Pos;
-	std::shared_ptr<GameObject> m_pLaser = nullptr;
-
 	std::shared_ptr<GoeiState> m_State = std::make_shared<SpawnStateGoei>();
 
 	// ACTIONS
-	float m_ActionTimer = 0.0f;
-	float m_ActionTime = 5.0f;
-	bool m_DoShootRun = false;
 	bool m_IsIdle = false;
 };

@@ -72,9 +72,6 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Engine\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="TestScene.h">
-      <Filter>Game\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Engine\Managers</Filter>
     </ClInclude>
@@ -165,6 +162,9 @@
     <ClInclude Include="ScoreCounter.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -190,9 +190,6 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Engine\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScene.cpp">
-      <Filter>Game\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Engine</Filter>
@@ -262,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="GameOverScene.cpp">
       <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Game\Prefab</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

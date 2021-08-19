@@ -97,10 +97,10 @@ class BaseComponent;
 		}
 
 		// delete functions
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		//GameObject(const GameObject& other) = delete;
+		//GameObject(GameObject&& other) = delete;
+		//GameObject& operator=(const GameObject& other) = delete;
+		//GameObject& operator=(GameObject&& other) = delete;
 
 	//protected:
 		SDL_Rect m_Rect = { 0,0,0,0 };

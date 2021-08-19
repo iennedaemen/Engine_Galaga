@@ -8,7 +8,7 @@
 
 std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
 {
-    if (goei.GetIsHit())
+    if (goei.m_IsHit)
     {
         goei.SetIsIdle(false);
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
@@ -21,7 +21,7 @@ std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
         return ptr2;
     }
 
-    if (goei.DoShootRun())
+    if (goei.m_DoShootRun)
     {
         goei.SetIsIdle(false);
         std::shared_ptr<ShootingRunStateGoei> ptr1 = std::make_shared<ShootingRunStateGoei>();
@@ -34,7 +34,7 @@ std::shared_ptr<GoeiState> IdleStateGoei::handleInput(Goei& goei)
 
 std::shared_ptr<GoeiState> SpawnStateGoei::handleInput(Goei& goei)
 {
-    if (goei.GetIsHit())
+    if (goei.m_IsHit)
     {
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         goei.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -68,7 +68,7 @@ void SpawnStateGoei::update(Goei& goei)
 
     if (!m_ReachedPosX1 || !m_ReachedPosY1)
     {
-        if (goei.SpawnedLeft())
+        if (goei.m_SpawnedLeft)
         {
             if (goei.m_Rect.x < newPosCoord1.x)
                 goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
@@ -108,7 +108,7 @@ void SpawnStateGoei::update(Goei& goei)
 
 std::shared_ptr<GoeiState> ShootingRunStateGoei::handleInput(Goei& goei)
 {
-    if (goei.GetIsHit())
+    if (goei.m_IsHit)
     {
         goei.SetIsIdle(false);
         goei.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
@@ -123,7 +123,7 @@ std::shared_ptr<GoeiState> ShootingRunStateGoei::handleInput(Goei& goei)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
-        goei.SetShootRun(false);
+        goei.m_DoShootRun = false;
         goei.SetIsIdle(true);
         std::shared_ptr<IdleStateGoei> ptr1 = std::make_shared<IdleStateGoei>();
         std::shared_ptr<GoeiState> ptr2 = std::static_pointer_cast<GoeiState>(ptr1);
@@ -155,7 +155,7 @@ void ShootingRunStateGoei::update(Goei& goei)
 
     if (!m_ReachedPosYIdle)
     {
-        if (goei.SpawnedLeft())
+        if (goei.m_SpawnedLeft)
         {
             if (!m_ReachedPos1 && m_ReachedPos2)
             {
@@ -179,7 +179,7 @@ void ShootingRunStateGoei::update(Goei& goei)
             }
         }
 
-        if (!goei.SpawnedLeft())
+        if (!goei.m_SpawnedLeft)
         {
             if (!m_ReachedPos1 && m_ReachedPos2)
             {
@@ -233,18 +233,18 @@ void ShootingRunStateGoei::update(Goei& goei)
     }
 
     //SHOOT
-    if (goei.GetPlayerPos().x > goei.m_Rect.x + 5
-        && goei.GetPlayerPos().x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
+    if (goei.m_PlayerPos.x > goei.m_Rect.x + 5
+        && goei.m_PlayerPos.x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
     {
-        goei.ShootLaser();
+        //goei.ShootLaser();
     }
 
     if (GameInfo::GetInstance().player2Active)
     {
-        if (goei.GetPlayer2Pos().x > goei.m_Rect.x + 5
-            && goei.GetPlayer2Pos().x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
+        if (goei.m_Player2Pos.x > goei.m_Rect.x + 5
+            && goei.m_Player2Pos.x - 5 < goei.m_Rect.x + goei.m_Rect.w / 2)
         {
-            goei.ShootLaser();
+            //goei.ShootLaser();
         }
     }
 }
@@ -254,7 +254,7 @@ std::shared_ptr<GoeiState> ExplodeStateGoei::handleInput(Goei& goei)
 
     if (goei.GetComponent<SpriteComponent>()->IsAnimPlayed())
     {
-        goei.SetIsDead(true);
+        goei.m_IsDead = true;
     }
 
     return nullptr;

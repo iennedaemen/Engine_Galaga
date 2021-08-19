@@ -275,31 +275,31 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		// ZAKOS
 		for (int i{}; i < m_pZakos.size(); ++i)
 		{
-			std::shared_ptr<Zako> dZakos = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
-			if (dZakos->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
+			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+			if (zako->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
 				dPlayer->SetIsHit(true);
 
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (dZakos->GetLaser());
+				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (zako->GetLaser());
 				dLaser->SetActive(false);
 
 			}
-			if (dPlayer->GetComponent<ColliderComponent>()->IsColliding(dZakos->m_Rect))
+			if (dPlayer->GetComponent<ColliderComponent>()->IsColliding(zako->m_Rect))
 			{
 				dPlayer->SetIsHit(true);
-				dZakos->SetIsHit(true);
+				zako->m_IsHit = true;
 			}
 		}
 
 		// GOEIS
 		for (int i{}; i < m_pGoeis.size(); ++i)
 		{
-			std::shared_ptr<Goei> dGoei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
-			if (dGoei->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
+			std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
+			if (goei->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
 				dPlayer->SetIsHit(true);
 
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (dGoei->GetLaser());
+				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (goei->GetLaser());
 				dLaser->SetActive(false);
 
 			}
@@ -307,12 +307,12 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		// BOSSES
 		for (int i{}; i < m_pBosses.size(); ++i)
 		{
-			std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
-			if (dBoss->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
+			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
+			if (boss->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
 				dPlayer->SetIsHit(true);
 
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (dBoss->GetLaser());
+				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (boss->GetLaser());
 				dLaser->SetActive(false);
 			}
 		}
@@ -358,22 +358,22 @@ void GameScene::SpawnZako()
 				}
 			}
 
-			std::shared_ptr<GameObject> zako = std::make_shared<Zako>(m_ZakoPositions[m_ZakoPos.front()]);
-			Add(zako);
-			m_pZakos.push_back(zako);
-			std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako>(zako);
+			std::shared_ptr<GameObject> zakoObj = std::make_shared<Zako>(m_ZakoPositions[m_ZakoPos.front()]);
+			Add(zakoObj);
+			m_pZakos.push_back(zakoObj);
+			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako>(zakoObj);
 
 			m_ZakoPos.pop();
 
 			if (m_SpawnLeftZako)
 			{
-				zako->SetPosition(-20, 400);
-				dZako->SetSpawnedLeft(true);
+				zakoObj->SetPosition(-20, 400);
+				zako->m_SpawnedLeft = true;
 			}
 			else
 			{
-				zako->SetPosition(float(ScreenInfo::GetInstance().screenwidth - 20), 400.0f);
-				dZako->SetSpawnedLeft(false);
+				zakoObj->SetPosition(float(ScreenInfo::GetInstance().screenwidth - 20), 400.0f);
+				zako->m_SpawnedLeft = false;
 			}
 	}
 }
@@ -395,16 +395,16 @@ void GameScene::UpdateZako()
 	// UPDATE DATA
 	for (int i{}; i < m_pZakos.size(); ++i)
 	{
-		std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+		std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
 
 		int r = std::rand() % 2;
 		if (r % 2 == 0)
-			dZako->SetNextAction(true);
-		else dZako->SetNextAction(false);
+			zako->SetNextAction(true);
+		else zako->SetNextAction(false);
 
-		if(GameInfo::GetInstance().player2Active)
-			dZako->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y }, { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y });
-		else dZako->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y });
+		zako->m_PlayerPos = { m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y };
+		if (GameInfo::GetInstance().player2Active)
+			zako->m_Player2Pos = { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y };
 	}
 
 	// COLLISION
@@ -414,15 +414,15 @@ void GameScene::UpdateZako()
 		{
 			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(m_pZakos[j]->m_Rect))
 			{
-				std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[j]);
-				if (!dZako->GetIsHit())
+				std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[j]);
+				if (!zako->m_IsHit)
 				{
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::ZakoHit, dZako, parent);
+						observer->onNotify(Event::ZakoHit, m_pZakos[j], parent);
 					}
-					dZako->SetIsHit(true);
+					zako->m_IsHit = true;
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 					if (GameInfo::GetInstance().player2Active)
 					{
@@ -438,11 +438,11 @@ void GameScene::UpdateZako()
 	std::vector<int> idxRemove;
 	for (int i{}; i < m_pZakos.size(); ++i)
 	{
-		std::shared_ptr<Zako> dZako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
-		if (dZako->GetIsDead())
+		std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+		if (zako->m_IsDead)
 		{
 			m_EnemiesDead++;
-			Remove(dZako);
+			Remove(m_pZakos[i]);
 			idxRemove.push_back(i);
 		}
 	}
@@ -480,22 +480,22 @@ void GameScene::SpawnGoei()
 			}
 		}
 
-		std::shared_ptr<GameObject> goei = std::make_shared<Goei>(m_GoeiPositions[m_GoeiPos.front()]);
-		Add(goei);
-		m_pGoeis.push_back(goei);
-		std::shared_ptr<Goei> dGoei = std::dynamic_pointer_cast<Goei>(goei);
+		std::shared_ptr<GameObject> goeiObj = std::make_shared<Goei>(m_GoeiPositions[m_GoeiPos.front()]);
+		Add(goeiObj);
+		m_pGoeis.push_back(goeiObj);
+		std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei>(goeiObj);
 
 		m_GoeiPos.pop();
 
 		if (m_SpawnLeftGoei)
 		{
-			goei->SetPosition(-20, 400);
-			dGoei->SetSpawnedLeft(true);
+			goeiObj->SetPosition(-20, 400);
+			goei->m_SpawnedLeft = true;
 		}
 		else
 		{
-			goei->SetPosition(float(ScreenInfo::GetInstance().screenwidth - 20), 400.0f);
-			dGoei->SetSpawnedLeft(false);
+			goeiObj->SetPosition(float(ScreenInfo::GetInstance().screenwidth - 20), 400.0f);
+			goei->m_SpawnedLeft = false;
 		}
 	}
 }
@@ -517,10 +517,11 @@ void GameScene::UpdateGoei()
 	// UPDATE DATA
 	for (int i{}; i < m_pGoeis.size(); ++i)
 	{
-		std::shared_ptr<Goei> dGoei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
+		std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
+		
+		goei->m_PlayerPos = { m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y };
 		if(GameInfo::GetInstance().player2Active)
-			dGoei->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y }, { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y });
-		else dGoei->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y });
+			goei->m_Player2Pos = { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y };
 	}
 
 	// COLLISION
@@ -530,10 +531,10 @@ void GameScene::UpdateGoei()
 		{
 			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(m_pGoeis[j]->m_Rect))
 			{
-				std::shared_ptr<Goei> dGoei = std::dynamic_pointer_cast<Goei> (m_pGoeis[j]);
-				if (!dGoei->GetIsHit())
+				std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[j]);
+				if (!goei->m_IsHit)
 				{
-					dGoei->SetIsHit(true);
+					goei->m_IsHit = true;
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 					if (GameInfo::GetInstance().player2Active)
 					{
@@ -549,11 +550,11 @@ void GameScene::UpdateGoei()
 	std::vector<int> idxRemove;
 	for (int i{}; i < m_pGoeis.size(); ++i)
 	{
-		std::shared_ptr<Goei> dGoei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
-		if (dGoei->GetIsDead())
+		std::shared_ptr<Goei> eGoei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
+		if (eGoei->m_IsDead)
 		{
 			m_EnemiesDead++;
-			Remove(dGoei);
+			Remove(m_pGoeis[i]);
 			idxRemove.push_back(i);
 		}
 	}
@@ -580,19 +581,19 @@ void GameScene::SpawnBoss()
 		m_BossTimes.pop();
 		m_NrActiveBoss++;
 
-		std::shared_ptr<GameObject> boss = std::make_shared<Boss>(m_BossPositions[m_BossPos.front()]);
-		Add(boss);
-		m_pBosses.push_back(boss);
-		std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss>(boss);
+		std::shared_ptr<GameObject> bossObj = std::make_shared<Boss>(m_BossPositions[m_BossPos.front()]);
+		Add(bossObj);
+		m_pBosses.push_back(bossObj);
+		std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss>(bossObj);
 
 		m_BossPos.pop();
 
-		boss->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2), -20);
+		bossObj->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2), -20);
 
 
 		int r = std::rand() % 2;
-		if (r == 0) dBoss->SetSpawnedLeft(true);
-		else dBoss->SetSpawnedLeft(false);
+		if (r == 0) boss->m_SpawnedLeft = true;
+		else boss->m_SpawnedLeft = false;
 	}
 }
 
@@ -613,16 +614,16 @@ void GameScene::UpdateBoss()
 	// UPDATE DATA
 	for (int i{}; i < m_pBosses.size(); ++i)
 	{
-		std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
+		std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
 
 		int r = std::rand() % 2;
 		if (r % 2 == 0)
-			dBoss->SetNextAction(true);
-		else dBoss->SetNextAction(false);
+			boss->SetNextAction(true);
+		else boss->SetNextAction(false);
 
+		boss->m_PlayerPos = { m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y };
 		if (GameInfo::GetInstance().player2Active)
-			dBoss->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y }, { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y });
-		else dBoss->SetPlayerPos({ m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y });
+			boss->m_Player2Pos = { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y };
 	}
 
 	// COLLISION
@@ -632,10 +633,10 @@ void GameScene::UpdateBoss()
 		{
 			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(m_pBosses[j]->m_Rect))
 			{
-				std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[j]);
-				if (!dBoss->GetIsHit())
+				std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[j]);
+				if (!boss->m_IsHit)
 				{
-					dBoss->SetIsHit(true);
+					boss->m_IsHit = true;
 					dPlayer->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 					if (GameInfo::GetInstance().player2Active)
 					{
@@ -651,11 +652,11 @@ void GameScene::UpdateBoss()
 	std::vector<int> idxRemove;
 	for (int i{}; i < m_pBosses.size(); ++i)
 	{
-		std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
-		if (dBoss->GetIsDead())
+		std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
+		if (boss->m_IsDead)
 		{
 			m_EnemiesDead++;
-			Remove(dBoss);
+			Remove(boss);
 			idxRemove.push_back(i);
 		}
 	}

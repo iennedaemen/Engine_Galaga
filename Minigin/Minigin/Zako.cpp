@@ -60,14 +60,3 @@ void Zako::Update()
 		m_State->update(*this);
 
 }
-
-void Zako::ShootLaser()
-{
-	std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
-	if (!dLaser->IsActive())
-	{
-		dLaser->SetActive(true);
-		m_pLaser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - m_pLaser->m_Rect.w / 2), float(m_Rect.y));
-		return;
-	}
-}

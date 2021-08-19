@@ -9,7 +9,7 @@
 
 std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 {
-    if (boss.GetLives() <= 0)
+    if (boss.m_Lives <= 0)
     {
         boss.SetIsIdle(false);
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
@@ -23,7 +23,7 @@ std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
         return ptr2;
     }
 
-    if (boss.DoShootRun())
+    if (boss.m_DoShootRun)
     {
         boss.SetIsIdle(false);
         std::shared_ptr<ShootingRunStateBoss> ptr1 = std::make_shared<ShootingRunStateBoss>();
@@ -44,7 +44,7 @@ std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 
 std::shared_ptr<BossState> SpawnStateBoss::handleInput(Boss& boss)
 {
-    if (boss.GetLives() <= 0)
+    if (boss.m_Lives <= 0)
     {
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         boss.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -95,7 +95,7 @@ void SpawnStateBoss::update(Boss& boss)
 
 std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
 {
-    if (boss.GetLives() <= 0)
+    if (boss.m_Lives <= 0)
     {
         boss.SetIsIdle(false);
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
@@ -110,7 +110,7 @@ std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
 
     if (m_ReachedPosXIdle && m_ReachedPosYIdle)
     {
-        boss.SetShootRun(false);
+        boss.m_DoShootRun = false;
         boss.SetIsIdle(true);
         std::shared_ptr<IdleStateBoss> ptr1 = std::make_shared<IdleStateBoss>();
         std::shared_ptr<BossState> ptr2 = std::static_pointer_cast<BossState>(ptr1);
@@ -126,7 +126,9 @@ void ShootingRunStateBoss::update(Boss& boss)
     glm::vec2 newPosCoord2;
     glm::vec2 newPosCoord3;
 
-    if (boss.SpawnedLeft())
+
+
+    if (boss.m_SpawnedLeft)
     {
         newPosCoord2 = { 50, ScreenInfo::GetInstance().screenheigth - 175 };
         newPosCoord3 = { ScreenInfo::GetInstance().screenwidth - 50, boss.m_Rect.y };
@@ -156,7 +158,7 @@ void ShootingRunStateBoss::update(Boss& boss)
     {
         if (!m_ReachedPosX2 || !m_ReachedPosY2)
         {
-            if (boss.SpawnedLeft())
+            if (boss.m_SpawnedLeft)
             {
                 if (boss.m_Rect.x > newPosCoord2.x)
                     boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
@@ -179,7 +181,7 @@ void ShootingRunStateBoss::update(Boss& boss)
     {
         if (!m_ReachedPos3)
         {
-            if (boss.SpawnedLeft())
+            if (boss.m_SpawnedLeft)
             {
                 if (boss.m_Rect.x < newPosCoord3.x)
                     boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
@@ -223,25 +225,25 @@ void ShootingRunStateBoss::update(Boss& boss)
     }
 
     //SHOOT
-    if (boss.GetPlayerPos().x > boss.m_Rect.x + 5
-        && boss.GetPlayerPos().x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
+    if (boss.m_PlayerPos.x > boss.m_Rect.x + 5
+        && boss.m_PlayerPos.x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
     {
-        boss.ShootLaser();
+        boss.ShootLaser(std::make_shared<Boss>(boss));
     }
 
     if (GameInfo::GetInstance().player2Active)
     {
-        if (boss.GetPlayer2Pos().x > boss.m_Rect.x + 5
-            && boss.GetPlayer2Pos().x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
+        if (boss.m_Player2Pos.x > boss.m_Rect.x + 5
+            && boss.m_Player2Pos.x - 5 < boss.m_Rect.x + boss.m_Rect.w / 2)
         {
-            boss.ShootLaser();
+            boss.ShootLaser(std::make_shared<Boss>(boss));
         }
     }
 }
 
 std::shared_ptr<BossState> BeamRunStateBoss::handleInput(Boss& boss)
 {
-    if (boss.GetLives() <= 0)
+    if (boss.m_Lives <= 0)
     {
         boss.SetIsIdle(false);
         boss.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
@@ -310,7 +312,7 @@ std::shared_ptr<BossState> ExplodeStateBoss::handleInput(Boss& boss)
 {
         if (boss.GetComponent<SpriteComponent>()->IsAnimPlayed())
         {
-            boss.SetIsDead(true);
+            boss.m_IsDead = true;
         }
 
     return nullptr;

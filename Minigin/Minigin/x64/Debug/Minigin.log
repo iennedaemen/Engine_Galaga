@@ -1,4 +1,31 @@
-﻿  GameScene.cpp
+﻿  BaseComponent.cpp
+  Beam.cpp
+  Boss.cpp
+  BossState.cpp
+  ColliderComponent.cpp
+  Enemy.cpp
+  FpsComponent.cpp
+  GameObject.cpp
+  GameOverScene.cpp
+  GameScene.cpp
+  Goei.cpp
+  GoeiState.cpp
+  InputManager.cpp
+  Laser.cpp
+  MenuScene.cpp
+  Minigin.cpp
+  Player.cpp
+  PlayerState.cpp
+  RenderComponent.cpp
+  Scene.cpp
+  Generating Code...
+  Compiling...
+  SpriteComponent.cpp
+  TextComponent.cpp
+  Zako.cpp
+  ZakoState.cpp
+  Generating Code...
+     Creating library C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\x64\Debug\Minigin.lib and object C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\x64\Debug\Minigin.exp
   Minigin.vcxproj -> C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\x64\Debug\Minigin.exe
   C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2\lib\x64\SDL2.dll
   1 File(s) copied

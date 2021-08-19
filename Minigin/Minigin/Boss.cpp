@@ -49,9 +49,9 @@ void Boss::Update()
 			m_ActionTimer = 0.0f;
 			m_ActionTime = float(std::rand() % 10 + 15);
 
-			/*if (m_NextAction)
-				m_DoShootRun = true;*/
-			//else 
+			if (m_NextAction)
+				m_DoShootRun = true;
+			else 
 			m_DoBeamRun = true;
 
 		}
@@ -80,15 +80,4 @@ void Boss::Update()
 	}
 	if (m_State)
 		m_State->update(*this);
-}
-
-void Boss::ShootLaser()
-{
-	std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
-	if (!dLaser->IsActive())
-	{
-		dLaser->SetActive(true);
-		m_pLaser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - m_pLaser->m_Rect.w / 2), float(m_Rect.y));
-		return;
-	}
 }
