@@ -54,6 +54,7 @@ void Minigin::LoadGame() const
 	//GameInfo::GetInstance().player2Active = true;
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(1));
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(2));
+	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(3));
 	SceneManager::GetInstance().AddScene(std::make_shared<MenuScene>());
 	SceneManager::GetInstance().AddScene(std::make_shared<GameOverScene>());
 	SceneManager::GetInstance().SetActiveScene("MenuScene");

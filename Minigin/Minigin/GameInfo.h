@@ -17,5 +17,7 @@ public:
 
 	int shotsHitP1 = 0;
 	int shotsHitP2 = 0;
+
+	int amountLevels = 3;
 };
 

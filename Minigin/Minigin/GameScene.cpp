@@ -25,6 +25,7 @@
 #include <iomanip>
 #include "HitObserver.h"
 
+// json reader = https://github.com/nlohmann/json
 using json = nlohmann::json;
 
 GameScene::GameScene(int level)
@@ -32,11 +33,13 @@ GameScene::GameScene(int level)
 	, m_Level(level)
 {}
 
-
 void GameScene::Initialize()
 {
+	// OBSERVER(S)
 	m_Observers.push_back(std::make_shared<HitObserver>());
 
+
+	// BACKGROUND
 	std::shared_ptr<GameObject> pBackObj = std::make_shared<GameObject>();
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(1000.0f, 2000.0f, 1, 1);
 	pBackObj->AddComponent(pSpriteComp);
@@ -45,6 +48,8 @@ void GameScene::Initialize()
 	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y + 20, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
 	Add(pBackObj);
 
+
+	// SCORE TEXT
 	m_pTextScoreP1 = std::make_shared<GameObject>();
 	std::shared_ptr<TextComponent> textScore1 = std::make_shared<TextComponent>("../Data/Pixel.otf", 15);
 	std::stringstream ss;
@@ -69,6 +74,8 @@ void GameScene::Initialize()
 	Add(m_pTextScoreP2);
 	m_pTextScoreP2->SetPosition(100, 1);
 
+
+	// LEVEL TEXT
 	m_pLevelText = std::make_shared<GameObject>();
 	std::shared_ptr<TextComponent> text = std::make_shared<TextComponent>("../Data/Pixel.otf", 25);
 	text->SetText("Level " + std::to_string(m_Level));
@@ -76,6 +83,8 @@ void GameScene::Initialize()
 	Add(m_pLevelText);
 	m_pLevelText->SetPosition(135, ScreenInfo::GetInstance().screenheigth/2.0f - 50);
 
+
+	// PLAYER(S)
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
 
@@ -88,6 +97,8 @@ void GameScene::Initialize()
 	}
 	else m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f), float(ScreenInfo::GetInstance().screenheigth - 75));
 
+
+	// POSSIBLE ENEMY POSITIONS
 	for (int i{}; i < 2; ++i)
 	{
 		for (int j{}; j < 8; ++j)
@@ -103,6 +114,8 @@ void GameScene::Initialize()
 		m_BossPositions.push_back(glm::vec2{ 40.0f * (j + 1), 25 + 20 });
 	}
 
+
+	// READ FILE
 	ReadFile();
 }
 
@@ -119,6 +132,7 @@ void GameScene::Update()
 		}
 	}
 
+
 	// UPDATE SCORE VISUALS
 	std::stringstream ss;
 	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP1;
@@ -133,13 +147,16 @@ void GameScene::Update()
 		m_pTextScoreP2->GetComponent<TextComponent>()->SetText(s);
 	}
 
+
 	// SPAWN TIMER
 	m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
+
 
 	// UPDATE PLAYER(S)
 	UpdatePlayer(m_pPlayer);
 	if (GameInfo::GetInstance().player2Active)
 		UpdatePlayer(m_pPlayer2);
+
 
 	// UPDATE ENEMIES
 	SpawnEnemy(EnemyType::Zako, m_ZakoPositions, m_ZakoTimes);
@@ -155,16 +172,15 @@ void GameScene::Update()
 	{
 		k = 1;
 		Reset();
-		if (m_Level < 2)
+		if (m_Level < GameInfo::GetInstance().amountLevels)
 			SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(m_Level + 1));
 		else SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(1));
 	}
 	else if (GetAsyncKeyState('P') == 0) k = 0;
 
-
 	if (m_EnemiesDead >= m_AmountZako + m_AmountGoei + m_AmountBoss)
 	{
-		if (m_Level < 2)
+		if (m_Level < GameInfo::GetInstance().amountLevels)
 			SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(m_Level + 1));
 		else SceneManager::GetInstance().SetActiveScene("GameOverScene");
 
@@ -194,13 +210,7 @@ void GameScene::Render() const
 
 void GameScene::Reset()
 {
-	//std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	if (m_Level == 1)
-	{
-		GameInfo::GetInstance().player1Lives = 3;
-		GameInfo::GetInstance().player2Lives = 3;
-	}
-
+	// RESET PLAYER(S)
 	Remove(m_pPlayer);
 	m_pPlayer = nullptr;
 	m_pPlayer = std::make_shared<Player>(1);
@@ -221,13 +231,13 @@ void GameScene::Reset()
 	else m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f), float(ScreenInfo::GetInstance().screenheigth - 75));
 
 
+	// RESET LEVEL TEXT
 	m_BeginTimer = 0.0f;
 	m_IsBegin = true;
 	m_pLevelText->GetComponent<TextComponent>()->SetText("Level " + std::to_string(m_Level));
 	
-	m_SpawnTimer = 0;
-	m_EnemiesDead = 0;
 
+	//RESET PLAYER 2 SCORE VISUALS
 	if (GameInfo::GetInstance().player2Active)
 	{
 		std::stringstream ss;
@@ -237,7 +247,16 @@ void GameScene::Reset()
 	}
 	else m_pTextScoreP2->GetComponent<TextComponent>()->SetText(" ");
 
-	// ZAKO
+
+	// RESET SPAWNER
+	m_SpawnTimer = 0;
+
+
+	// RESET DEAD ENEMIES;
+	m_EnemiesDead = 0;
+
+
+	// RESET ZAKO
 	for (int i{}; i < m_pZakos.size(); ++i)
 	{
 		Remove(m_pZakos[i]);
@@ -247,7 +266,8 @@ void GameScene::Reset()
 	m_SpawnAmountZako = 4;
 	m_SpawnLeftZako = false;
 
-	// GOEI
+
+	// RESET GOEI
 	for (int i{}; i < m_pGoeis.size(); ++i)
 	{
 		Remove(m_pGoeis[i]);
@@ -257,7 +277,8 @@ void GameScene::Reset()
 	m_SpawnAmountGoei = 0;
 	m_SpawnLeftGoei = false;
 
-	// BOSS
+
+	// RESET BOSS
 	for (int i{}; i < m_pBosses.size(); ++i)
 	{
 		Remove(m_pBosses[i]);
@@ -267,7 +288,7 @@ void GameScene::Reset()
 	m_SpawnAmountBoss = 0;
 
 
-	// READ
+	// RESET READ VARIABLES
 	m_AmountZako = 0;
 	while(!m_ZakoTimes.empty())
 		m_ZakoTimes.pop();
