@@ -4,11 +4,10 @@
 #include <vector>
 #include "Transform.h"
 #include <SDL.h>
-#include <memory>
 
 class BaseComponent;
 
-	class GameObject : public std::enable_shared_from_this<GameObject>
+	class GameObject
 	{
 	public:
 		GameObject() = default;
@@ -49,7 +48,7 @@ class BaseComponent;
 
 		void Add(std::shared_ptr<GameObject> object)
 		{
-			object->SetParent(shared_from_this());
+			object->SetParent(this);
 			m_pChildren.push_back(object);
 			object->Initialize();
 		}
@@ -86,12 +85,12 @@ class BaseComponent;
 			return m_Rect;
 		}
 
-		std::shared_ptr<GameObject> GetParent()
+		GameObject* GetParent()
 		{
 			return m_pParent;
 		}
 
-		void SetParent(std::shared_ptr<GameObject> parent)
+		void SetParent(GameObject* parent)
 		{
 			m_pParent = parent;
 		}
@@ -108,7 +107,7 @@ class BaseComponent;
 	private:
 		std::vector<std::shared_ptr<BaseComponent>> m_pComponents;
 		std::vector<std::shared_ptr<GameObject>> m_pChildren;
-		std::shared_ptr<GameObject> m_pParent;
+		GameObject* m_pParent = nullptr;
 		Transform m_Transform;
 		std::shared_ptr<Texture2D> m_Texture;
 		bool m_IsInitialized = false;

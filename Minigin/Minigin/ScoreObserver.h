@@ -29,15 +29,15 @@ public:
 		m_ScoreMap[EnemyType::Boss] = bossScoreMap;
 	};
 
-	virtual void  onNotify(const Event event, std::shared_ptr<GameObject> arg) 
+	virtual void  onNotify(const Event event, GameObject* arg) 
 	{
 		UNREFERENCED_PARAMETER(event);
 		UNREFERENCED_PARAMETER(arg);
 	};
 
-	virtual void onNotify(const Event event, std::shared_ptr<GameObject> arg1, std::shared_ptr<GameObject> arg2)
+	virtual void onNotify(const Event event, GameObject* arg1, GameObject* arg2)
 	{
-		std::shared_ptr<Player> pPlayer = std::dynamic_pointer_cast<Player>(arg2);
+		Player* pPlayer = static_cast<Player*>(arg2);
 
 		if (pPlayer->getPlayerNr() == 1)
 			GameInfo::GetInstance().shotsHitP1 += 1;
@@ -49,7 +49,7 @@ public:
 		{
 		case Event::ZakoHit:
 		{
-			std::shared_ptr<Zako> pZako = std::dynamic_pointer_cast<Zako>(arg1);
+			Zako* pZako = static_cast<Zako*>(arg1);
 
 			if (pPlayer->getPlayerNr() == 1)
 			{
@@ -65,7 +65,7 @@ public:
 
 		case Event::GoeiHit:
 		{
-			std::shared_ptr<Goei> pGoei = std::dynamic_pointer_cast<Goei>(arg1);
+			Goei* pGoei = static_cast<Goei*>(arg1);
 
 			if (pPlayer->getPlayerNr() == 1)
 			{
@@ -81,7 +81,7 @@ public:
 
 		case Event::BossHit:
 		{
-			std::shared_ptr<Boss> pBoss = std::dynamic_pointer_cast<Boss>(arg1);
+			Boss* pBoss = static_cast<Boss*>(arg1);
 
 			if (pBoss->m_Lives <= 0)
 			{

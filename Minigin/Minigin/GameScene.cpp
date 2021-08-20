@@ -440,10 +440,10 @@ void GameScene::UpdateZako()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::ZakoHit, m_pZakos[j], parent);
+						observer->onNotify(Event::ZakoHit, m_pZakos[j].get(), parent);
 					}
 					zako->m_IsHit = true;
-					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					Player* p = static_cast<Player*>(parent);
 					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
@@ -553,11 +553,11 @@ void GameScene::UpdateGoei()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::GoeiHit, m_pGoeis[j], parent);
+						observer->onNotify(Event::GoeiHit, m_pGoeis[j].get(), parent);
 					}
 
 					goei->m_IsHit = true;
-					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					Player* p =static_cast<Player*>(parent);
 					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
@@ -657,11 +657,11 @@ void GameScene::UpdateBoss()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::BossHit, m_pBosses[j], parent);
+						observer->onNotify(Event::BossHit, m_pBosses[j].get(), parent);
 					}
 
 					boss->m_IsHit = true;
-					std::shared_ptr<Player> p = std::dynamic_pointer_cast<Player>(parent);
+					Player* p = static_cast<Player*>(parent);
 					p->RemoveLaser(std::dynamic_pointer_cast<Laser>(pLasers[i]));
 				}
 			}
