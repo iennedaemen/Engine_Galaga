@@ -6,6 +6,7 @@
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
 #pragma warning(pop)
+#include <unordered_map>
 
 class GameScene : public Scene
 {
@@ -18,24 +19,22 @@ public:
 	virtual void Reset() override;
 
 private:
-	std::vector<std::shared_ptr<Observer>> m_Observers;
-
 	int k = 0;
 
 	std::shared_ptr<GameObject> m_pPlayer = nullptr;
 	std::shared_ptr<GameObject> m_pPlayer2 = nullptr;
 
-	float m_SpawnTimer = 0;
-	int m_EnemiesDead = 0;
-
 	std::shared_ptr<GameObject> m_pTextScoreP1 = nullptr;
 	std::shared_ptr<GameObject> m_pTextScoreP2 = nullptr;
 
+	float m_SpawnTimer = 0;
+	int m_EnemiesDead = 0;
+
 	//BEGIN
 	std::shared_ptr<GameObject> m_pLevelText = nullptr;
-	bool m_IsBegin = true;
 	float m_BeginTimer = 0.0f;
 	float m_BeginTime = 4.0f;
+	bool m_IsBegin = true;
 
 	// ZAKO
 	std::vector<glm::vec2> m_ZakoPositions;
@@ -57,32 +56,29 @@ private:
 	int m_NrActiveBoss = 0;
 	int m_SpawnAmountBoss = 0;
 
-	// FUNCTIONS
-	void UpdatePlayer(std::shared_ptr<GameObject> pPlayer);
-	void SpawnZako();
-	void UpdateZako();
-	void SpawnGoei();
-	void UpdateGoei();
-	void SpawnBoss();
-	void UpdateBoss();
-
+	// OBSERVER
+	std::vector<std::shared_ptr<Observer>> m_Observers;
 
 	// READ
-	void ReadFile();
-
 	int m_Level;
 
 	int m_AmountZako = 0;
 	std::queue<float> m_ZakoTimes;
-	std::queue<int> m_ZakoPos;
+	std::queue<std::pair<int, bool>> m_ZakoPos;
 
 	int m_AmountGoei = 0;
 	std::queue<float> m_GoeiTimes;
-	std::queue<int> m_GoeiPos;
+	std::queue<std::pair<int, bool>> m_GoeiPos;
 
 	int m_AmountBoss = 0;
 	std::queue<float> m_BossTimes;
-	std::queue<int> m_BossPos;
+	std::queue<std::pair<int, bool>> m_BossPos;
+
+	// FUNCTIONS
+	void SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, std::queue<float>& spawnTimes);
+	void UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObject>>& Enemies);
+	void UpdatePlayer(std::shared_ptr<GameObject> pPlayer);
+	void ReadFile();
 
 };
 

@@ -3,12 +3,15 @@
 		{
 		"AmountZako" : 8,
 		"ZakoTimes" : [5.0, 5.1, 5.2, 5.3, 15.0, 15.1, 15.2, 25.1],
+		"ZakoSpawnLeft" : [false, false, false, false, true, true, true, true],
 		"ZakoPositions" : [0, 1, 8, 9, 5, 6, 7, 15],
 		"AmountGoei" : 6,
 		"GoeiTimes" : [10.0, 10.1, 10.2, 18.0, 18.1, 28.0],
+		"GoeiSpawnLeft" : [true, true, true, false, false, false],
 		"GoeiPositions" : [3, 4, 5, 13, 14, 0],
 		"AmountBoss" : 2,
 		"BossTimes" : [14.0, 30.0],
+		"BossSpawnLeft" : [true, true],
 		"BossPositions" : [6, 0]
 		},
 
@@ -16,12 +19,15 @@
 		{
 		"AmountZako" : 12,
 		"ZakoTimes" : [10.0, 10.1, 10.2, 16.0, 16.1, 16.2, 25.0, 25.1, 30.0, 30.1, 30.2, 30.3],
+		"ZakoSpawnLeft" : [true, true, true, false, false, false, true, true, false, false, false, false],
 		"ZakoPositions" : [5, 6, 14, 3, 12, 11, 3, 1, 0, 9, 2, 10],
 		"AmountGoei" : 8,
 		"GoeiTimes" : [5.0, 5.1, 5.2, 5.3, 5.4, 21.0, 21.1, 21.2],
+		"GoeiSpawnLeft" : [false, false, false, false, false, true, true, true],
 		"GoeiPositions" : [13, 12, 11, 2, 3, 5, 6, 14],
 		"AmountBoss" : 4,
 		"BossTimes" : [8.0, 15.0, 15.1, 28.0],
+		"BossSpawnLeft" : [false, true, true, true],
 		"BossPositions" : [5, 4, 1, 7]
 		}
 }
