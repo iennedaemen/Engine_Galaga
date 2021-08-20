@@ -10,8 +10,7 @@
 class Goei : public GameObject, public Enemy
 {
 public:
-	Goei(glm::vec2 idlePos) : Enemy(idlePos)
-	{};
+	Goei(glm::vec2 idlePos) : Enemy(idlePos) {}
 
 protected:
 	void Initialize() override;

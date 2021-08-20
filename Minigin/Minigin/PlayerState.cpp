@@ -3,15 +3,15 @@
 #include <SDL.h>
 #include "InputManager.h"
 #include "SpriteComponent.h"
-
+#include "GameInfo.h"
 
 std::shared_ptr<PlayerState> IdleState::handleInput(Player& player)
 {
 
-    if (player.GetIsHit())
+    if (player.m_IsHit)
     {
-        player.SetExploding(true);
-        player.SetIsHit(false);
+        player.m_Exploding = true;
+        player.m_IsHit = false;
         player.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         player.GetComponent<SpriteComponent>()->IsStatic(false);
         player.GetComponent<SpriteComponent>()->SetNrFramesToPlay(5);
@@ -32,14 +32,23 @@ std::shared_ptr<PlayerState> ExplodeState::handleInput(Player& player)
     {
         player.GetComponent<SpriteComponent>()->SetIsAnimPlayed(false);
 
-        player.SetLives(player.GetLives() - 1);
-
-        if(player.GetLives() <= 0)
-            player.SetIsDead(true);
-        else
+        if (player.GetPlayerNr() == 1)
         {
-            player.SetExploding(false);
-            player.GetComponent<SpriteComponent>()->SetTexture("Player" + std::to_string(player.getPlayerNr()) +".png", 60.0f, 64.0f, 1, 1);
+            GameInfo::GetInstance().player1Lives -= 1;
+            if (GameInfo::GetInstance().player1Lives <= 0)
+                player.m_IsDead = true;
+        }
+        else if (player.GetPlayerNr() == 2)
+        {
+            GameInfo::GetInstance().player2Lives -= 1;
+            if (GameInfo::GetInstance().player2Lives <= 0)
+                player.m_IsDead = true;
+        }
+
+        if(!player.m_IsDead)
+        {
+            player.m_Exploding = false;
+            player.GetComponent<SpriteComponent>()->SetTexture("Player" + std::to_string(player.GetPlayerNr()) +".png", 60.0f, 64.0f, 1, 1);
             player.GetComponent<SpriteComponent>()->SetSpriteSheetTopLeft(0, 0);
             player.GetComponent<SpriteComponent>()->IsStatic(true);
             player.GetComponent<SpriteComponent>()->SetCurrentFrame(0);

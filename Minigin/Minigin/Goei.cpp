@@ -42,17 +42,15 @@ void Goei::Update()
 	{
 		m_pLaser->m_Rect.x = -100;
 		std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
-		dLaser->SetActive(false);
+		dLaser->m_IsActive = false;
 	}
 
 
 	// STATE
 	std::shared_ptr<GoeiState> newState = nullptr;
 	newState = m_State->HandleState(*this);
-	if (newState != nullptr)
-	{
+	if (newState != nullptr) 
 		m_State = newState;
-	}
-	if (m_State)
+	if (m_State) 
 		m_State->Update(*this);
 }

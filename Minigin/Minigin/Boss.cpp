@@ -28,6 +28,7 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
+	// LIVES
 	if (m_IsHit)
 	{
 		m_Lives--;
@@ -35,9 +36,7 @@ void Boss::Update()
 	}
 
 	if (m_Lives == 1)
-	{
 		GetComponent<SpriteComponent>()->SetCurrentFrame(1);
-	}
 
 	// ACTIONS
 	if (m_EnumState == State::Idle)
@@ -49,35 +48,39 @@ void Boss::Update()
 			m_ActionTimer = 0.0f;
 			m_ActionTime = float(std::rand() % 10 + 15);
 
-			if (m_NextAction)
-				m_DoShootRun = true;
-			else 
-			m_DoBeamRun = true;
-
+			if (m_NextAction) m_DoShootRun = true;
+			else m_DoBeamRun = true;
 		}
 	}
 
 	// LASER
-
 	if (m_pLaser->GetRect().y > ScreenInfo::GetInstance().screenheigth + 20)
 	{
 		m_pLaser->m_Rect.x = -100;
 		std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
-		dLaser->SetActive(false);
+		dLaser->m_IsActive = false;
 	}
 
 	// BEAM
 	std::shared_ptr<Beam> dBeam = std::dynamic_pointer_cast<Beam>(m_pBeam);
-	if(dBeam->IsActive())
+	if (dBeam->m_IsActive)
 		m_pBeam->SetPosition(float(m_Rect.x - 20), float(m_Rect.y + 40));
 
 	// STATE
 	std::shared_ptr<BossState> newState = nullptr;
 	newState = m_State->handleInput(*this);
 	if (newState != nullptr)
-	{
 		m_State = newState;
-	}
 	if (m_State)
 		m_State->update(*this);
+}
+
+const std::shared_ptr<GameObject> Boss::GetBeam()
+{
+	return m_pBeam;
+}
+
+void Boss::SetNextAction(bool doShootRun)
+{
+	m_NextAction = doShootRun;
 }

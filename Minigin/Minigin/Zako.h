@@ -13,13 +13,9 @@ class Zako : public GameObject, public Enemy
 {
 public:
 	Zako() {};
-	Zako(glm::vec2 idlePos) : Enemy(idlePos)
-	{};
+	Zako(glm::vec2 idlePos) : Enemy(idlePos) {}
 
-	void SetNextAction(bool doShootRun)
-	{
-		m_NextAction = doShootRun;
-	}
+	void SetNextAction(bool doShootRun);
 
 	bool m_DoCrashRun = false;
 

@@ -32,31 +32,30 @@ void Zako::Update()
 			m_ActionTimer = 0.0f;
 			m_ActionTime = float(std::rand() % 10 + 15);
 
-			if (m_NextAction)
-				m_DoShootRun = true;
+			if (m_NextAction) m_DoShootRun = true;
 			else m_DoCrashRun = true;
-
 		}
 	}
 
 	// LASER
-
-		if (m_pLaser->GetRect().y > ScreenInfo::GetInstance().screenheigth + 20)
-		{
-			m_pLaser->m_Rect.x = -100;
-			std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
-			dLaser->SetActive(false);
-		}
-	
+	if (m_pLaser->GetRect().y > ScreenInfo::GetInstance().screenheigth + 20)
+	{
+		m_pLaser->m_Rect.x = -100;
+		std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
+		dLaser->m_IsActive = false;
+	}
 
 	// STATE
 	std::shared_ptr<ZakoState> newState = nullptr;
 	newState = m_State->HandleState(*this);
 	if (newState != nullptr)
-	{
 		m_State = newState;
-	}
 	if (m_State)
 		m_State->Update(*this);
 
+}
+
+void Zako::SetNextAction(bool doShootRun)
+{
+	m_NextAction = doShootRun;
 }

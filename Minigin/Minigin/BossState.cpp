@@ -296,13 +296,13 @@ void BeamRunStateBoss::update(Boss& boss)
     if (m_ReachedPos && !m_BeamDone)
     {
         std::shared_ptr<Beam> dBeam = std::dynamic_pointer_cast<Beam> (boss.GetBeam());
-        dBeam->SetActive(true);
+        dBeam->m_IsActive = true;
         m_BeamTimer += elapsedSec;
 
         if (m_BeamTimer >= m_BeamTime)
         {
             m_BeamTimer = 0.0f;
-            dBeam->SetActive(false);
+            dBeam->m_IsActive = false;
             m_BeamDone = true;
         }
 

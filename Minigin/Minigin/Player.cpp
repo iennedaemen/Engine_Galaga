@@ -8,14 +8,14 @@
 
 
 void Player::Initialize()
-{	
+{
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(60.0f, 64.0f, 1, 1);
 	AddComponent(pSpriteComp);
 	pSpriteComp->SetTexture("Player" + std::to_string(m_PlayerNr) + ".png");
 	pSpriteComp->IsStatic(true);
 	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
 	std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
-	AddComponent(pCollComp);	
+	AddComponent(pCollComp);
 	m_Rect = { m_Rect.x, m_Rect.y, 25, 27 };
 
 	m_pLasers[0] = std::shared_ptr<GameObject>(std::make_shared<Laser>(true));
@@ -47,10 +47,8 @@ void Player::Update()
 	// STATE
 	std::shared_ptr<PlayerState> newState = nullptr;
 	newState = m_State->handleInput(*this);
-	if(newState != nullptr)
-	{
+	if (newState != nullptr)
 		m_State = newState;
-	}
 	if (m_State)
 		m_State->update(*this);
 
@@ -62,7 +60,7 @@ void Player::Update()
 		{
 			laser->m_Rect.x = -100;
 			std::shared_ptr<Laser> derived = std::dynamic_pointer_cast<Laser> (laser);
-			derived->SetActive(false);
+			derived->m_IsActive = false;
 		}
 	}
 
@@ -71,7 +69,7 @@ void Player::Update()
 	{
 		float elapsedSec = Time::GetInstance().m_ElapsedSec;
 		float velocity{};
-		if(m_ReachedAbductionPos)
+		if (m_ReachedAbductionPos)
 			velocity = 150 * elapsedSec;
 		else velocity = 50 * elapsedSec;
 
@@ -93,8 +91,6 @@ void Player::Update()
 			m_Abducted = false;
 
 		}
-
-		
 	}
 }
 
@@ -103,13 +99,13 @@ void Player::ShootLaser()
 	for (std::shared_ptr<GameObject> laser : m_pLasers)
 	{
 		std::shared_ptr<Laser> l = std::dynamic_pointer_cast<Laser> (laser);
-		if (!l->IsActive())
+		if (!l->m_IsActive)
 		{
-			if(m_PlayerNr == 1) GameInfo::GetInstance().shotsFiredP1 += 1;
+			if (m_PlayerNr == 1) GameInfo::GetInstance().shotsFiredP1 += 1;
 			else if (m_PlayerNr == 2) GameInfo::GetInstance().shotsFiredP2 += 1;
 
-			l->SetActive(true);
- 			laser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - laser->m_Rect.w / 2), float(m_Rect.y));
+			l->m_IsActive = true;
+			laser->SetPosition(float(m_Rect.x + m_Rect.w / 2 - laser->m_Rect.w / 2), float(m_Rect.y));
 			return;
 		}
 	}
@@ -117,11 +113,42 @@ void Player::ShootLaser()
 
 void Player::RemoveLaser(std::shared_ptr<Laser> laser)
 {
-	if (laser->IsActive())
+	if (laser->m_IsActive)
 	{
 		if (laser == m_pLasers[0] || laser == m_pLasers[1])
 		{
-			laser->SetActive(false);
+			laser->m_IsActive = false;
 		}
 	}
+}
+
+void Player::SetState(PlayerState state)
+{
+	m_State = std::make_shared<PlayerState>(state);
+}
+
+const int Player::GetPlayerNr()
+{
+	return m_PlayerNr;
+}
+
+const std::shared_ptr<GameObject> Player::GetLaser(int index)
+{
+	return m_pLasers[index];
+}
+
+const bool Player::IsAbducted()
+{
+	return m_Abducted;
+}
+
+void Player::SetAbducted(bool abducted)
+{
+	m_Abducted = abducted;
+}
+
+void Player::SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper)
+{
+	m_Abducted = abducted;
+	m_pKidnapper = std::dynamic_pointer_cast<Boss>(kidnapper);
 }

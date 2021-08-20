@@ -165,7 +165,7 @@
     <ClInclude Include="Enemy.h">
       <Filter>Game\Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreObserver.h">
+    <ClInclude Include="HitObserver.h">
       <Filter>Game\Observers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -265,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="HitObserver.cpp">
+      <Filter>Game\Observers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

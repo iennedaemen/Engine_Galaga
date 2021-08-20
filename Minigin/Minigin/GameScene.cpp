@@ -23,7 +23,7 @@
 #include "Observer.h"
 #include <sstream>
 #include <iomanip>
-#include "ScoreObserver.h"
+#include "HitObserver.h"
 
 using json = nlohmann::json;
 
@@ -35,7 +35,7 @@ GameScene::GameScene(int level)
 
 void GameScene::Initialize()
 {
-	m_Observers.push_back(std::make_shared<ScoreObserver>());
+	m_Observers.push_back(std::make_shared<HitObserver>());
 
 	std::shared_ptr<GameObject> pBackObj = std::make_shared<GameObject>();
 	std::shared_ptr<SpriteComponent> pSpriteComp = std::make_shared<SpriteComponent>(1000.0f, 2000.0f, 1, 1);
@@ -171,14 +171,14 @@ void GameScene::Update()
 		std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
 		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
 
-		if(dPlayer->GetIsDead() && dPlayer2->GetIsDead())
+		if(dPlayer->m_IsDead && dPlayer2->m_IsDead)
 			SceneManager::GetInstance().SetActiveScene("GameOverScene");
 	}
 	else
 	{
 		std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
 
-		if (dPlayer->GetIsDead())
+		if (dPlayer->m_IsDead)
 			SceneManager::GetInstance().SetActiveScene("GameOverScene");
 	}
 }
@@ -202,7 +202,6 @@ void GameScene::Reset()
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
-	dPlayer->SetLives(GameInfo::GetInstance().player1Lives);
 
 	Remove(m_pPlayer2);
 	m_pPlayer2 = nullptr;
@@ -212,7 +211,6 @@ void GameScene::Reset()
 		m_pPlayer2 = std::make_shared<Player>(2);
 		Add(m_pPlayer2);
 		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-		dPlayer2->SetLives(GameInfo::GetInstance().player2Lives);
 		m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f - 20), float(ScreenInfo::GetInstance().screenheigth - 75));
 		m_pPlayer2->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer2->m_Rect.w / 2.0f + 20), float(ScreenInfo::GetInstance().screenheigth - 75));
 	}
@@ -290,7 +288,7 @@ void GameScene::Reset()
 void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (pPlayer);
-	if (!dPlayer->GetIsHit() && !dPlayer->IsAbducted())
+	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted())
 	{
 		// ZAKOS
 		for (int i{}; i < m_pZakos.size(); ++i)
@@ -298,15 +296,15 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
 			if (zako->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
-				dPlayer->SetIsHit(true);
+				dPlayer->m_IsHit = true;
 
 				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (zako->GetLaser());
-				dLaser->SetActive(false);
+				dLaser->m_IsActive = false;
 
 			}
 			if (dPlayer->GetComponent<ColliderComponent>()->IsColliding(zako->m_Rect))
 			{
-				dPlayer->SetIsHit(true);
+				dPlayer->m_IsHit = true;
 				zako->m_IsHit = true;
 			}
 		}
@@ -317,10 +315,10 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 			std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
 			if (goei->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
-				dPlayer->SetIsHit(true);
+				dPlayer->m_IsHit = true;
 
 				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (goei->GetLaser());
-				dLaser->SetActive(false);
+				dLaser->m_IsActive = false;
 
 			}
 		}
@@ -330,20 +328,20 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
 			if (boss->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
-				dPlayer->SetIsHit(true);
+				dPlayer->m_IsHit = true;
 
 				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (boss->GetLaser());
-				dLaser->SetActive(false);
+				dLaser->m_IsActive = false;
 			}
 		}
 	}
 
-	if (dPlayer->GetIsDead())
+	if (dPlayer->m_IsDead)
 	{
 		Remove(pPlayer);
 	}
 
-	if (!dPlayer->IsExploding())
+	if (!dPlayer->m_Exploding)
 	{
 		for (int i{}; i < m_pBosses.size(); ++i)
 		{
@@ -440,7 +438,7 @@ void GameScene::UpdateZako()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::ZakoHit, m_pZakos[j].get(), parent);
+						observer->OnNotify(Event::ZakoHit, m_pZakos[j].get(), parent);
 					}
 					zako->m_IsHit = true;
 					Player* p = static_cast<Player*>(parent);
@@ -553,7 +551,7 @@ void GameScene::UpdateGoei()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::GoeiHit, m_pGoeis[j].get(), parent);
+						observer->OnNotify(Event::GoeiHit, m_pGoeis[j].get(), parent);
 					}
 
 					goei->m_IsHit = true;
@@ -657,7 +655,7 @@ void GameScene::UpdateBoss()
 					auto parent = pLasers[i]->GetParent();
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
-						observer->onNotify(Event::BossHit, m_pBosses[j].get(), parent);
+						observer->OnNotify(Event::BossHit, m_pBosses[j].get(), parent);
 					}
 
 					boss->m_IsHit = true;

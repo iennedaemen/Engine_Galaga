@@ -6,15 +6,7 @@ class Laser : public GameObject
 public:
 	Laser(bool playerLasers) : m_PlayerLasers(playerLasers) {}
 
-	void SetActive(bool active)
-	{
-		m_IsActive = active;
-	}
-
-	bool IsActive()
-	{
-		return m_IsActive;
-	}
+	bool m_IsActive = false;
 
 protected:
 	void Initialize() override;
@@ -23,6 +15,6 @@ protected:
 
 private:
 	bool m_PlayerLasers;
-	bool m_IsActive = false;
+
 };
 
