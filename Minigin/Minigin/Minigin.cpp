@@ -70,41 +70,51 @@ void Minigin::Cleanup()
 
 void Minigin::Run()
 {
-	Initialize();
+	try {
+		Initialize();
 
-	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance().Init("../Data/");
+		// tell the resource manager where he can find the game data
+		ResourceManager::GetInstance().Init("../Data/");
 
-	LoadGame();
+		LoadGame();
 
-	{
-		auto& renderer = Renderer::GetInstance();
-		auto& sceneManager = SceneManager::GetInstance();
-		auto& input = InputManager::GetInstance();
-		auto lastTime = std::chrono::high_resolution_clock::now();
-		float lag = 0.0f;
-
-		bool doContinue = true;
-		while (doContinue)
 		{
-			const auto currentTime = high_resolution_clock::now();
-			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
-			lastTime = currentTime;
-			lag += deltaTime;
-			Time::GetInstance().m_ElapsedSec = deltaTime;
+			auto& renderer = Renderer::GetInstance();
+			auto& sceneManager = SceneManager::GetInstance();
+			auto& input = InputManager::GetInstance();
+			auto lastTime = std::chrono::high_resolution_clock::now();
+			float lag = 0.0f;
 
-			doContinue = input.ProcessInput();
-			while (lag >= 0.02f)
+			bool doContinue = true;
+			while (doContinue)
 			{
-				sceneManager.Update();
-				lag -= 0.02f;
+				const auto currentTime = high_resolution_clock::now();
+				float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+				lastTime = currentTime;
+				lag += deltaTime;
+				Time::GetInstance().m_ElapsedSec = deltaTime;
+
+				doContinue = input.ProcessInput();
+				while (lag >= 0.02f)
+				{
+					sceneManager.Update();
+					lag -= 0.02f;
+				}
+				renderer.Render();
+
+				auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
+				this_thread::sleep_for(sleepTime);
 			}
-			renderer.Render();
-
-			auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
-			this_thread::sleep_for(sleepTime);
 		}
-	}
 
-	Cleanup();
+		Cleanup();
+	}
+	catch (std::string str)
+	{
+		std::cout << str;
+	}
+	catch (...)
+	{
+		std::cout << "Undefined error" << std::endl;
+	}
 }

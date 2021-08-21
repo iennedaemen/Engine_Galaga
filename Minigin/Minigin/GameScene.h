@@ -8,6 +8,8 @@
 #pragma warning(pop)
 #include <unordered_map>
 
+class Player;
+
 class GameScene : public Scene
 {
 public:
@@ -82,6 +84,7 @@ private:
 	void SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, std::queue<float>& spawnTimes);
 	void UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObject>>& Enemies);
 	void UpdatePlayer(std::shared_ptr<GameObject> pPlayer);
+	void PlayerHit(std::vector<std::shared_ptr<GameObject>>& Enemies, std::shared_ptr<Player> pPlayer);
 	void ReadFile();
 
 };

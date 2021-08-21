@@ -269,5 +269,8 @@
     <ClCompile Include="HitObserver.cpp">
       <Filter>Game\Observers</Filter>
     </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Engine\Command</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

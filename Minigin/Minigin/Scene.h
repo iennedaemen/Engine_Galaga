@@ -8,7 +8,7 @@
 		explicit Scene(const std::string& name);
 		~Scene();
 		
-		void Add(const std::shared_ptr<GameObject>& object);
+		void Add(const std::shared_ptr<GameObject>& object, bool allowDuplicate = false);
 		void Remove(const std::shared_ptr<GameObject>& object);
 
 		void Clear()

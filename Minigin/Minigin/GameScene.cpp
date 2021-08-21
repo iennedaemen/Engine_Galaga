@@ -162,37 +162,6 @@ void GameScene::Update()
 		}
 	}
 
-
-	// UPDATE LIVES VISUALS
-	//if (GameInfo::GetInstance().player1Lives == 2)
-	//{
-	//	Remove(m_pLivesP1[2]);
-	//}
-	//else if (GameInfo::GetInstance().player1Lives == 1)
-	//{
-	//	Remove(m_pLivesP1[1]);
-	//}
-	//else if (GameInfo::GetInstance().player1Lives == 0)
-	//{
-	//	Remove(m_pLivesP1[0]);
-	//}
-
-	//if (GameInfo::GetInstance().player2Active)
-	//{
-	//	if (GameInfo::GetInstance().player2Lives == 2)
-	//	{
-	//		Remove(m_pLivesP2[2]);
-	//	}
-	//	else if (GameInfo::GetInstance().player2Lives == 1)
-	//	{
-	//		Remove(m_pLivesP2[1]);
-	//	}
-	//	else if (GameInfo::GetInstance().player2Lives == 0)
-	//	{
-	//		Remove(m_pLivesP2[0]);
-	//	}
-	//}
-
 	// UPDATE SCORE VISUALS
 	std::stringstream ss;
 	ss << std::setw(5) << std::setfill('0') << GameInfo::GetInstance().scoreP1;
@@ -309,9 +278,26 @@ void GameScene::Reset()
 
 
 	// RESET LIVES VISUALS
-	Add(m_pLivesP1[0]);
-	Add(m_pLivesP1[1]);
-	Add(m_pLivesP1[2]);
+	if (m_Level == 1)
+	{
+
+		Add(m_pLivesP1[0]);
+		Add(m_pLivesP1[1]);
+		Add(m_pLivesP1[2]);
+
+		if (GameInfo::GetInstance().player2Active)
+		{
+			Add(m_pLivesP2[0]);
+			Add(m_pLivesP2[1]);
+			Add(m_pLivesP2[2]);
+		}
+		else
+		{
+			Remove(m_pLivesP2[0]);
+			Remove(m_pLivesP2[1]);
+			Remove(m_pLivesP2[2]);
+		}
+	}
 
 
 	// RESET SPAWNER
@@ -379,49 +365,25 @@ void GameScene::Reset()
 void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (pPlayer);
-	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted())
+	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted() && !dPlayer->m_Exploding)
 	{
+
+		PlayerHit(m_pZakos, dPlayer);
+		PlayerHit(m_pGoeis, dPlayer);
+		PlayerHit(m_pBosses, dPlayer);
+
 		// ZAKOS
 		for (unsigned int i{}; i < m_pZakos.size(); ++i)
 		{
 			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
-			if (zako->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
-			{
-				dPlayer->m_IsHit = true;
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (zako->GetLaser());
-				dLaser->m_IsActive = false;
-
-			}
 			if (dPlayer->GetComponent<ColliderComponent>()->IsColliding(zako->m_Rect))
 			{
 				dPlayer->m_IsHit = true;
 				zako->m_IsHit = true;
-			}
-		}
-
-		// GOEIS
-		for (unsigned int i{}; i < m_pGoeis.size(); ++i)
-		{
-			std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
-			if (goei->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
-			{
-				dPlayer->m_IsHit = true;
-
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (goei->GetLaser());
-				dLaser->m_IsActive = false;
-
-			}
-		}
-		// BOSSES
-		for (unsigned int i{}; i < m_pBosses.size(); ++i)
-		{
-			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
-			if (boss->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
-			{
-				dPlayer->m_IsHit = true;
-
-				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (boss->GetLaser());
-				dLaser->m_IsActive = false;
+				if (dPlayer->GetPlayerNr() == 1)
+					Remove(m_pLivesP1[GameInfo::GetInstance().player1Lives - 1]);
+				if (dPlayer->GetPlayerNr() == 2)
+					Remove(m_pLivesP2[GameInfo::GetInstance().player2Lives - 1]);
 			}
 		}
 	}
@@ -443,6 +405,32 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		}
 	}
 
+}
+
+void GameScene::PlayerHit(std::vector<std::shared_ptr<GameObject>>& Enemies, std::shared_ptr<Player> pPlayer)
+{
+	for (unsigned int i{}; i < Enemies.size(); ++i)
+	{
+		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i]);
+		if (enemy->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
+		{
+			pPlayer->m_IsHit = true;
+
+			int idx = 0;
+			if (pPlayer->GetPlayerNr() == 1)
+			{
+				idx = GameInfo::GetInstance().player1Lives - 1;
+				Remove(m_pLivesP1[idx]);
+			}
+			if (pPlayer->GetPlayerNr() == 2)
+			{
+				idx = GameInfo::GetInstance().player2Lives - 1;
+				Remove(m_pLivesP2[idx]);
+			}
+			std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (enemy->GetLaser());
+			dLaser->m_IsActive = false;
+		}
+	}
 }
 
 void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, std::queue<float> &spawnTimes)

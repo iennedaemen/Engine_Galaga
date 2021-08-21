@@ -29,8 +29,13 @@ void Scene::RootInitialize()
 }
 
 
-void Scene::Add(const std::shared_ptr<GameObject>& object)
+void Scene::Add(const std::shared_ptr<GameObject>& object, bool allowDuplicate)
 {
+	if (!allowDuplicate)
+	{
+		auto it = std::find(m_Objects.begin(), m_Objects.end(), object);
+		if (it != m_Objects.end()) return;
+	}
 	m_Objects.push_back(object);
 	object->RootInitialize();
 }

@@ -34,13 +34,13 @@ std::shared_ptr<PlayerState> ExplodeState::handleInput(Player& player)
 
         if (player.GetPlayerNr() == 1)
         {
-           // GameInfo::GetInstance().player1Lives -= 1;
+            GameInfo::GetInstance().player1Lives -= 1;
             if (GameInfo::GetInstance().player1Lives <= 0)
                 player.m_IsDead = true;
         }
         else if (player.GetPlayerNr() == 2)
         {
-            //GameInfo::GetInstance().player2Lives -= 1;
+            GameInfo::GetInstance().player2Lives -= 1;
             if (GameInfo::GetInstance().player2Lives <= 0)
                 player.m_IsDead = true;
         }

@@ -33,9 +33,9 @@ void HitObserver::OnNotify(const Event event, GameObject* arg1, GameObject* arg2
 
 	if (pPlayer->GetPlayerNr() == 1)
 		GameInfo::GetInstance().shotsHitP1 += 1;
-
 	else if (pPlayer->GetPlayerNr() == 2)
 		GameInfo::GetInstance().shotsHitP2 += 1;
+	else throw "HitObserver.cpp : playerNr invalid";
 
 	switch (event)
 	{
@@ -51,7 +51,7 @@ void HitObserver::OnNotify(const Event event, GameObject* arg1, GameObject* arg2
 		{
 			GameInfo::GetInstance().scoreP2 += m_ScoreMap[EnemyType::Zako][pZako->m_EnumState];
 		}
-		//error
+		else throw "HitObserver.cpp : playerNr invalid";
 		break;
 	}
 
@@ -67,7 +67,7 @@ void HitObserver::OnNotify(const Event event, GameObject* arg1, GameObject* arg2
 		{
 			GameInfo::GetInstance().scoreP2 += m_ScoreMap[EnemyType::Goei][pGoei->m_EnumState];
 		}
-		//error
+		else throw "HitObserver.cpp : playerNr invalid";
 		break;
 	}
 
@@ -85,7 +85,7 @@ void HitObserver::OnNotify(const Event event, GameObject* arg1, GameObject* arg2
 			{
 				GameInfo::GetInstance().scoreP2 += m_ScoreMap[EnemyType::Boss][pBoss->m_EnumState];
 			}
-			//error
+			else throw "HitObserver.cpp : playerNr invalid";
 		}
 		break;
 	}

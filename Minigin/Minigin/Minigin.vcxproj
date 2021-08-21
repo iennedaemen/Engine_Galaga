@@ -241,6 +241,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossState.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FpsComponent.cpp" />
