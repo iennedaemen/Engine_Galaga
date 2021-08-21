@@ -84,6 +84,36 @@ void GameScene::Initialize()
 	m_pLevelText->SetPosition(135, ScreenInfo::GetInstance().screenheigth/2.0f - 50);
 
 
+	// LIVES VISUALS
+	for (unsigned int i{}; i < 3; ++i)
+	{
+		std::shared_ptr<GameObject> pLiveVisual = std::make_shared<GameObject>();
+		std::shared_ptr<SpriteComponent> pSpriteComp2 = std::make_shared<SpriteComponent>(60.0f, 64.0f, 1, 1);
+		pLiveVisual->AddComponent(pSpriteComp2);
+		pSpriteComp2->SetTexture("Player1.png");
+		pSpriteComp2->IsStatic(true);
+		pLiveVisual->m_Rect = { pLiveVisual->m_Rect.x, pLiveVisual->m_Rect.y, 15, 17 };
+		Add(pLiveVisual);
+		pLiveVisual->SetPosition(5.0f + 20 * i, ScreenInfo::GetInstance().screenheigth - 20.0f);
+
+		m_pLivesP1[i] = pLiveVisual;
+	}
+
+	for (unsigned int i{}; i < 3; ++i)
+	{
+		std::shared_ptr<GameObject> pLive2Visual = std::make_shared<GameObject>();
+		std::shared_ptr<SpriteComponent> pSpriteComp3 = std::make_shared<SpriteComponent>(60.0f, 64.0f, 1, 1);
+		pLive2Visual->AddComponent(pSpriteComp3);
+		pSpriteComp3->SetTexture("Player2.png");
+		pSpriteComp3->IsStatic(true);
+		pLive2Visual->m_Rect = { pLive2Visual->m_Rect.x, pLive2Visual->m_Rect.y, 15, 17 };
+		Add(pLive2Visual);
+		pLive2Visual->SetPosition(ScreenInfo::GetInstance().screenwidth - 60.0f + 20.0f * i, ScreenInfo::GetInstance().screenheigth - 20.0f);
+
+		m_pLivesP2[i] = pLive2Visual;
+	}
+
+
 	// PLAYER(S)
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
@@ -132,6 +162,36 @@ void GameScene::Update()
 		}
 	}
 
+
+	// UPDATE LIVES VISUALS
+	//if (GameInfo::GetInstance().player1Lives == 2)
+	//{
+	//	Remove(m_pLivesP1[2]);
+	//}
+	//else if (GameInfo::GetInstance().player1Lives == 1)
+	//{
+	//	Remove(m_pLivesP1[1]);
+	//}
+	//else if (GameInfo::GetInstance().player1Lives == 0)
+	//{
+	//	Remove(m_pLivesP1[0]);
+	//}
+
+	//if (GameInfo::GetInstance().player2Active)
+	//{
+	//	if (GameInfo::GetInstance().player2Lives == 2)
+	//	{
+	//		Remove(m_pLivesP2[2]);
+	//	}
+	//	else if (GameInfo::GetInstance().player2Lives == 1)
+	//	{
+	//		Remove(m_pLivesP2[1]);
+	//	}
+	//	else if (GameInfo::GetInstance().player2Lives == 0)
+	//	{
+	//		Remove(m_pLivesP2[0]);
+	//	}
+	//}
 
 	// UPDATE SCORE VISUALS
 	std::stringstream ss;
@@ -248,6 +308,12 @@ void GameScene::Reset()
 	else m_pTextScoreP2->GetComponent<TextComponent>()->SetText(" ");
 
 
+	// RESET LIVES VISUALS
+	Add(m_pLivesP1[0]);
+	Add(m_pLivesP1[1]);
+	Add(m_pLivesP1[2]);
+
+
 	// RESET SPAWNER
 	m_SpawnTimer = 0;
 
@@ -257,7 +323,7 @@ void GameScene::Reset()
 
 
 	// RESET ZAKO
-	for (int i{}; i < m_pZakos.size(); ++i)
+	for (unsigned int i{}; i < m_pZakos.size(); ++i)
 	{
 		Remove(m_pZakos[i]);
 	}
@@ -268,7 +334,7 @@ void GameScene::Reset()
 
 
 	// RESET GOEI
-	for (int i{}; i < m_pGoeis.size(); ++i)
+	for (unsigned int i{}; i < m_pGoeis.size(); ++i)
 	{
 		Remove(m_pGoeis[i]);
 	}
@@ -279,7 +345,7 @@ void GameScene::Reset()
 
 
 	// RESET BOSS
-	for (int i{}; i < m_pBosses.size(); ++i)
+	for (unsigned int i{}; i < m_pBosses.size(); ++i)
 	{
 		Remove(m_pBosses[i]);
 	}
@@ -316,13 +382,12 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted())
 	{
 		// ZAKOS
-		for (int i{}; i < m_pZakos.size(); ++i)
+		for (unsigned int i{}; i < m_pZakos.size(); ++i)
 		{
 			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
 			if (zako->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
 				dPlayer->m_IsHit = true;
-
 				std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (zako->GetLaser());
 				dLaser->m_IsActive = false;
 
@@ -335,7 +400,7 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		}
 
 		// GOEIS
-		for (int i{}; i < m_pGoeis.size(); ++i)
+		for (unsigned int i{}; i < m_pGoeis.size(); ++i)
 		{
 			std::shared_ptr<Goei> goei = std::dynamic_pointer_cast<Goei> (m_pGoeis[i]);
 			if (goei->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
@@ -348,7 +413,7 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 			}
 		}
 		// BOSSES
-		for (int i{}; i < m_pBosses.size(); ++i)
+		for (unsigned int i{}; i < m_pBosses.size(); ++i)
 		{
 			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
 			if (boss->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
@@ -368,7 +433,7 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 
 	if (!dPlayer->m_Exploding)
 	{
-		for (int i{}; i < m_pBosses.size(); ++i)
+		for (unsigned int i{}; i < m_pBosses.size(); ++i)
 		{
 			std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
 			if (dBoss->GetBeam()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
@@ -491,7 +556,7 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 	}
 
 	// UPDATE DATA
-	for (int i{}; i < Enemies.size(); ++i)
+	for (unsigned int i{}; i < Enemies.size(); ++i)
 	{
 		if (type == EnemyType::Zako)
 		{
@@ -518,9 +583,9 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 	}
 
 	// COLLISION
-	for (int i{}; i < pLasers.size(); ++i)
+	for (unsigned int i{}; i < pLasers.size(); ++i)
 	{
-		for (int j{}; j < Enemies.size(); ++j)
+		for (unsigned int j{}; j < Enemies.size(); ++j)
 		{
 			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(Enemies[j]->m_Rect))
 			{
@@ -548,7 +613,7 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 
 	// DELETE
 	std::vector<int> idxRemove;
-	for (int i{}; i < Enemies.size(); ++i)
+	for (unsigned int i{}; i < Enemies.size(); ++i)
 	{
 		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i]);
 		if (enemy->m_IsDead)
@@ -583,12 +648,12 @@ void GameScene::ReadFile()
 		// ZAKO
 		m_AmountZako = jf[level]["AmountZako"];
 
-		for (int i{}; i < jf[level]["ZakoTimes"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["ZakoTimes"].size(); ++i)
 		{
 			m_ZakoTimes.push(jf[level]["ZakoTimes"][i]);
 		}
 
-		for (int i{}; i < jf[level]["ZakoPositions"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["ZakoPositions"].size(); ++i)
 		{
 			m_ZakoPos.push(std::pair<int, bool>(jf[level]["ZakoPositions"][i], jf[level]["ZakoSpawnLeft"][i]));
 		}
@@ -597,12 +662,12 @@ void GameScene::ReadFile()
 		// GOEI
 		m_AmountGoei = jf[level]["AmountGoei"];
 
-		for (int i{}; i < jf[level]["GoeiTimes"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["GoeiTimes"].size(); ++i)
 		{
 			m_GoeiTimes.push(jf[level]["GoeiTimes"][i]);
 		}
 
-		for (int i{}; i < jf[level]["GoeiPositions"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["GoeiPositions"].size(); ++i)
 		{
 			m_GoeiPos.push(std::pair<int, bool>(jf[level]["GoeiPositions"][i], jf[level]["GoeiSpawnLeft"][i]));
 		}
@@ -611,12 +676,12 @@ void GameScene::ReadFile()
 		// BOSS
 		m_AmountBoss = jf[level]["AmountBoss"];
 
-		for (int i{}; i < jf[level]["BossTimes"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["BossTimes"].size(); ++i)
 		{
 			m_BossTimes.push(jf[level]["BossTimes"][i]);
 		}
 
-		for (int i{}; i < jf[level]["BossPositions"].size(); ++i)
+		for (unsigned int i{}; i < jf[level]["BossPositions"].size(); ++i)
 		{
 			m_BossPos.push(std::pair<int, bool>(jf[level]["BossPositions"][i], jf[level]["BossSpawnLeft"][i]));
 		}

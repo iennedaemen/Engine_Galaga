@@ -1,5 +1,7 @@
 #include "MiniginPCH.h"
 #include "HitObserver.h"
+#include "SceneManager.h"
+#include "Scene.h"
 
 HitObserver::HitObserver()
 {

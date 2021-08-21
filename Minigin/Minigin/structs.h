@@ -34,6 +34,7 @@ enum class EnemyType
 
 enum class Event
 {
+	PlayerHit,
 	ZakoHit,
 	GoeiHit,
 	BossHit

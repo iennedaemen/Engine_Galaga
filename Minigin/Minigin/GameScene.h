@@ -30,6 +30,10 @@ private:
 	float m_SpawnTimer = 0;
 	int m_EnemiesDead = 0;
 
+	// LIVES VISUALS
+	std::shared_ptr<GameObject> m_pLivesP1[3];
+	std::shared_ptr<GameObject> m_pLivesP2[3];
+
 	//BEGIN
 	std::shared_ptr<GameObject> m_pLevelText = nullptr;
 	float m_BeginTimer = 0.0f;

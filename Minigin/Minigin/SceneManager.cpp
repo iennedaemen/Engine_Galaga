@@ -52,3 +52,8 @@ void SceneManager::SetActiveScene(const std::string name)
 		throw std::exception("Scene not found -> SceneManager::SetActiveScene()\n");
 	}
 }
+
+std::shared_ptr<Scene> SceneManager::GetActiveScene()
+{
+	return m_ActiveScene;
+}
