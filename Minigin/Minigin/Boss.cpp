@@ -13,7 +13,6 @@ void Boss::Initialize()
 	AddComponent(pSpriteComp);
 	pSpriteComp->SetTexture("Boss.png");
 	pSpriteComp->IsStatic(true);
-	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
 	m_Rect = { m_Rect.x, m_Rect.y, 60, 64 };
 	GetTransform()->SetScale(0.5f);
 
@@ -57,7 +56,7 @@ void Boss::Update()
 	// LASER
 	if (m_pLaser->GetRect().y > ScreenInfo::GetInstance().screenheigth + 20)
 	{
-		m_pLaser->m_Rect.x = -100;
+		m_pLaser->SetPosition(-100, 1000);
 		std::shared_ptr<Laser> dLaser = std::dynamic_pointer_cast<Laser> (m_pLaser);
 		dLaser->m_IsActive = false;
 	}

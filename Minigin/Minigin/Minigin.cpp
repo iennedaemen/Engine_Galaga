@@ -7,13 +7,8 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <SDL.h>
-#include "TextObject.h"
-#include "GameObject.h"
 #include "Scene.h"
 #include "Time.h"
-#include "RenderComponent.h"
-#include "TextComponent.h"
-#include "FpsComponent.h"
 #include "GameScene.h"
 #include "ScreenInfo.h"
 #include "GameInfo.h"
@@ -51,7 +46,6 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
-	//GameInfo::GetInstance().player2Active = true;
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(1));
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(2));
 	SceneManager::GetInstance().AddScene(std::make_shared<GameScene>(3));

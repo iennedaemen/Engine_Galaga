@@ -19,6 +19,6 @@ void Beam::Update()
 {
 	if (!m_IsActive)
 	{
-		m_Rect.x = -100;
+		SetPosition(-100, 1000);
 	}
 }

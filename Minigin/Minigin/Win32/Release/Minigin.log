@@ -1,0 +1,53 @@
+﻿  MiniginPCH.cpp
+  BaseComponent.cpp
+  Beam.cpp
+  Boss.cpp
+  BossState.cpp
+  ColliderComponent.cpp
+  Command.cpp
+  Enemy.cpp
+  Font.cpp
+  FpsComponent.cpp
+  GameObject.cpp
+  GameOverScene.cpp
+  GameScene.cpp
+  Goei.cpp
+  GoeiState.cpp
+  HitObserver.cpp
+  InputManager.cpp
+  Laser.cpp
+  Main.cpp
+  MenuScene.cpp
+  Minigin.cpp
+  Compiling...
+  Player.cpp
+  PlayerState.cpp
+  RenderComponent.cpp
+  Renderer.cpp
+  ResourceManager.cpp
+  Scene.cpp
+  SceneManager.cpp
+  SpriteComponent.cpp
+  TextComponent.cpp
+  Texture2D.cpp
+  Transform.cpp
+  Zako.cpp
+  ZakoState.cpp
+     Creating library C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Release\Minigin.lib and object C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Release\Minigin.exp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 3490 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Minigin.vcxproj -> C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Release\Minigin.exe
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2\lib\x86\SDL2.dll
+  1 File(s) copied
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libjpeg-9.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libpng16-16.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libtiff-5.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libwebp-7.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\SDL2_image.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\zlib1.dll
+  6 File(s) copied
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_ttf\lib\x86\libfreetype-6.dll
+  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
+  2 File(s) copied

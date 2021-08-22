@@ -3,8 +3,6 @@
 #include "SpriteComponent.h"
 #include "Time.h"
 #include "ColliderComponent.h"
-#include "SceneManager.h"
-#include "Scene.h"
 
 void Laser::Initialize()
 {

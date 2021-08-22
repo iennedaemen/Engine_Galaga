@@ -12,7 +12,6 @@ void Goei::Initialize()
 	AddComponent(pSpriteComp);
 	pSpriteComp->SetTexture("Goei.png");
 	pSpriteComp->IsStatic(true);
-	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
 	m_Rect = { m_Rect.x, m_Rect.y, 52, 40 };
 	GetTransform()->SetScale(0.4f);
 

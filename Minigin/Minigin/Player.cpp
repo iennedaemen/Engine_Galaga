@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "Laser.h"
 #include "GameInfo.h"
+#include "Boss.h"
 
 
 void Player::Initialize()
@@ -32,75 +33,79 @@ void Player::Initialize()
 void Player::Update()
 {
 	// COMMAND
-	if (!m_IsExploding)
+	if (!m_IsDead)
 	{
-		if (!m_IsAbducted)
+		if (!m_IsExploding)
 		{
-			std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
-			if (command)
+			if (!m_IsAbducted)
 			{
-				command->execute(*this);
+				std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
+				if (command)
+				{
+					command->execute(*this);
+				}
+			}
+		}
+
+		// STATE
+		std::shared_ptr<PlayerState> newState = nullptr;
+		newState = m_pState->handleInput(*this);
+		if (newState != nullptr)
+			m_pState = newState;
+		if (m_pState)
+			m_pState->update(*this);
+
+
+		// LASERS
+		for (std::shared_ptr<GameObject> laser : m_pLasers)
+		{
+			if (laser->GetRect().y < -20)
+			{
+				laser->SetPosition(-100, 1000);
+				std::shared_ptr<Laser> derived = std::dynamic_pointer_cast<Laser> (laser);
+				derived->m_IsActive = false;
+			}
+		}
+
+		// ABDUCTION
+		if (m_IsAbducted)
+		{
+			float elapsedSec = Time::GetInstance().m_ElapsedSec;
+
+			if (!m_ReachedAbductionPos || m_RotAngle >= 2)
+			{
+				m_RotAngle += 400 * elapsedSec;
+				if (m_RotAngle >= 360) m_RotAngle = 0;
+				GetTransform()->SetRotation(m_RotAngle);
+			}
+
+			float velocity{};
+			if (m_ReachedAbductionPos)
+				velocity = 150 * elapsedSec;
+			else velocity = 50 * elapsedSec;
+
+
+			if (GetTransform()->GetPosition().x > m_pKidnapper->GetRect().x + 2.0f)
+				SetPosition(GetTransform()->GetPosition().x - velocity, GetTransform()->GetPosition().y);
+			else if (GetTransform()->GetPosition().x < m_pKidnapper->GetRect().x + 1.0f)
+				SetPosition(GetTransform()->GetPosition().x + velocity, GetTransform()->GetPosition().y);
+			else SetPosition(m_pKidnapper->GetRect().x + 2.0f, GetTransform()->GetPosition().y);
+
+			if (GetTransform()->GetPosition().y > m_pKidnapper->GetRect().y + 40)
+				SetPosition(GetTransform()->GetPosition().x, GetTransform()->GetPosition().y - velocity);
+			else m_ReachedAbductionPos = true;
+
+			if (m_pKidnapper->m_EnumState == State::Idle)
+			{
+				m_IsHit = true;
+				m_ReachedAbductionPos = false;
+				m_IsAbducted = false;
+				m_RotAngle = 0.0f;
+				GetTransform()->SetRotation(0.0f);
 			}
 		}
 	}
-
-	// STATE
-	std::shared_ptr<PlayerState> newState = nullptr;
-	newState = m_pState->handleInput(*this);
-	if (newState != nullptr)
-		m_pState = newState;
-	if (m_pState)
-		m_pState->update(*this);
-
-
-	// LASERS
-	for (std::shared_ptr<GameObject> laser : m_pLasers)
-	{
-		if (laser->GetRect().y < -20)
-		{
-			laser->m_Rect.x = -100;
-			std::shared_ptr<Laser> derived = std::dynamic_pointer_cast<Laser> (laser);
-			derived->m_IsActive = false;
-		}
-	}
-
-	// ABDUCTION
-	if (m_IsAbducted)
-	{
-		float elapsedSec = Time::GetInstance().m_ElapsedSec;
-
-		if (!m_ReachedAbductionPos || m_RotAngle >= 2)
-		{
-			m_RotAngle += 400 * elapsedSec;
-			if (m_RotAngle >= 360) m_RotAngle = 0;
-			GetTransform()->SetRotation(m_RotAngle);
-		}
-
-		float velocity{};
-		if (m_ReachedAbductionPos)
-			velocity = 150 * elapsedSec;
-		else velocity = 50 * elapsedSec;
-
-
-		if (GetTransform()->GetPosition().x > m_pKidnapper->GetRect().x + 2.0f)
-			SetPosition(GetTransform()->GetPosition().x - velocity, GetTransform()->GetPosition().y);
-		else if (GetTransform()->GetPosition().x < m_pKidnapper->GetRect().x + 1.0f)
-			SetPosition(GetTransform()->GetPosition().x + velocity, GetTransform()->GetPosition().y);
-		else SetPosition(m_pKidnapper->GetRect().x + 2.0f, GetTransform()->GetPosition().y);
-
-		if (GetTransform()->GetPosition().y > m_pKidnapper->GetRect().y + 40)
-			SetPosition(GetTransform()->GetPosition().x, GetTransform()->GetPosition().y - velocity);
-		else m_ReachedAbductionPos = true;
-
-		if (m_pKidnapper->m_EnumState == State::Idle)
-		{
-			m_IsHit = true;
-			m_ReachedAbductionPos = false;
-			m_IsAbducted = false;
-			m_RotAngle = 0.0f;
-			GetTransform()->SetRotation(0.0f);
-		}
-	}
+	else SetPosition(-100, 1000);
 }
 
 void Player::ShootLaser()

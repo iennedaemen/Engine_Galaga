@@ -7,7 +7,6 @@ public:
 	int player1Lives = 3;
 	int player2Lives = 3;
 	bool player2Active = false;
-	bool enemyPlayerActive = false;
 
 	int scoreP1 = 0;
 	int scoreP2 = 0;

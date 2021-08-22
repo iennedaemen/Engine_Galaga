@@ -21,7 +21,6 @@ void MenuScene::Initialize()
 	pSpriteComp->IsStatic(true);
 	pBackObj->m_Rect = { pBackObj->m_Rect.x, pBackObj->m_Rect.y, ScreenInfo::GetInstance().screenwidth, ScreenInfo::GetInstance().screenheigth };
 	Add(pBackObj);
-	//pBackObj->SetPosition(ScreenInfo::GetInstance().screenwidth / 2.0f - pLogoObj->m_Rect.w / 2.0f, 80);
 
 	std::shared_ptr<GameObject> pLogoObj = std::make_shared<GameObject>();
 	std::shared_ptr<SpriteComponent> pSpriteComp2 = std::make_shared<SpriteComponent>(2685.0f, 1389.0f, 1, 1);

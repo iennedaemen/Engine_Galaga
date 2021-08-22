@@ -91,7 +91,7 @@ void GameScene::Initialize()
 		pSpriteComp2->SetTexture("Player1.png");
 		pSpriteComp2->IsStatic(true);
 		pLiveVisual->m_Rect = { pLiveVisual->m_Rect.x, pLiveVisual->m_Rect.y, 15, 17 };
-		Add(pLiveVisual);
+
 		pLiveVisual->SetPosition(5.0f + 20 * i, ScreenInfo::GetInstance().screenheigth - 20.0f);
 
 		m_pLivesP1[i] = pLiveVisual;
@@ -105,7 +105,7 @@ void GameScene::Initialize()
 		pSpriteComp3->SetTexture("Player2.png");
 		pSpriteComp3->IsStatic(true);
 		pLive2Visual->m_Rect = { pLive2Visual->m_Rect.x, pLive2Visual->m_Rect.y, 15, 17 };
-		Add(pLive2Visual);
+		if(GameInfo::GetInstance().player2Active) Add(pLive2Visual);
 		pLive2Visual->SetPosition(ScreenInfo::GetInstance().screenwidth - 60.0f + 20.0f * i, ScreenInfo::GetInstance().screenheigth - 20.0f);
 
 		m_pLivesP2[i] = pLive2Visual;
@@ -189,9 +189,13 @@ void GameScene::Update()
 
 
 	// UPDATE PLAYER(S)
-	UpdatePlayer(m_pPlayer);
+	if(m_pPlayer)
+		UpdatePlayer(m_pPlayer);
 	if (GameInfo::GetInstance().player2Active)
-		UpdatePlayer(m_pPlayer2);
+	{
+		if (m_pPlayer2)
+			UpdatePlayer(m_pPlayer2);
+	}
 
 
 	// UPDATE ENEMIES
@@ -203,16 +207,6 @@ void GameScene::Update()
 	UpdateEnemy(EnemyType::Boss, m_pBosses, m_BossPositions);
 
 	// SCENE MANAGEMENT
-	if ((GetAsyncKeyState('P') & 0x8000) && (k == 0))
-	{
-		k = 1;
-		Reset();
-		if (m_Level < GameInfo::GetInstance().amountLevels)
-			SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(m_Level + 1));
-		else SceneManager::GetInstance().SetActiveScene("GameScene" + std::to_string(1));
-	}
-	else if (GetAsyncKeyState('P') == 0) k = 0;
-
 	if (m_EnemiesDead >= m_AmountZako + m_AmountGoei + m_AmountBoss)
 	{
 		if (m_Level < GameInfo::GetInstance().amountLevels)
@@ -251,17 +245,25 @@ void GameScene::Reset()
 	m_pPlayer = std::make_shared<Player>(1);
 	Add(m_pPlayer);
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+	if (m_Level != 1 && GameInfo::GetInstance().player1Lives <= 0)
+		dPlayer->m_IsDead = true;
 
 	Remove(m_pPlayer2);
 	m_pPlayer2 = nullptr;
 
 	if (GameInfo::GetInstance().player2Active)
 	{
+
 		m_pPlayer2 = std::make_shared<Player>(2);
 		Add(m_pPlayer2);
 		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-		m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f - 20), float(ScreenInfo::GetInstance().screenheigth - 75));
+
+		if (m_Level != 1 && GameInfo::GetInstance().player2Lives <= 0)
+			dPlayer2->m_IsDead = true;
+
 		m_pPlayer2->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer2->m_Rect.w / 2.0f + 20), float(ScreenInfo::GetInstance().screenheigth - 75));
+
+		m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f - 20), float(ScreenInfo::GetInstance().screenheigth - 75));
 	}
 	else m_pPlayer->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2.0f - m_pPlayer->m_Rect.w / 2.0f), float(ScreenInfo::GetInstance().screenheigth - 75));
 
@@ -270,7 +272,7 @@ void GameScene::Reset()
 	m_BeginTimer = 0.0f;
 	m_IsBegin = true;
 	m_pLevelText->GetComponent<TextComponent>()->SetText("Level " + std::to_string(m_Level));
-	
+
 
 	//RESET PLAYER 2 SCORE VISUALS
 	if (GameInfo::GetInstance().player2Active)
@@ -302,6 +304,21 @@ void GameScene::Reset()
 			Remove(m_pLivesP2[0]);
 			Remove(m_pLivesP2[1]);
 			Remove(m_pLivesP2[2]);
+		}
+	}
+	else
+	{
+		for (int i{}; i < GameInfo::GetInstance().player1Lives; ++i)
+		{
+			Add(m_pLivesP1[i]);
+		}
+
+		if (GameInfo::GetInstance().player2Active)
+		{
+			for (int i{}; i < GameInfo::GetInstance().player2Lives; ++i)
+			{
+				Add(m_pLivesP2[i]);
+			}
 		}
 	}
 
@@ -391,11 +408,6 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 					Remove(m_pLivesP2[GameInfo::GetInstance().player2Lives - 1]);
 			}
 		}
-	}
-
-	if (dPlayer->m_IsDead)
-	{
-		Remove(pPlayer);
 	}
 
 	if (!dPlayer->m_IsExploding)
@@ -549,16 +561,23 @@ void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, s
 void GameScene::UpdateEnemy(EnemyType type, std::vector<std::pair<std::shared_ptr<GameObject>, int>>& Enemies, std::vector<glm::vec2>& possiblePos)
 {
 	// GET LASERS FROM PLAYER
-	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
 	std::vector<std::shared_ptr<GameObject>> pLasers;
-	pLasers.push_back(dPlayer->GetLaser(0));
-	pLasers.push_back(dPlayer->GetLaser(1));
+
+	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
+	if(!dPlayer->m_IsDead)
+	{
+		pLasers.push_back(dPlayer->GetLaser(0));
+		pLasers.push_back(dPlayer->GetLaser(1));
+	}
 
 	if (GameInfo::GetInstance().player2Active)
 	{
 		std::shared_ptr<Player> dPlayer2 = std::dynamic_pointer_cast<Player> (m_pPlayer2);
-		pLasers.push_back(dPlayer2->GetLaser(0));
-		pLasers.push_back(dPlayer2->GetLaser(1));
+		if (!dPlayer2->m_IsDead)
+		{
+			pLasers.push_back(dPlayer2->GetLaser(0));
+			pLasers.push_back(dPlayer2->GetLaser(1));
+		}
 	}
 
 	// UPDATE DATA

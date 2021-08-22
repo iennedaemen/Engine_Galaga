@@ -1,16 +1,15 @@
 #pragma once
 #include "GameObject.h"
-//#include "Command.h"
+#include "PlayerState.h"
+#include <SDL.h>
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
-#include <SDL.h>
-#include "PlayerState.h"
 #pragma warning(pop)
-#include "Boss.h"
 
 class Command;
 class Laser;
+class Boss;
 
 class Player : public GameObject
 {

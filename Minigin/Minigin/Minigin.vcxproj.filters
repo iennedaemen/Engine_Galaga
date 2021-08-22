@@ -43,6 +43,9 @@
     <Filter Include="Game\Observers">
       <UniqueIdentifier>{39a58806-21e5-4ecc-9d48-f2245fce79df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Singletons">
+      <UniqueIdentifier>{e21d7ebf-087f-485a-80ac-2727bfe1efe6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniginPCH.h">
@@ -84,9 +87,6 @@
     <ClInclude Include="Texture2D.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Engine\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
@@ -113,12 +113,6 @@
     </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>Engine\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="PyramidPos.h">
-      <Filter>Engine\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="ScreenInfo.h">
-      <Filter>Engine\Render</Filter>
     </ClInclude>
     <ClInclude Include="Laser.h">
       <Filter>Game\Prefab</Filter>
@@ -147,9 +141,6 @@
     <ClInclude Include="GameScene.h">
       <Filter>Game\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="GameInfo.h">
-      <Filter>Engine\Render</Filter>
-    </ClInclude>
     <ClInclude Include="MenuScene.h">
       <Filter>Game\Scenes</Filter>
     </ClInclude>
@@ -167,6 +158,15 @@
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInfo.h">
+      <Filter>Game\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Game\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenInfo.h">
+      <Filter>Game\Singletons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

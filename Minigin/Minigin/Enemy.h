@@ -31,7 +31,6 @@ protected:
 	Enemy(glm::vec2 idlePos) : m_IdlePos{ idlePos } {}
 
 	std::shared_ptr<GameObject> m_pLaser = nullptr;
-	//glm::vec2 m_IdlePos;	
 	float m_ActionTimer = 0.0f;
 	float m_ActionTime = 5.0f;
 };
