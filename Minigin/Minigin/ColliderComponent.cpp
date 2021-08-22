@@ -1,5 +1,6 @@
 #include "MiniginPCH.h"
 #include "ColliderComponent.h"
+#include "GameObject.h"
 
 ColliderComponent::ColliderComponent()
 	: m_Rect()

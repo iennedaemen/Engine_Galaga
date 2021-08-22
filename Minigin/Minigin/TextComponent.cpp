@@ -6,6 +6,7 @@
 #include <SDL_ttf.h>
 #include "RenderComponent.h"
 #include "Renderer.h"
+#include "GameObject.h"
 
 
 TextComponent::TextComponent(std::string font, int size, SDL_Color color)
@@ -40,7 +41,7 @@ void TextComponent::Render()
 {
 	if (m_pTexture != nullptr)
 	{
-		Renderer::GetInstance().RenderTexture(*m_pTexture, GetGameObject()->GetTransform().GetPosition().x, GetGameObject()->GetTransform().GetPosition().y);
+		Renderer::GetInstance().RenderTexture(*m_pTexture, GetGameObject()->GetTransform()->GetPosition().x, GetGameObject()->GetTransform()->GetPosition().y);
 
 	}
 }

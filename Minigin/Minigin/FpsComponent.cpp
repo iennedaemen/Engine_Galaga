@@ -2,6 +2,7 @@
 #include "FpsComponent.h"
 #include "TextComponent.h"
 #include "Time.h"
+#include "GameObject.h"
 
 FpsComponent::FpsComponent(std::string font, int size, SDL_Color color)
 {

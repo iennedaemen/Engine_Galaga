@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "GameObject.h"
 #include "BaseComponent.h"
-
+#include "Transform.h"
 
 void GameObject::RootInitialize()
 {
@@ -72,11 +72,11 @@ void GameObject::RootRender()
 
 void GameObject::SetPosition(float x, float y)
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	m_Transform->SetPosition(x, y, 0.0f);
 	m_Rect = { int(x), int(y), m_Rect.w, m_Rect.h };
 }
 
-Transform GameObject::GetTransform()
+std::shared_ptr<Transform> GameObject::GetTransform()
 {
 	return m_Transform;
 }

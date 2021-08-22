@@ -1,6 +1,11 @@
 #pragma once
 #include "structs.h"
 #include <SDL_hints.h>
+#pragma warning(push)
+#pragma warning (disable:4201)
+#include <glm/vec2.hpp>
+#pragma warning(pop)
+
 class Goei;
 
 class GoeiState
@@ -17,6 +22,11 @@ public:
     {
         UNREFERENCED_PARAMETER(goei);
     }
+
+protected:
+    void GoToPosition(Goei& goei, glm::vec2 newPos, float velocity, bool& reachedX, bool& reachedY, bool xFirst = false, bool yFirst = false);
+    bool m_ReachedPosXIdle = false;
+    bool m_ReachedPosYIdle = false;
 };
 
 class IdleStateGoei : public GoeiState
@@ -39,8 +49,6 @@ public:
 private:
     bool m_ReachedPosX1 = false;
     bool m_ReachedPosY1 = false;
-    bool m_ReachedPosXIdle = false;
-    bool m_ReachedPosYIdle = false;
 };
 
 class ShootingRunStateGoei : public GoeiState
@@ -55,8 +63,6 @@ private:
     bool m_ReachedPos1 = false;
     bool m_ReachedPos2 = true;
     bool m_ReachedPosY = false;
-    bool m_ReachedPosXIdle = false;
-    bool m_ReachedPosYIdle = false;
 };
 
 class ExplodeStateGoei : public GoeiState

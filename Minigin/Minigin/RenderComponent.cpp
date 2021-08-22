@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "Time.h"
 #include "ResourceManager.h"
-
+#include "GameObject.h"
 
 RenderComponent::RenderComponent()
 	: m_pTexture{ nullptr }
@@ -32,16 +32,16 @@ void RenderComponent::Render()
 		Renderer::GetInstance().RenderTexture
 		(
 			*m_pTexture,
-			GetGameObject()->GetTransform().GetPosition().x,
-			GetGameObject()->GetTransform().GetPosition().y
+			GetGameObject()->GetTransform()->GetPosition().x,
+			GetGameObject()->GetTransform()->GetPosition().y
 		);
 	}
 	else {
 		Renderer::GetInstance().RenderTexture
 		(
 			*m_pTexture,
-			GetGameObject()->GetTransform().GetPosition().x,
-			GetGameObject()->GetTransform().GetPosition().y,
+			GetGameObject()->GetTransform()->GetPosition().x,
+			GetGameObject()->GetTransform()->GetPosition().y,
 			m_Width, m_Height
 		);
 	}

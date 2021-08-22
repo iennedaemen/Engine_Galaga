@@ -11,7 +11,8 @@ void Beam::Initialize()
 	pSpriteComp->IsStatic(false);
 	std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
 	AddComponent(pCollComp);
-	m_Rect = { m_Rect.x, m_Rect.y, 69, 120 };
+	m_Rect = { m_Rect.x, m_Rect.y, 46, 80 };
+	GetTransform()->SetScale(1.5f);
 }
 
 void Beam::Update()

@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 #include <SDL.h>
 #include "Font.h"
+#include "Texture2D.h"
 
 class TextComponent final: public BaseComponent
 {

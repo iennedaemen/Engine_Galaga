@@ -1,6 +1,11 @@
 #pragma once
 #include "structs.h"
 #include <SDL_hints.h>
+#pragma warning(push)
+#pragma warning (disable:4201)
+#include <glm/vec2.hpp>
+#pragma warning(pop)
+
 class Zako;
 
 class ZakoState
@@ -16,6 +21,11 @@ public:
     {
         UNREFERENCED_PARAMETER(zako);
     }
+
+protected:
+    void GoToPosition(Zako& zako, glm::vec2 newPos, float velocity, bool& reachedX, bool& reachedY, bool xFirst = false, bool yFirst = false);
+    bool m_ReachedPosXIdle = false;
+    bool m_ReachedPosYIdle = false;
 };
 
 class IdleStateZako : public ZakoState
@@ -38,8 +48,6 @@ public:
 private:
     bool m_ReachedPosX1 = false;
     bool m_ReachedPosY1 = false;
-    bool m_ReachedPosXIdle = false;
-    bool m_ReachedPosYIdle = false;
 };
 
 class ShootingRunStateZako : public ZakoState
@@ -51,12 +59,12 @@ public:
     virtual void Update(Zako& zako) override;
 
 private:
-    bool m_ReachedPos1 = false;
+    bool m_ReachedPosX1 = false;
+    bool m_ReachedPosY1 = false;
     bool m_ReachedPosX2 = false;
     bool m_ReachedPosY2 = false;
-    bool m_ReachedPos3 = false;
-    bool m_ReachedPosXIdle = false;
-    bool m_ReachedPosYIdle = false;
+    bool m_ReachedPosX3 = false;
+    bool m_ReachedPosY3 = false;
 };
 
 class CrashRunStateZako : public ZakoState
@@ -70,9 +78,8 @@ public:
 private:
     bool m_ReachedPosX1 = false;
     bool m_ReachedPosY1 = false;
-    bool m_ReachedPos2 = false;
-    bool m_ReachedPosXIdle = false;
-    bool m_ReachedPosYIdle = false;
+    bool m_ReachedPosX2 = false;
+    bool m_ReachedPosY2 = false;
 };
 
 class ExplodeStateZako : public ZakoState

@@ -13,10 +13,10 @@ void Player::Initialize()
 	AddComponent(pSpriteComp);
 	pSpriteComp->SetTexture("Player" + std::to_string(m_PlayerNr) + ".png");
 	pSpriteComp->IsStatic(true);
-	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
 	std::shared_ptr<ColliderComponent> pCollComp = std::make_shared<ColliderComponent>();
 	AddComponent(pCollComp);
-	m_Rect = { m_Rect.x, m_Rect.y, 25, 27 };
+	m_Rect = { m_Rect.x, m_Rect.y, 60, 64 };
+	GetTransform()->SetScale(0.4f);
 
 	m_pLasers[0] = std::shared_ptr<GameObject>(std::make_shared<Laser>(true));
 	Add(m_pLasers[0]);
@@ -68,20 +68,28 @@ void Player::Update()
 	if (m_IsAbducted)
 	{
 		float elapsedSec = Time::GetInstance().m_ElapsedSec;
+
+		if (!m_ReachedAbductionPos || m_RotAngle >= 2)
+		{
+			m_RotAngle += 400 * elapsedSec;
+			if (m_RotAngle >= 360) m_RotAngle = 0;
+			GetTransform()->SetRotation(m_RotAngle);
+		}
+
 		float velocity{};
 		if (m_ReachedAbductionPos)
 			velocity = 150 * elapsedSec;
 		else velocity = 50 * elapsedSec;
 
 
-		if (GetTransform().GetPosition().x > m_pKidnapper->GetRect().x + 2.0f)
-			SetPosition(GetTransform().GetPosition().x - velocity, GetTransform().GetPosition().y);
-		else if (GetTransform().GetPosition().x < m_pKidnapper->GetRect().x + 1.0f)
-			SetPosition(GetTransform().GetPosition().x + velocity, GetTransform().GetPosition().y);
-		else SetPosition(m_pKidnapper->GetRect().x + 2.0f, GetTransform().GetPosition().y);
+		if (GetTransform()->GetPosition().x > m_pKidnapper->GetRect().x + 2.0f)
+			SetPosition(GetTransform()->GetPosition().x - velocity, GetTransform()->GetPosition().y);
+		else if (GetTransform()->GetPosition().x < m_pKidnapper->GetRect().x + 1.0f)
+			SetPosition(GetTransform()->GetPosition().x + velocity, GetTransform()->GetPosition().y);
+		else SetPosition(m_pKidnapper->GetRect().x + 2.0f, GetTransform()->GetPosition().y);
 
-		if (GetTransform().GetPosition().y > m_pKidnapper->GetRect().y + 40)
-			SetPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y - velocity);
+		if (GetTransform()->GetPosition().y > m_pKidnapper->GetRect().y + 40)
+			SetPosition(GetTransform()->GetPosition().x, GetTransform()->GetPosition().y - velocity);
 		else m_ReachedAbductionPos = true;
 
 		if (m_pKidnapper->m_EnumState == State::Idle)
@@ -89,7 +97,8 @@ void Player::Update()
 			m_IsHit = true;
 			m_ReachedAbductionPos = false;
 			m_IsAbducted = false;
-
+			m_RotAngle = 0.0f;
+			GetTransform()->SetRotation(0.0f);
 		}
 	}
 }
@@ -151,4 +160,9 @@ void Player::SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper)
 {
 	m_IsAbducted = abducted;
 	m_pKidnapper = std::dynamic_pointer_cast<Boss>(kidnapper);
+}
+
+const std::shared_ptr<GameObject> Player::GetKidnapper()
+{
+	return m_pKidnapper;
 }

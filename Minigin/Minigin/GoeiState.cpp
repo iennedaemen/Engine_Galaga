@@ -72,17 +72,17 @@ void SpawnStateGoei::Update(Goei& goei)
         if (goei.m_SpawnedLeft)
         {
             if (goei.m_Rect.x < newPosCoord1.x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+                goei.SetPosition(goei.GetTransform()->GetPosition().x + velocity, goei.GetTransform()->GetPosition().y);
             else m_ReachedPosX1 = true;
         }
         else
         {
             if (goei.m_Rect.x > newPosCoord1.x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+                goei.SetPosition(goei.GetTransform()->GetPosition().x - velocity, goei.GetTransform()->GetPosition().y);
             else m_ReachedPosX1 = true;
         }
         if (goei.m_Rect.y > newPosCoord1.y)
-            goei.SetPosition(goei.GetTransform().GetPosition().x, goei.GetTransform().GetPosition().y - velocity);
+            goei.SetPosition(goei.GetTransform()->GetPosition().x, goei.GetTransform()->GetPosition().y - velocity);
         else m_ReachedPosY1 = true;
     }
 
@@ -90,13 +90,13 @@ void SpawnStateGoei::Update(Goei& goei)
     {
 
 		if (goei.m_Rect.x > goei.GetIdlePos().x + 2)
-			goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+			goei.SetPosition(goei.GetTransform()->GetPosition().x - velocity, goei.GetTransform()->GetPosition().y);
 		else if (goei.m_Rect.x < goei.GetIdlePos().x - 2)
-			goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+			goei.SetPosition(goei.GetTransform()->GetPosition().x + velocity, goei.GetTransform()->GetPosition().y);
 		else m_ReachedPosXIdle = true;
         
         if (goei.m_Rect.y > goei.GetIdlePos().y)
-            goei.SetPosition(goei.GetTransform().GetPosition().x, goei.GetTransform().GetPosition().y - velocity);
+            goei.SetPosition(goei.GetTransform()->GetPosition().x, goei.GetTransform()->GetPosition().y - velocity);
         else m_ReachedPosYIdle = true;
     }
 
@@ -145,7 +145,7 @@ void ShootingRunStateGoei::Update(Goei& goei)
     if (!m_ReachedPosY)
     {
         if (goei.m_Rect.y < maxDivePosY)
-            goei.SetPosition(goei.GetTransform().GetPosition().x, goei.GetTransform().GetPosition().y + velocity);
+            goei.SetPosition(goei.GetTransform()->GetPosition().x, goei.GetTransform()->GetPosition().y + velocity);
         else m_ReachedPosY = true;
     }
 
@@ -156,7 +156,7 @@ void ShootingRunStateGoei::Update(Goei& goei)
             if (!m_ReachedPos1 && m_ReachedPos2)
             {
                 if (goei.m_Rect.x > newPosCoordLeft)
-                    goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+                    goei.SetPosition(goei.GetTransform()->GetPosition().x - velocity, goei.GetTransform()->GetPosition().y);
                 else
                 {
                     m_ReachedPos1 = true;
@@ -166,7 +166,7 @@ void ShootingRunStateGoei::Update(Goei& goei)
             if (m_ReachedPos1 && !m_ReachedPos2)
             {
                 if (goei.m_Rect.x < newPosCoordRight)
-                    goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+                    goei.SetPosition(goei.GetTransform()->GetPosition().x + velocity, goei.GetTransform()->GetPosition().y);
                 else
                 {
                     m_ReachedPos1 = false;
@@ -180,7 +180,7 @@ void ShootingRunStateGoei::Update(Goei& goei)
             if (!m_ReachedPos1 && m_ReachedPos2)
             {
                 if (goei.m_Rect.x < newPosCoordRight)
-                    goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+                    goei.SetPosition(goei.GetTransform()->GetPosition().x + velocity, goei.GetTransform()->GetPosition().y);
                 else
                 {
                     m_ReachedPos1 = true;
@@ -190,7 +190,7 @@ void ShootingRunStateGoei::Update(Goei& goei)
             if (m_ReachedPos1 && !m_ReachedPos2)
             {
                 if (goei.m_Rect.x > newPosCoordLeft)
-                    goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+                    goei.SetPosition(goei.GetTransform()->GetPosition().x - velocity, goei.GetTransform()->GetPosition().y);
                 else
                 {
                     m_ReachedPos1 = false;
@@ -201,24 +201,11 @@ void ShootingRunStateGoei::Update(Goei& goei)
     }
 
     // POSITION IDLE
-    if (m_ReachedPosY && !m_ReachedPosYIdle)
+    if (m_ReachedPosY && (!m_ReachedPosYIdle || !m_ReachedPosXIdle))
     {
-        if (goei.m_Rect.y > goei.GetIdlePos().y)
-            goei.SetPosition(goei.GetTransform().GetPosition().x, goei.GetTransform().GetPosition().y - velocity);
-        else
-        {
-            m_ReachedPosYIdle = true;
-        }
+        GoToPosition(goei, goei.GetIdlePos(), velocity, m_ReachedPosXIdle, m_ReachedPosYIdle, false, true);
     }
 
-    if (m_ReachedPosYIdle && !m_ReachedPosXIdle)
-    {
-		if (goei.m_Rect.x > goei.GetIdlePos().x + 2)
-			goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
-		else  if (goei.m_Rect.x < goei.GetIdlePos().x - 2)
-			goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
-		else m_ReachedPosXIdle = true;
-    }
 
     //SHOOT
     if (goei.m_PlayerPos.x > goei.m_Rect.x + 5
@@ -245,4 +232,38 @@ std::shared_ptr<GoeiState> ExplodeStateGoei::HandleState(Goei& goei)
     }
 
     return nullptr;
+}
+
+void GoeiState::GoToPosition(Goei& goei, glm::vec2 newPos, float velocity, bool& reachedX, bool& reachedY, bool xFirst, bool yFirst)
+{
+    bool doX = true;
+    bool doY = true;
+    if (yFirst)
+    {
+        if (!reachedY)
+            doX = false;
+    }
+    else if (xFirst)
+    {
+        if (!reachedX)
+            doY = false;
+    }
+
+    if (doX)
+    {
+        if (goei.m_Rect.x > newPos.x + 2)
+            goei.SetPosition(goei.GetTransform()->GetPosition().x - velocity, goei.GetTransform()->GetPosition().y);
+        else if (goei.m_Rect.x < newPos.x - 2)
+            goei.SetPosition(goei.GetTransform()->GetPosition().x + velocity, goei.GetTransform()->GetPosition().y);
+        else reachedX = true;
+    }
+
+    if (doY)
+    {
+        if (goei.m_Rect.y < newPos.y - 2)
+            goei.SetPosition(goei.GetTransform()->GetPosition().x, goei.GetTransform()->GetPosition().y + velocity);
+        else if (goei.m_Rect.y > newPos.y + 2)
+            goei.SetPosition(goei.GetTransform()->GetPosition().x, goei.GetTransform()->GetPosition().y - velocity);
+        else reachedY = true;
+    }
 }

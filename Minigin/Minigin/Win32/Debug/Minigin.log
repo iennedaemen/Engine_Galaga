@@ -1,18 +1,33 @@
-﻿  GameScene.cpp
+﻿  BaseComponent.cpp
+  Beam.cpp
+  Boss.cpp
+  BossState.cpp
+  ColliderComponent.cpp
+  Command.cpp
+  Enemy.cpp
+  FpsComponent.cpp
+  GameObject.cpp
+  GameOverScene.cpp
+  GameScene.cpp
   Goei.cpp
+  GoeiState.cpp
+  HitObserver.cpp
+  InputManager.cpp
+  Laser.cpp
+  MenuScene.cpp
+  Minigin.cpp
+  Player.cpp
+  PlayerState.cpp
+  Generating Code...
+  Compiling...
+  RenderComponent.cpp
+  Renderer.cpp
+  Scene.cpp
+  SpriteComponent.cpp
+  TextComponent.cpp
+  Transform.cpp
+C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Minigin\Transform.cpp(17,40): error C2661: 'Renderer::RenderTexture': no overloaded function takes 0 arguments
+C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Minigin\Transform.cpp(18,1): error C2143: syntax error: missing ';' before '}'
+  Zako.cpp
   ZakoState.cpp
   Generating Code...
-     Creating library C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Debug\Minigin.lib and object C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Debug\Minigin.exp
-  Minigin.vcxproj -> C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\Win32\Debug\Minigin.exe
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2\lib\x86\SDL2.dll
-  1 File(s) copied
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libjpeg-9.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libpng16-16.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libtiff-5.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\libwebp-7.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\SDL2_image.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_image\lib\x86\zlib1.dll
-  6 File(s) copied
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_ttf\lib\x86\libfreetype-6.dll
-  C:\Users\Ienne\Documents\GitHub\Engine_Galaga\Minigin\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
-  2 File(s) copied

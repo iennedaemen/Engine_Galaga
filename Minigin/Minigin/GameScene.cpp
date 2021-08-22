@@ -1,9 +1,7 @@
 #include "MiniginPCH.h"
 #include "GameScene.h"
 #include "GameObject.h"
-#include "RenderComponent.h"
 #include "TextComponent.h"
-#include "FpsComponent.h"
 #include "SpriteComponent.h"
 #include "Player.h"
 #include "ColliderComponent.h"
@@ -203,7 +201,6 @@ void GameScene::Update()
 	UpdateEnemy(EnemyType::Zako, m_pZakos, m_ZakoPositions);
 	UpdateEnemy(EnemyType::Goei, m_pGoeis, m_GoeiPositions);
 	UpdateEnemy(EnemyType::Boss, m_pBosses, m_BossPositions);
-
 
 	// SCENE MANAGEMENT
 	if ((GetAsyncKeyState('P') & 0x8000) && (k == 0))
@@ -409,7 +406,20 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 			if (dBoss->GetBeam()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
 				dPlayer->SetAbducted(true, m_pBosses[i].first);
+				dBoss->m_AbductedPlayer = dPlayer.get();
 			}
+		}
+	}
+
+	if (dPlayer->IsAbducted())
+	{
+		std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (dPlayer->GetKidnapper());
+		if (dBoss->m_EnumState == State::Idle)
+		{
+			if (dPlayer->GetPlayerNr() == 1)
+				Remove(m_pLivesP1[GameInfo::GetInstance().player1Lives - 1]);
+			if (dPlayer->GetPlayerNr() == 2)
+				Remove(m_pLivesP2[GameInfo::GetInstance().player2Lives - 1]);
 		}
 	}
 
@@ -580,7 +590,7 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::pair<std::shared_pt
 
 
 	// IDLE POSSITIONS
-	for (int j{}; j < possiblePos.size(); ++j)
+	for (unsigned int j{}; j < possiblePos.size(); ++j)
 	{
 		possiblePos[j].x += m_IdleSpeed * Time::GetInstance().m_ElapsedSec;
 	}

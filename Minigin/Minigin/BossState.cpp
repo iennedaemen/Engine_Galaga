@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "Beam.h"
 #include "GameInfo.h"
+#include "Player.h"
 
 std::shared_ptr<BossState> IdleStateBoss::handleInput(Boss& boss)
 {
@@ -74,17 +75,7 @@ void SpawnStateBoss::update(Boss& boss)
     float velocity{};
     velocity = speed * Time::GetInstance().m_ElapsedSec;
 
-	if (boss.m_Rect.x > boss.GetIdlePos().x + 2)
-		boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-	else if (boss.m_Rect.x < boss.GetIdlePos().x - 2)
-		boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-	else m_ReachedPosXIdle = true;
-       
-	if (boss.m_Rect.y < boss.GetIdlePos().y)
-		boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
-	else m_ReachedPosYIdle = true;
-
-
+    GoToPosition(boss, boss.GetIdlePos(), velocity, m_ReachedPosXIdle, m_ReachedPosYIdle, false, true);
 }
 
 std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
@@ -116,11 +107,9 @@ std::shared_ptr<BossState> ShootingRunStateBoss::handleInput(Boss& boss)
 
 void ShootingRunStateBoss::update(Boss& boss)
 {
-    glm::vec2 newPosCoord1 = { boss.m_Rect.x , ScreenInfo::GetInstance().screenheigth - 275 };
+    glm::vec2 newPosCoord1 = { boss.GetTransform()->GetPosition().x , ScreenInfo::GetInstance().screenheigth - 275 };
     glm::vec2 newPosCoord2;
     glm::vec2 newPosCoord3;
-
-
 
     if (boss.m_SpawnedLeft)
     {
@@ -140,75 +129,28 @@ void ShootingRunStateBoss::update(Boss& boss)
     velocity = speed * elapsedSec;
 
     // POSITION 1
-    if (!m_ReachedPos1)
+    if (!m_ReachedPosX1 || !m_ReachedPosY1)
     {
-        if (boss.m_Rect.y < newPosCoord1.y)
-            boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
-        else m_ReachedPos1 = true;
+        GoToPosition(boss, newPosCoord1, velocity, m_ReachedPosX1, m_ReachedPosY1, true, false);
     }
 
-    // POSITION 2
-    if (m_ReachedPos1)
-    {
-        if (!m_ReachedPosX2 || !m_ReachedPosY2)
-        {
-            if (boss.m_SpawnedLeft)
-            {
-                if (boss.m_Rect.x > newPosCoord2.x)
-                    boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-                else m_ReachedPosX2 = true;
-            }
-            else
-            {
-                if (boss.m_Rect.x < newPosCoord2.x)
-                    boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-                else m_ReachedPosX2 = true;
-            }
-            if (boss.m_Rect.y < newPosCoord2.y)
-                boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
-            else m_ReachedPosY2 = true;
-        }
-    }
-
-    // POSITION 3
-    if (m_ReachedPosX2 && m_ReachedPosY2)
-    {
-        if (!m_ReachedPos3)
-        {
-            if (boss.m_SpawnedLeft)
-            {
-                if (boss.m_Rect.x < newPosCoord3.x)
-                    boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-                else
-                {
-                    m_ReachedPos3 = true;
-                }
-            }
-            else
-            {
-                if (boss.m_Rect.x > newPosCoord3.x)
-                    boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-                else
-                {
-                    m_ReachedPos3 = true;
-                }
-            }
-        }
-    }
-
-    // POSITION IDLE
-	if (m_ReachedPos3)
+    // POSITION 1 REACHED -> GO POSITION 2
+	else if (!m_ReachedPosX2 || !m_ReachedPosY2)
 	{
-		if (boss.m_Rect.x > boss.GetIdlePos().x + 2)
-			boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-		else if (boss.m_Rect.x < boss.GetIdlePos().x - 2)
-			boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-		else m_ReachedPosXIdle = true;
+		GoToPosition(boss, newPosCoord2, velocity, m_ReachedPosX2, m_ReachedPosY2);
+	}
+    
+    // POSITION 2 REACHED -> GO POSITION 3
+	else if (!m_ReachedPosX3 || !m_ReachedPosY3)
+	{
+		GoToPosition(boss, newPosCoord3, velocity, m_ReachedPosX3, m_ReachedPosY3, true, false);
+	}
 
-		if (boss.m_Rect.y > boss.GetIdlePos().y)
-			boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y - velocity);
-		else m_ReachedPosYIdle = true;
-    }
+    // POSITION 3 REACHED -> GO POSITION IDLE
+    else
+	{
+        GoToPosition(boss, boss.GetIdlePos(), velocity, m_ReachedPosXIdle, m_ReachedPosYIdle);
+	}
 
     //SHOOT
     if (boss.m_PlayerPos.x > boss.m_Rect.x + 5
@@ -242,7 +184,7 @@ std::shared_ptr<BossState> BeamRunStateBoss::handleInput(Boss& boss)
         return ptr2;
     }
 
-    if (m_ReachedPosYIdle)
+    if (m_ReachedPosYIdle && m_ReachedPosXIdle)
     {
         boss.m_EnumState = State::Idle;
         boss.m_DoBeamRun = false;
@@ -256,29 +198,20 @@ std::shared_ptr<BossState> BeamRunStateBoss::handleInput(Boss& boss)
 
 void BeamRunStateBoss::update(Boss& boss)
 {
+    glm::vec2 newPosCoord = { boss.GetTransform()->GetPosition().x, ScreenInfo::GetInstance().screenheigth / 2 + 50 };
+
     float elapsedSec = Time::GetInstance().m_ElapsedSec;
     int speed = 150;
     float velocity{};
     velocity = speed * elapsedSec;
 
     // POSITION 1
-    if (!m_ReachedPos)
+    if (!m_ReachedPosX || !m_ReachedPosY)
     {
-        if (boss.m_Rect.y < ScreenInfo::GetInstance().screenheigth/2 + 50)
-            boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
-        else m_ReachedPos = true;
+        GoToPosition(boss, newPosCoord, velocity, m_ReachedPosX, m_ReachedPosY, false, true);
     }
-
-    // POSITION IDLE
-    if (m_BeamDone)
-    {
-        if (boss.m_Rect.y > boss.GetIdlePos().y)
-            boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y - velocity);
-        else m_ReachedPosYIdle = true;
-    }
-
-    //BEAM
-    if (m_ReachedPos && !m_BeamDone)
+    // POSITION 1 REACHED -> DO BEAM
+    else if (!m_BeamDone)
     {
         std::shared_ptr<Beam> dBeam = std::dynamic_pointer_cast<Beam> (boss.GetBeam());
         dBeam->m_IsActive = true;
@@ -286,11 +219,30 @@ void BeamRunStateBoss::update(Boss& boss)
 
         if (m_BeamTimer >= m_BeamTime)
         {
-            m_BeamTimer = 0.0f;
-            dBeam->m_IsActive = false;
-            m_BeamDone = true;
+            if (boss.m_AbductedPlayer)
+            {
+                if (boss.m_AbductedPlayer->GetReachedAbductionPos())
+                {
+                    m_BeamTimer = 0.0f;
+                    dBeam->m_IsActive = false;
+                    m_BeamDone = true;
+                    boss.m_AbductedPlayer = nullptr;
+                }
+            }
+            else
+            {
+                m_BeamTimer = 0.0f;
+                dBeam->m_IsActive = false;
+                m_BeamDone = true;
+            }
         }
 
+    }
+
+    // BEAM IS DONE -> GO POSITION IDLE
+    else if (m_BeamDone)
+	{
+        GoToPosition(boss, boss.GetIdlePos(), velocity, m_ReachedPosXIdle, m_ReachedPosYIdle, false, true);
     }
 }
 
@@ -302,4 +254,38 @@ std::shared_ptr<BossState> ExplodeStateBoss::handleInput(Boss& boss)
         }
 
     return nullptr;
+}
+
+void BossState::GoToPosition(Boss& boss, glm::vec2 newPos, float velocity, bool& reachedX, bool& reachedY,bool xFirst, bool yFirst)
+{
+    bool doX = true;
+    bool doY = true;
+    if (yFirst)
+    {
+        if (!reachedY)
+            doX = false;
+    }
+    else if (xFirst)
+    {
+        if (!reachedX)
+            doY = false;
+    }
+
+    if (doX)
+    {
+        if (boss.m_Rect.x > newPos.x + 2)
+            boss.SetPosition(boss.GetTransform()->GetPosition().x - velocity, boss.GetTransform()->GetPosition().y);
+        else if (boss.m_Rect.x < newPos.x - 2)
+            boss.SetPosition(boss.GetTransform()->GetPosition().x + velocity, boss.GetTransform()->GetPosition().y);
+        else reachedX = true;
+    }
+
+    if (doY)
+    {
+        if (boss.m_Rect.y < newPos.y - 2)
+            boss.SetPosition(boss.GetTransform()->GetPosition().x, boss.GetTransform()->GetPosition().y + velocity);
+        else if (boss.m_Rect.y > newPos.y + 2)
+            boss.SetPosition(boss.GetTransform()->GetPosition().x, boss.GetTransform()->GetPosition().y - velocity);
+        else reachedY = true;
+    }
 }

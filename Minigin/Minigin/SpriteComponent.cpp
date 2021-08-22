@@ -4,6 +4,7 @@
 #include "Time.h"
 #include "ResourceManager.h"
 #include "ScreenInfo.h"
+#include "GameObject.h"
 
 
 SpriteComponent::SpriteComponent(float width, float height, int rows, int cols, int beginFrame)
@@ -29,7 +30,6 @@ void SpriteComponent::Initialize()
 	m_FrameTime = 1.0f / ScreenInfo::GetInstance().framesPerSecond;
 
 	InitSourceRect();
-	InitDestinationRect();
 }
 
 void SpriteComponent::Update()
@@ -57,16 +57,8 @@ void SpriteComponent::Update()
 
 void SpriteComponent::Render()
 {
-	//m_DestRect.x = int(GetGameObject()->GetTransform().GetPosition().x);
-	//m_DestRect.y = int(GetGameObject()->GetTransform().GetPosition().y);
-	Renderer::GetInstance().RenderTexture(*m_pTexture, GetGameObject()->GetRect(), m_SrcRect);
-}
-
-void SpriteComponent::InitDestinationRect()
-{
-	//m_DestRect.w = int(m_SheetWidth / float(m_Rows));
-	//m_DestRect.h = int(m_SheetHeight / float(m_Cols));
-
+	float angle = GetGameObject()->GetTransform()->GetRotation();
+	Renderer::GetInstance().RenderTexture(*m_pTexture, GetGameObject()->GetRect(), m_SrcRect, angle);
 }
 
 void SpriteComponent::InitSourceRect()
@@ -128,3 +120,8 @@ void SpriteComponent::SetNrFramesToPlay(int nrFramesToPlay)
 	m_NrFramesToPlay = nrFramesToPlay;
 }
 
+void SpriteComponent::UpdateRender()
+{
+	float angle = GetGameObject()->GetTransform()->GetRotation();
+	Renderer::GetInstance().RenderTexture(*m_pTexture, GetGameObject()->GetRect(), m_SrcRect, angle);
+}

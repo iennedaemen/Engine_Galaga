@@ -2,19 +2,25 @@
 #include <memory>
 #include "Texture2D.h"
 #include <vector>
-#include "Transform.h"
 #include <SDL.h>
+#include "Transform.h"
 
 class BaseComponent;
+class Transform;
 
 	class GameObject
 	{
 	public:
-		GameObject() = default;
+		GameObject()
+		{
+			m_Transform = std::make_shared<Transform>();
+			m_Transform->SetGameObject(this);
+			m_Rect = { 0,0,0,0 };
+		}
 		virtual ~GameObject() = default;
 
 		virtual void SetPosition(float x, float y);
-		Transform GetTransform();
+		std::shared_ptr<Transform> GetTransform();
 
 		void AddComponent(std::shared_ptr<BaseComponent> component);
 
@@ -72,12 +78,10 @@ class BaseComponent;
 		virtual void Render() {}
 		virtual void Update() {}
 
-		void NeedsUpdate(bool needsUpdate);
-
 		void SetRect(SDL_Rect rect)
 		{
 			m_Rect = rect;
-			m_Transform.SetPosition(float(rect.x), float(rect.y), 0.0f);
+			m_Transform->SetPosition(float(rect.x), float(rect.y), 0.0f);
 		}
 
 		SDL_Rect GetRect()
@@ -108,7 +112,7 @@ class BaseComponent;
 		std::vector<std::shared_ptr<BaseComponent>> m_pComponents;
 		std::vector<std::shared_ptr<GameObject>> m_pChildren;
 		GameObject* m_pParent = nullptr;
-		Transform m_Transform;
+		std::shared_ptr<Transform> m_Transform;
 		std::shared_ptr<Texture2D> m_Texture;
 		bool m_IsInitialized = false;
 	};

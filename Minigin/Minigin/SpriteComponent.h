@@ -35,6 +35,8 @@ public:
 		m_PlayedAnim = isPlayed;
 	}
 
+	void UpdateRender();
+
 protected:
 	virtual void Update() override;
 	virtual void Render() override;
@@ -55,7 +57,6 @@ private:
 	bool m_PlayedAnim = false;
 	
 	// FUNCTIONS
-	void InitDestinationRect();
 	void InitSourceRect();
 	void UpdateSourceRect();
 };

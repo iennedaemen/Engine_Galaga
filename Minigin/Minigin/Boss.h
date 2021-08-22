@@ -8,6 +8,7 @@
 #pragma warning(pop)
 
 class Beam;
+class Player;
 
 class Boss : public GameObject, public Enemy
 {
@@ -17,6 +18,7 @@ public:
 	const std::shared_ptr<GameObject> GetBeam();
 	void SetNextAction(bool doShootRun);
 
+	Player* m_AbductedPlayer = nullptr;
 	int m_Lives = 2;
 	bool m_DoBeamRun = false;
 
@@ -29,4 +31,5 @@ private:
 	std::shared_ptr<GameObject> m_pBeam = nullptr;
 	std::shared_ptr<BossState> m_pState = std::make_shared<SpawnStateBoss>();
 	bool m_NextAction = false;
+
 };

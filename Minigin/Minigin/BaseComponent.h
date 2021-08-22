@@ -1,6 +1,5 @@
 #pragma once
-#include "GameObject.h"
-#include "Transform.h"
+class GameObject;
 
 class BaseComponent
 {
@@ -8,8 +7,7 @@ public:
 	BaseComponent();
 	virtual ~BaseComponent() = default;
 
-	GameObject* GetGameObject() const;
-	Transform GetTransform() const;
+	GameObject* GetGameObject();
 	void SetGameObject(GameObject* object);
 	void NeedsUpdates(bool needsUpdate);
 

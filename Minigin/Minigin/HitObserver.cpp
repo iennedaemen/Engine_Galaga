@@ -75,7 +75,7 @@ void HitObserver::OnNotify(const Event event, GameObject* arg1, GameObject* arg2
 	{
 		Boss* pBoss = static_cast<Boss*>(arg1);
 
-		if (pBoss->m_Lives <= 0)
+		if (pBoss->m_Lives <= 1)
 		{
 			if (pPlayer->GetPlayerNr() == 1)
 			{

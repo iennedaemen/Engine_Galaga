@@ -25,6 +25,11 @@ public:
 	const bool IsAbducted();
 	void SetAbducted(bool abducted);
 	void SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper);
+	const std::shared_ptr<GameObject> GetKidnapper();
+	bool GetReachedAbductionPos()
+	{
+		return m_ReachedAbductionPos;
+	}
 
 	bool m_IsHit = false;
 	bool m_IsExploding = false;
@@ -41,8 +46,11 @@ private:
 	std::shared_ptr<PlayerState> m_pState = std::make_shared<IdleState>();
 	std::shared_ptr<GameObject> m_pLasers[2];
 	std::shared_ptr<Boss> m_pKidnapper = nullptr;
+	float m_RotAngle = 0.0f;
 	int m_PlayerNr;	
 	bool m_IsAbducted = false;
 	bool m_ReachedAbductionPos = false;
+
+	//float q;
 };
 

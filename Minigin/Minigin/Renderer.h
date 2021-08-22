@@ -18,7 +18,7 @@ struct SDL_Renderer;
 
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
-		void RenderTexture(Texture2D& texture, SDL_Rect dstRect, SDL_Rect srcRect) const;
+		void RenderTexture(Texture2D& texture, SDL_Rect dstRect, SDL_Rect srcRect, float angle = 0) const;
 
 		SDL_Renderer* GetSDLRenderer() const { return m_Renderer; }
 	private:

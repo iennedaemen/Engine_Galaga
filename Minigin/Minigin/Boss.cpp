@@ -14,11 +14,12 @@ void Boss::Initialize()
 	pSpriteComp->SetTexture("Boss.png");
 	pSpriteComp->IsStatic(true);
 	pSpriteComp->SetSpriteSheetTopLeft(0, 0);
-	m_Rect = { m_Rect.x, m_Rect.y, 30, 32 };
+	m_Rect = { m_Rect.x, m_Rect.y, 60, 64 };
+	GetTransform()->SetScale(0.5f);
 
 	m_pBeam = std::shared_ptr<GameObject>(std::make_shared<Beam>());
 	Add(m_pBeam);
-	m_pBeam->SetPosition(float(m_Rect.x + m_Rect.w / 2), float(m_Rect.y));
+	m_pBeam->SetPosition(float(m_Rect.x + m_Rect.w / 4), float(m_Rect.y));
 
 	m_pLaser = std::shared_ptr<GameObject>(std::make_shared<Laser>(false));
 	Add(m_pLaser);
