@@ -44,7 +44,7 @@ std::shared_ptr<Command> InputManager::HandleInput(int playerNr, Player& player)
 	if (IsPressed(ControllerButton::ButtonA, playerNr)) return m_pButtonA;
 
 	if (!IsPressed(ControllerButton::ButtonA, playerNr))
-		player.m_Shot = false;
+		player.m_IsShot = false;
 
 	return nullptr;
 }

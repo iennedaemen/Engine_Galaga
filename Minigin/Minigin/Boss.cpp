@@ -68,11 +68,14 @@ void Boss::Update()
 
 	// STATE
 	std::shared_ptr<BossState> newState = nullptr;
-	newState = m_State->handleInput(*this);
+	newState = m_pState->handleInput(*this);
 	if (newState != nullptr)
-		m_State = newState;
-	if (m_State)
-		m_State->update(*this);
+		m_pState = newState;
+	if (m_pState)
+		m_pState->update(*this);
+
+	if (m_EnumState == State::Idle)
+		SetPosition(m_IdlePos.x, m_IdlePos.y);
 }
 
 const std::shared_ptr<GameObject> Boss::GetBeam()

@@ -10,7 +10,7 @@ std::shared_ptr<PlayerState> IdleState::handleInput(Player& player)
 
     if (player.m_IsHit)
     {
-        player.m_Exploding = true;
+        player.m_IsExploding = true;
         player.m_IsHit = false;
         player.GetComponent<SpriteComponent>()->SetTexture("Explosion.png", 180, 36, 5, 1);
         player.GetComponent<SpriteComponent>()->IsStatic(false);
@@ -47,7 +47,7 @@ std::shared_ptr<PlayerState> ExplodeState::handleInput(Player& player)
 
         if(!player.m_IsDead)
         {
-            player.m_Exploding = false;
+            player.m_IsExploding = false;
             player.GetComponent<SpriteComponent>()->SetTexture("Player" + std::to_string(player.GetPlayerNr()) +".png", 60.0f, 64.0f, 1, 1);
             player.GetComponent<SpriteComponent>()->SetSpriteSheetTopLeft(0, 0);
             player.GetComponent<SpriteComponent>()->IsStatic(true);

@@ -88,18 +88,13 @@ void SpawnStateGoei::Update(Goei& goei)
 
     if (m_ReachedPosX1 && m_ReachedPosY1)
     {
-        if (goei.GetIdlePos().x < ScreenInfo::GetInstance().screenwidth / 2)
-        {
-            if (goei.m_Rect.x > goei.GetIdlePos().x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        else
-        {
-            if (goei.m_Rect.x < goei.GetIdlePos().x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
+
+		if (goei.m_Rect.x > goei.GetIdlePos().x + 2)
+			goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+		else if (goei.m_Rect.x < goei.GetIdlePos().x - 2)
+			goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+		else m_ReachedPosXIdle = true;
+        
         if (goei.m_Rect.y > goei.GetIdlePos().y)
             goei.SetPosition(goei.GetTransform().GetPosition().x, goei.GetTransform().GetPosition().y - velocity);
         else m_ReachedPosYIdle = true;
@@ -213,24 +208,16 @@ void ShootingRunStateGoei::Update(Goei& goei)
         else
         {
             m_ReachedPosYIdle = true;
-            m_LastPosX = float(goei.m_Rect.x);
         }
     }
 
     if (m_ReachedPosYIdle && !m_ReachedPosXIdle)
     {
-        if (goei.GetIdlePos().x < m_LastPosX)
-        {
-            if (goei.m_Rect.x > goei.GetIdlePos().x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        else
-        {
-            if (goei.m_Rect.x < goei.GetIdlePos().x)
-                goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
+		if (goei.m_Rect.x > goei.GetIdlePos().x + 2)
+			goei.SetPosition(goei.GetTransform().GetPosition().x - velocity, goei.GetTransform().GetPosition().y);
+		else  if (goei.m_Rect.x < goei.GetIdlePos().x - 2)
+			goei.SetPosition(goei.GetTransform().GetPosition().x + velocity, goei.GetTransform().GetPosition().y);
+		else m_ReachedPosXIdle = true;
     }
 
     //SHOOT

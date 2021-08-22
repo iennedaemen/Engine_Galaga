@@ -133,15 +133,15 @@ void GameScene::Initialize()
 	{
 		for (int j{}; j < 8; ++j)
 		{
-			m_ZakoPositions.push_back(glm::vec2{ 40.0f * (j + 1), 25 * i + 150 });
-			m_GoeiPositions.push_back(glm::vec2{ 40.0f * (j + 1), 25 * i + 90 });
+			m_ZakoPositions.push_back(glm::vec2{ 40.0f * (j + 1) - 20, 25 * i + 150 });
+			m_GoeiPositions.push_back(glm::vec2{ 40.0f * (j + 1) - 20, 25 * i + 90 });
 
 		}
 	}
 
 	for (int j{}; j < 8; ++j)
 	{
-		m_BossPositions.push_back(glm::vec2{ 40.0f * (j + 1), 25 + 20 });
+		m_BossPositions.push_back(glm::vec2{ 40.0f * (j + 1) - 20, 25 + 20 });
 	}
 
 
@@ -177,6 +177,15 @@ void GameScene::Update()
 	}
 
 
+	// IDLE POSSITIONS
+	m_IdlePosTimer += Time::GetInstance().m_ElapsedSec;
+	if (m_IdlePosTimer >= 3)
+	{
+		m_IdleSpeed = m_IdleSpeed * -1.0f;
+		m_IdlePosTimer = 0.0f;
+	}
+
+
 	// SPAWN TIMER
 	m_SpawnTimer += Time::GetInstance().m_ElapsedSec;
 
@@ -191,9 +200,9 @@ void GameScene::Update()
 	SpawnEnemy(EnemyType::Zako, m_ZakoPositions, m_ZakoTimes);
 	SpawnEnemy(EnemyType::Goei, m_GoeiPositions, m_GoeiTimes);
 	SpawnEnemy(EnemyType::Boss, m_BossPositions, m_BossTimes);
-	UpdateEnemy(EnemyType::Zako, m_pZakos);
-	UpdateEnemy(EnemyType::Goei, m_pGoeis);
-	UpdateEnemy(EnemyType::Boss, m_pBosses);
+	UpdateEnemy(EnemyType::Zako, m_pZakos, m_ZakoPositions);
+	UpdateEnemy(EnemyType::Goei, m_pGoeis, m_GoeiPositions);
+	UpdateEnemy(EnemyType::Boss, m_pBosses, m_BossPositions);
 
 
 	// SCENE MANAGEMENT
@@ -311,7 +320,7 @@ void GameScene::Reset()
 	// RESET ZAKO
 	for (unsigned int i{}; i < m_pZakos.size(); ++i)
 	{
-		Remove(m_pZakos[i]);
+		Remove(m_pZakos[i].first);
 	}
 	m_pZakos.clear();
 	m_NrActiveZako = 0;
@@ -322,7 +331,7 @@ void GameScene::Reset()
 	// RESET GOEI
 	for (unsigned int i{}; i < m_pGoeis.size(); ++i)
 	{
-		Remove(m_pGoeis[i]);
+		Remove(m_pGoeis[i].first);
 	}
 	m_pGoeis.clear();
 	m_NrActiveGoei = 0;
@@ -333,7 +342,7 @@ void GameScene::Reset()
 	// RESET BOSS
 	for (unsigned int i{}; i < m_pBosses.size(); ++i)
 	{
-		Remove(m_pBosses[i]);
+		Remove(m_pBosses[i].first);
 	}
 	m_pBosses.clear();
 	m_NrActiveBoss = 0;
@@ -365,9 +374,8 @@ void GameScene::Reset()
 void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 {
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (pPlayer);
-	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted() && !dPlayer->m_Exploding)
+	if (!dPlayer->m_IsHit && !dPlayer->IsAbducted() && !dPlayer->m_IsExploding)
 	{
-
 		PlayerHit(m_pZakos, dPlayer);
 		PlayerHit(m_pGoeis, dPlayer);
 		PlayerHit(m_pBosses, dPlayer);
@@ -375,7 +383,7 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		// ZAKOS
 		for (unsigned int i{}; i < m_pZakos.size(); ++i)
 		{
-			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i]);
+			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (m_pZakos[i].first);
 			if (dPlayer->GetComponent<ColliderComponent>()->IsColliding(zako->m_Rect))
 			{
 				dPlayer->m_IsHit = true;
@@ -393,25 +401,25 @@ void GameScene::UpdatePlayer(std::shared_ptr<GameObject> pPlayer)
 		Remove(pPlayer);
 	}
 
-	if (!dPlayer->m_Exploding)
+	if (!dPlayer->m_IsExploding)
 	{
 		for (unsigned int i{}; i < m_pBosses.size(); ++i)
 		{
-			std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i]);
+			std::shared_ptr<Boss> dBoss = std::dynamic_pointer_cast<Boss> (m_pBosses[i].first);
 			if (dBoss->GetBeam()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 			{
-				dPlayer->SetAbducted(true, m_pBosses[i]);
+				dPlayer->SetAbducted(true, m_pBosses[i].first);
 			}
 		}
 	}
 
 }
 
-void GameScene::PlayerHit(std::vector<std::shared_ptr<GameObject>>& Enemies, std::shared_ptr<Player> pPlayer)
+void GameScene::PlayerHit(std::vector<std::pair<std::shared_ptr<GameObject>, int>>& Enemies, std::shared_ptr<Player> pPlayer)
 {
 	for (unsigned int i{}; i < Enemies.size(); ++i)
 	{
-		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i]);
+		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i].first);
 		if (enemy->GetLaser()->GetComponent<ColliderComponent>()->IsColliding(pPlayer->m_Rect))
 		{
 			pPlayer->m_IsHit = true;
@@ -457,7 +465,7 @@ void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, s
 
 			enemyObj = std::make_shared<Zako>(m_ZakoPositions[m_ZakoPos.front().first]);
 			Add(enemyObj);
-			m_pZakos.push_back(enemyObj);
+			m_pZakos.push_back(std::pair<std::shared_ptr<GameObject>, int>(enemyObj, m_ZakoPos.front().first));
 			zako = std::dynamic_pointer_cast<Zako>(enemyObj);
 
 			if (m_ZakoPos.front().second)
@@ -483,7 +491,7 @@ void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, s
 
 			enemyObj = std::make_shared<Goei>(m_GoeiPositions[m_GoeiPos.front().first]);
 			Add(enemyObj);
-			m_pGoeis.push_back(enemyObj);
+			m_pGoeis.push_back(std::pair<std::shared_ptr<GameObject>, int>(enemyObj, m_GoeiPos.front().first));
 			goei = std::dynamic_pointer_cast<Goei>(enemyObj);
 
 			if (m_GoeiPos.front().second)
@@ -509,7 +517,7 @@ void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, s
 
 			enemyObj = std::make_shared<Boss>(m_BossPositions[m_BossPos.front().first]);
 			Add(enemyObj);
-			m_pBosses.push_back(enemyObj);
+			m_pBosses.push_back(std::pair<std::shared_ptr<GameObject>, int>(enemyObj, m_BossPos.front().first));
 			boss = std::dynamic_pointer_cast<Boss>(enemyObj);
 
 			enemyObj->SetPosition(float(ScreenInfo::GetInstance().screenwidth / 2), -20);
@@ -528,7 +536,7 @@ void GameScene::SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, s
 	}
 }
 
-void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObject>>& Enemies)
+void GameScene::UpdateEnemy(EnemyType type, std::vector<std::pair<std::shared_ptr<GameObject>, int>>& Enemies, std::vector<glm::vec2>& possiblePos)
 {
 	// GET LASERS FROM PLAYER
 	std::shared_ptr<Player> dPlayer = std::dynamic_pointer_cast<Player> (m_pPlayer);
@@ -548,7 +556,7 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 	{
 		if (type == EnemyType::Zako)
 		{
-			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (Enemies[i]);
+			std::shared_ptr<Zako> zako = std::dynamic_pointer_cast<Zako> (Enemies[i].first);
 			int r = std::rand() % 2;
 			if (r % 2 == 0)
 				zako->SetNextAction(true);
@@ -556,28 +564,41 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 		}
 		else if (type == EnemyType::Boss)
 		{
-			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (Enemies[i]);
+			std::shared_ptr<Boss> boss = std::dynamic_pointer_cast<Boss> (Enemies[i].first);
 			int r = std::rand() % 2;
 			if (r % 2 == 0)
 				boss->SetNextAction(true);
 			else boss->SetNextAction(false);
 		}
 
-		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i]);
+		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i].first);
 
 		enemy->m_PlayerPos = { m_pPlayer->m_Rect.x + m_pPlayer->m_Rect.w / 2,  m_pPlayer->m_Rect.y };
 		if (GameInfo::GetInstance().player2Active)
 			enemy->m_Player2Pos = { m_pPlayer2->m_Rect.x + m_pPlayer2->m_Rect.w / 2,  m_pPlayer2->m_Rect.y };
 	}
 
+
+	// IDLE POSSITIONS
+	for (int j{}; j < possiblePos.size(); ++j)
+	{
+		possiblePos[j].x += m_IdleSpeed * Time::GetInstance().m_ElapsedSec;
+	}
+	for (auto enemy2 : Enemies)
+	{
+		std::shared_ptr<Enemy> e = std::dynamic_pointer_cast<Enemy> (enemy2.first);
+		e->m_IdlePos = possiblePos[enemy2.second];
+	}
+
+
 	// COLLISION
 	for (unsigned int i{}; i < pLasers.size(); ++i)
 	{
 		for (unsigned int j{}; j < Enemies.size(); ++j)
 		{
-			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(Enemies[j]->m_Rect))
+			if (pLasers[i]->GetComponent<ColliderComponent>()->IsColliding(Enemies[j].first->m_Rect))
 			{
-				std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[j]);
+				std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[j].first);
 
 				if (!enemy->m_IsHit)
 				{
@@ -585,11 +606,11 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 					for (std::shared_ptr<Observer> observer : m_Observers)
 					{
 						if(type == EnemyType::Zako)
-							observer->OnNotify(Event::ZakoHit, Enemies[j].get(), parent);
+							observer->OnNotify(Event::ZakoHit, Enemies[j].first.get(), parent);
 						else if (type == EnemyType::Goei)
-							observer->OnNotify(Event::GoeiHit, Enemies[j].get(), parent);
+							observer->OnNotify(Event::GoeiHit, Enemies[j].first.get(), parent);
 						else if (type == EnemyType::Boss)
-							observer->OnNotify(Event::BossHit, Enemies[j].get(), parent);
+							observer->OnNotify(Event::BossHit, Enemies[j].first.get(), parent);
 					}
 					enemy->m_IsHit = true;
 					Player* p = static_cast<Player*>(parent);
@@ -603,11 +624,11 @@ void GameScene::UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObje
 	std::vector<int> idxRemove;
 	for (unsigned int i{}; i < Enemies.size(); ++i)
 	{
-		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i]);
+		std::shared_ptr<Enemy> enemy = std::dynamic_pointer_cast<Enemy> (Enemies[i].first);
 		if (enemy->m_IsDead)
 		{
 			m_EnemiesDead++;
-			Remove(Enemies[i]);
+			Remove(Enemies[i].first);
 			idxRemove.push_back(i);
 		}
 	}

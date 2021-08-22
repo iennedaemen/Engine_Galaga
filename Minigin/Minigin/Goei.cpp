@@ -48,9 +48,12 @@ void Goei::Update()
 
 	// STATE
 	std::shared_ptr<GoeiState> newState = nullptr;
-	newState = m_State->HandleState(*this);
+	newState = m_pState->HandleState(*this);
 	if (newState != nullptr) 
-		m_State = newState;
-	if (m_State) 
-		m_State->Update(*this);
+		m_pState = newState;
+	if (m_pState) 
+		m_pState->Update(*this);
+
+	if (m_EnumState == State::Idle)
+		SetPosition(m_IdlePos.x, m_IdlePos.y);
 }

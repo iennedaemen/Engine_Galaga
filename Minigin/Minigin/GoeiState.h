@@ -57,7 +57,6 @@ private:
     bool m_ReachedPosY = false;
     bool m_ReachedPosXIdle = false;
     bool m_ReachedPosYIdle = false;
-    float m_LastPosX = 0.0f;
 };
 
 class ExplodeStateGoei : public GoeiState

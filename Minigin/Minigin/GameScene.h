@@ -29,6 +29,8 @@ private:
 	std::shared_ptr<GameObject> m_pTextScoreP1 = nullptr;
 	std::shared_ptr<GameObject> m_pTextScoreP2 = nullptr;
 
+	float m_IdleSpeed = 20;
+	float m_IdlePosTimer = 0;
 	float m_SpawnTimer = 0;
 	int m_EnemiesDead = 0;
 
@@ -44,21 +46,21 @@ private:
 
 	// ZAKO
 	std::vector<glm::vec2> m_ZakoPositions;
-	std::vector<std::shared_ptr<GameObject>> m_pZakos;
+	std::vector<std::pair<std::shared_ptr<GameObject>, int>> m_pZakos;
 	int m_NrActiveZako = 0;
 	int m_SpawnAmountZako = 4;
 	bool m_SpawnLeftZako = false;
 
 	// GOEI
 	std::vector<glm::vec2> m_GoeiPositions;
-	std::vector<std::shared_ptr<GameObject>> m_pGoeis;
+	std::vector<std::pair<std::shared_ptr<GameObject>, int>> m_pGoeis;
 	int m_NrActiveGoei = 0;
 	int m_SpawnAmountGoei = 0;
 	bool m_SpawnLeftGoei = false;
 
 	// BOSS
 	std::vector<glm::vec2> m_BossPositions;
-	std::vector<std::shared_ptr<GameObject>> m_pBosses;
+	std::vector<std::pair<std::shared_ptr<GameObject>, int>> m_pBosses;
 	int m_NrActiveBoss = 0;
 	int m_SpawnAmountBoss = 0;
 
@@ -82,9 +84,9 @@ private:
 
 	// FUNCTIONS
 	void SpawnEnemy(EnemyType type, std::vector<glm::vec2> possiblePos, std::queue<float>& spawnTimes);
-	void UpdateEnemy(EnemyType type, std::vector<std::shared_ptr<GameObject>>& Enemies);
+	void UpdateEnemy(EnemyType type, std::vector<std::pair<std::shared_ptr<GameObject>, int>>& Enemies, std::vector<glm::vec2>& possiblePos);
 	void UpdatePlayer(std::shared_ptr<GameObject> pPlayer);
-	void PlayerHit(std::vector<std::shared_ptr<GameObject>>& Enemies, std::shared_ptr<Player> pPlayer);
+	void PlayerHit(std::vector<std::pair<std::shared_ptr<GameObject>, int>>& Enemies, std::shared_ptr<Player> pPlayer);
 	void ReadFile();
 
 };

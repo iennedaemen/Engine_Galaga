@@ -12,7 +12,7 @@
 class Zako : public GameObject, public Enemy
 {
 public:
-	Zako() {};
+	Zako() {}
 	Zako(glm::vec2 idlePos) : Enemy(idlePos) {}
 
 	void SetNextAction(bool doShootRun);
@@ -26,7 +26,7 @@ protected:
 
 
 private:
-	std::shared_ptr<ZakoState> m_State = std::make_shared<SpawnStateZako>();
+	std::shared_ptr<ZakoState> m_pState = std::make_shared<SpawnStateZako>();
 	bool m_NextAction = false;
 };
 

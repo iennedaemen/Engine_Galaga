@@ -37,9 +37,9 @@ void MoveRightCommand::execute(Player& player)
 
 void ShootCommand::execute(Player& player)
 {
-    if (!player.m_Shot)
+    if (!player.m_IsShot)
     {
         player.ShootLaser();
-        player.m_Shot = true;
+        player.m_IsShot = true;
     }
 }

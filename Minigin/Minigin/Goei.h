@@ -18,5 +18,5 @@ protected:
 	void Update() override;
 
 private:
-	std::shared_ptr<GoeiState> m_State = std::make_shared<SpawnStateGoei>();
+	std::shared_ptr<GoeiState> m_pState = std::make_shared<SpawnStateGoei>();
 };

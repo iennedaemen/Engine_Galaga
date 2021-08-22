@@ -56,7 +56,6 @@ private:
     bool m_ReachedPos3 = false;
     bool m_ReachedPosXIdle = false;
     bool m_ReachedPosYIdle = false;
-    float m_LastPosX = 0;
 };
 
 class BeamRunStateBoss : public BossState

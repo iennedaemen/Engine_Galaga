@@ -32,9 +32,9 @@ void Player::Initialize()
 void Player::Update()
 {
 	// COMMAND
-	if (!m_Exploding)
+	if (!m_IsExploding)
 	{
-		if (!m_Abducted)
+		if (!m_IsAbducted)
 		{
 			std::shared_ptr<Command> command = InputManager::GetInstance().HandleInput(m_PlayerNr, *this);
 			if (command)
@@ -46,11 +46,11 @@ void Player::Update()
 
 	// STATE
 	std::shared_ptr<PlayerState> newState = nullptr;
-	newState = m_State->handleInput(*this);
+	newState = m_pState->handleInput(*this);
 	if (newState != nullptr)
-		m_State = newState;
-	if (m_State)
-		m_State->update(*this);
+		m_pState = newState;
+	if (m_pState)
+		m_pState->update(*this);
 
 
 	// LASERS
@@ -65,7 +65,7 @@ void Player::Update()
 	}
 
 	// ABDUCTION
-	if (m_Abducted)
+	if (m_IsAbducted)
 	{
 		float elapsedSec = Time::GetInstance().m_ElapsedSec;
 		float velocity{};
@@ -88,7 +88,7 @@ void Player::Update()
 		{
 			m_IsHit = true;
 			m_ReachedAbductionPos = false;
-			m_Abducted = false;
+			m_IsAbducted = false;
 
 		}
 	}
@@ -124,7 +124,7 @@ void Player::RemoveLaser(std::shared_ptr<Laser> laser)
 
 void Player::SetState(PlayerState state)
 {
-	m_State = std::make_shared<PlayerState>(state);
+	m_pState = std::make_shared<PlayerState>(state);
 }
 
 const int Player::GetPlayerNr()
@@ -139,16 +139,16 @@ const std::shared_ptr<GameObject> Player::GetLaser(int index)
 
 const bool Player::IsAbducted()
 {
-	return m_Abducted;
+	return m_IsAbducted;
 }
 
 void Player::SetAbducted(bool abducted)
 {
-	m_Abducted = abducted;
+	m_IsAbducted = abducted;
 }
 
 void Player::SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper)
 {
-	m_Abducted = abducted;
+	m_IsAbducted = abducted;
 	m_pKidnapper = std::dynamic_pointer_cast<Boss>(kidnapper);
 }

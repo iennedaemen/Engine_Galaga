@@ -27,6 +27,6 @@ protected:
 
 private:
 	std::shared_ptr<GameObject> m_pBeam = nullptr;
-	std::shared_ptr<BossState> m_State = std::make_shared<SpawnStateBoss>();
+	std::shared_ptr<BossState> m_pState = std::make_shared<SpawnStateBoss>();
 	bool m_NextAction = false;
 };

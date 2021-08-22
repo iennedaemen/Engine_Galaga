@@ -27,9 +27,9 @@ public:
 	void SetAbducted(bool abducted, std::shared_ptr<GameObject> kidnapper);
 
 	bool m_IsHit = false;
-	bool m_Exploding = false;
+	bool m_IsExploding = false;
 	bool m_IsDead = false;
-	bool m_Shot = false;
+	bool m_IsShot = false;
 
 protected:
 	void Initialize() override;
@@ -38,11 +38,11 @@ protected:
 
 private:
 	std::shared_ptr<Command> m_pLastCommand = nullptr;
-	std::shared_ptr<PlayerState> m_State = std::make_shared<IdleState>();
+	std::shared_ptr<PlayerState> m_pState = std::make_shared<IdleState>();
 	std::shared_ptr<GameObject> m_pLasers[2];
 	std::shared_ptr<Boss> m_pKidnapper = nullptr;
 	int m_PlayerNr;	
-	bool m_Abducted = false;
+	bool m_IsAbducted = false;
 	bool m_ReachedAbductionPos = false;
 };
 

@@ -70,27 +70,20 @@ std::shared_ptr<BossState> SpawnStateBoss::handleInput(Boss& boss)
 
 void SpawnStateBoss::update(Boss& boss)
 {
-    float elapsedSec = Time::GetInstance().m_ElapsedSec;
     int speed = 150;
     float velocity{};
-    velocity = speed * elapsedSec;
+    velocity = speed * Time::GetInstance().m_ElapsedSec;
 
-        if (boss.GetIdlePos().x < ScreenInfo::GetInstance().screenwidth / 2)
-        {
-            if (boss.m_Rect.x > boss.GetIdlePos().x)
-                boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        else
-        {
-            if (boss.m_Rect.x < boss.GetIdlePos().x)
-                boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        if (boss.m_Rect.y < boss.GetIdlePos().y)
-            boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
-        else m_ReachedPosYIdle = true;
-  
+	if (boss.m_Rect.x > boss.GetIdlePos().x + 2)
+		boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
+	else if (boss.m_Rect.x < boss.GetIdlePos().x - 2)
+		boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
+	else m_ReachedPosXIdle = true;
+       
+	if (boss.m_Rect.y < boss.GetIdlePos().y)
+		boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y + velocity);
+	else m_ReachedPosYIdle = true;
+
 
 }
 
@@ -189,7 +182,6 @@ void ShootingRunStateBoss::update(Boss& boss)
                 else
                 {
                     m_ReachedPos3 = true;
-                    m_LastPosX = boss.GetTransform().GetPosition().x;
                 }
             }
             else
@@ -199,30 +191,23 @@ void ShootingRunStateBoss::update(Boss& boss)
                 else
                 {
                     m_ReachedPos3 = true;
-                    m_LastPosX = boss.GetTransform().GetPosition().x;
                 }
             }
         }
     }
 
     // POSITION IDLE
-    if (m_ReachedPos3)
-    {
-        if (boss.GetIdlePos().x < m_LastPosX)
-        {
-            if (boss.m_Rect.x > boss.GetIdlePos().x)
-                boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        else
-        {
-            if (boss.m_Rect.x < boss.GetIdlePos().x)
-                boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
-            else m_ReachedPosXIdle = true;
-        }
-        if (boss.m_Rect.y > boss.GetIdlePos().y)
-            boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y - velocity);
-        else m_ReachedPosYIdle = true;
+	if (m_ReachedPos3)
+	{
+		if (boss.m_Rect.x > boss.GetIdlePos().x + 2)
+			boss.SetPosition(boss.GetTransform().GetPosition().x - velocity, boss.GetTransform().GetPosition().y);
+		else if (boss.m_Rect.x < boss.GetIdlePos().x - 2)
+			boss.SetPosition(boss.GetTransform().GetPosition().x + velocity, boss.GetTransform().GetPosition().y);
+		else m_ReachedPosXIdle = true;
+
+		if (boss.m_Rect.y > boss.GetIdlePos().y)
+			boss.SetPosition(boss.GetTransform().GetPosition().x, boss.GetTransform().GetPosition().y - velocity);
+		else m_ReachedPosYIdle = true;
     }
 
     //SHOOT

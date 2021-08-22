@@ -4,7 +4,7 @@
 class Laser : public GameObject
 {
 public:
-	Laser(bool playerLasers) : m_PlayerLasers(playerLasers) {}
+	Laser(bool isPlayerLaser) : m_IsPlayerLaser(isPlayerLaser) {}
 
 	bool m_IsActive = false;
 
@@ -14,7 +14,7 @@ protected:
 	void Update() override;
 
 private:
-	bool m_PlayerLasers;
+	bool m_IsPlayerLaser;
 
 };
 
